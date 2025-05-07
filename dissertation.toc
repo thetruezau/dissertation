@@ -1,0 +1,31 @@
+\babel@toc {english}{}\relax 
+\contentsline {paragraph}{Palavras-chave}{iv}{paragraph*.4}%
+\contentsline {paragraph}{Keywords}{v}{paragraph*.6}%
+\contentsline {paragraph}{}{vi}{paragraph*.7}%
+\contentsline {chapter}{\numberline {1}Introduction}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Motivation}{2}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Objectives}{2}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Document Structure}{2}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Background}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Basic Lambda Calculus Theory}{3}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Syntax}{3}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Typed Terms}{4}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Mechanising Meta-theory in \textit {Coq}}{4}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Binding Variables}{4}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}De Bruijn Syntax}{5}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Explicit Substitutions and the Sigma Calculus}{5}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}The \textit {Autosubst} Library}{5}{subsection.2.2.4}%
+\contentsline {chapter}{\numberline {3}The Multiary Lambda Calculus and Its Canonical Fragment }{7}{chapter.3}%
+\contentsline {section}{\numberline {3.1}The Multiary Lambda Calculus ($\lambda m$)}{7}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}A Nested Inductive Type}{7}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}A Sequent Calculus Fragment}{7}{subsection.3.1.2}%
+\contentsline {section}{\numberline {3.2}The Canonical Fragment ($\vec \lambda m$)}{7}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Formalising a Subsystem}{7}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}}{7}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Conservativeness}{7}{subsection.3.2.3}%
+\contentsline {chapter}{\numberline {4}The Isomorphic Fragment of Lambda Calculus in $\lambda m$}{8}{chapter.4}%
+\contentsline {chapter}{\numberline {5}Discussion}{9}{chapter.5}%
+\contentsline {chapter}{\numberline {6}Conclusions}{10}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Summary of Findings}{10}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Future Work}{10}{section.6.2}%
+\contentsline {chapter}{\numberline {A}Example}{11}{appendix.A}%
