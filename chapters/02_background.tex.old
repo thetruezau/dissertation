@@ -1,0 +1,141 @@
+\chapter{Background}
+\label{c:background}
+
+In this chapter, we intend to take the example of formalising some theory about the $\lambda$-calculus as a motivation to display some core aspects involved in the more elaborate formalisations ahead.
+
+\section{Basic Lambda Calculus Theory}
+
+\subsection{Syntax}
+
+\cite{Hindley1997} \cite{Barendregt1987}
+
+\begin{definition}
+  Given an infinite sequence of variables $V$, we define the set of $\lambda$-terms, $\Lambda$, inductively as follows:
+  
+  \begin{enumerate}
+  \item (variable) $x \in V \implies x \in \Lambda$
+  \item (application) $M, N \in \Lambda \implies (MN) \in \Lambda$
+  \item (abstraction) $x \in V, M \in \Lambda \implies (\lambda x . M) \in \Lambda$
+  \end{enumerate}    
+\end{definition}
+
+\begin{notation} \hfill
+  \begin{enumerate}
+  \item (variable names) Variables in $V$ will be denoted with the lowercase letters $w, x, y, z$ with or without number-subscripts.
+  \item ($\lambda$-term names) Terms in $\Lambda$ will be denoted with the uppercase letters $M, N, P, Q$ with or without number-subscripts.
+    % \item (equality) We will denote syntactically equal terms $M, N \in \Lambda$ as $M \equiv N$.  
+  \item (multiple abstractions) For every term $M \in \Lambda$, the term $\lambda x_1 x_2 \dots x_n . M$ will be syntactic sugar for the term $\lambda x_1 . \lambda x_2 . \dots . \lambda x_n . M$.
+  \item (application left association) For every terms $M_i \in \Lambda$, the term $M_1 M_2 \dots M_n$ will be syntactic sugar for the term $((M_1 M_2)...)M_n$.  
+  \end{enumerate}
+\end{notation}
+
+\begin{definition}[Free variables]
+  For every $M \in \Lambda$, we define the set of free variables in $M$, $FV(M)$, recursively as follows:
+  
+  \begin{enumerate}
+  \item $FV( x ) = \{ x \}$
+  \item $FV( M N ) = FV(M) \cup FV(N)$
+  \item $FV( \lambda x . M ) = FV(M) - \{ x \}$
+  \end{enumerate}
+
+  When a variable occurring in a term is not free it is said to be bound.
+\end{definition}
+
+\begin{definition}[$\alpha$-conversion]
+  We identify 
+\end{definition}
+
+\begin{convention} \cite{Barendregt1987}
+  We will use the same 
+\end{convention}
+
+\begin{definition}[Substitution]
+  For every 
+\end{definition}
+
+\begin{definition}[Compatible Relation]
+  We say that a binary relation $R : \Lambda \times \Lambda$ is compatible if:
+
+  \begin{enumerate}
+    \item $(M, N) \in R \implies \forall x \in V . (\lambda x . M, )$
+  \end{enumerate}
+\end{definition}
+
+\subsection{Typed Terms}
+
+% ---
+
+\section{Mechanising Meta-theory in \textit{Coq}}
+
+The formalisation we aim at is dependent on the theory provided by the \textit{Coq} proof assistant - the Calculus of Inductive Constructions. We will follow assuming a basic knowledge on \textit{Coq} and its syntax to define inductive types and proof techniques.
+
+\subsection{Binding Variables}
+
+How could we define the syntax of the untyped $\lambda$-terms in \textit{Coq}? Probably, we would describe something similar to:
+
+\begin{lstlisting}
+  Inductive term :
+  | Var : var
+  | Abs : var -> term
+  | App : term -> term -> term
+  end.
+\end{lstlisting}
+
+We would still have to clarify what we mean by variables (the above $var$ type). Here lies a common and subtle problem that is usually not noticed when describing definitions in a paper. If we want these variables to be the usual reserved strings (say, $x, x_0, x_1, x_2, \dots, y, y_0, y_1, y_2, \dots, z, z_0, z_1, z_2, \dots$) we would fall into some of the known problems \cite{Winterhalter}:
+
+\begin{itemize}
+\item{\alpha-equivalence}: We want to be able to identify which variables are bound in our term but the name they hold is indifferent. A simple example is the term $Abs \ x \ (Var \ x)$ that is syntactically different from the term $Abs \ y \ (Var \ y)$. We desire to compare \textit{terms modulo a change of bound variables} \cite{Barendregt1987}.
+  
+\item{variable capture}: When dealing with substitutions, we will swap a variable by a new term with possibly free variables that can get bound to an unwanted abstraction. For example, if we were to substitute the free occurrence of $Var \ y$ in the term $Abs \ x \ (Var \ y)$ by $Var \ x$ we would get the term $Abs \ x \ (Var \ x)$, with the variable $x$ now bound.
+\end{itemize} 
+
+Furthermore, we notice that having such freedom to choose the names of our bound variables is annoying (and even unnecessary for our case). This motivates our use of de Bruijn syntax when formalising our calculi with binders.
+
+\subsection{De Bruijn Syntax}
+
+In the 1970s, de Bruijn started working on the \textit{AUTOMATH} proof assistant and proposed a simplified syntax to deal with generic binders \cite{deBruijn}.
+This approach is claimed to be good for meta-lingual discussion and for the computer and computer programme. In contrast, this syntax is farther away from the human reader.
+
+The main idea is to treat variables as indices (represented by natural numbers) and to interpret these indices as the distance to the respective binder.
+In de Bruijn syntax for $\lambda$-terms, we only have one representative for the identity terms $\lambda x.x$, $\lambda y.y$, $\lambda z.z$ \dots, that is, $\lambda .0$.
+This way, we do not decide the names for the bound variables in a term - we are obliged to use the specific indices that bind a variable to a certain binder.
+
+Let us see how using this approach would change our first definition of the untyped $\lambda$-terms in \textit{Coq}.
+
+\begin{lstlisting}
+  Inductive term :
+  | Var : nat
+  | Abs : term
+  | App : term -> term -> term
+  end.
+\end{lstlisting}
+
+Now, we do not have to specify the variable name we want to bind - this was unnecessary!
+Using this definition, we also eliminate our problem of identifying terms modulo $\alpha$-equivalence. 
+
+Variable capture can also be avoided, but this requires some care when defining the substitution operations.
+\sout{The next question to answer is: What are these substitutions and how do we instantiate them in our terms?}
+
+\subsection{Explicit Substitutions and the Sigma Calculus}
+
+
+
+\subsection{The \textit{Autosubst} Library}
+
+The \textit{Autosubst} library for \textit{Coq} is one of the many solutions to generically deal with binders using de Bruijn syntax and to support substitution operations in an inductively defined calculi.
+This library also supported some automation to define the substitution operations for simple inductive definitions of terms and to prove some results that deal with elaborate substitution equalities (that take advantage of the substitution lemmas).
+
+Now, the changes 
+
+\begin{lstlisting}
+  Inductive term :
+  | Var : var
+  | Abs : { bind term }
+  | App : term -> term -> term
+  end.
+\end{lstlisting}
+
+%%% Local Variables:
+%%% mode: LaTeX
+%%% TeX-master: "../dissertation"
+%%% End:
