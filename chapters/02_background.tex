@@ -69,12 +69,15 @@ First, we introduce the $\lambda$-calculus and some basic knowledge around it. T
   
   \begin{enumerate}
   \item $x[x := N] = N$
-  \item $y[x := N] = y \quad$ (when $x \neq y$)
-  \item $(\lambda y . M)[x := N] = \lambda y . (M[x := N]$)
+  \item $y[x := N] = y \text{, with } x \neq y$
+  \item $(\lambda y . M_1)[x := N] = \lambda y . (M_1[x := N]$)
   \item $(M_1 M_2)[x := N] = (M_1[x := N]) (M_2[x := N]$)
   \end{enumerate}
-
 \end{definition}
+
+\begin{remark}
+	Is is important to notice that by variable convention, the substitution operation described is capture-avoiding - bound variables will not be substituted ($x \in FV(M)$) and the free variables in $N$ will not be affected by the binders in $M$, as they are chosen to have different names. 
+\end{remark}
 
 \begin{definition}[Compatible Relation]
   We say that a binary relation in $\lambda$-terms, $R$, is compatible if it satisfies:
@@ -94,25 +97,65 @@ First, we introduce the $\lambda$-calculus and some basic knowledge around it. T
       \hypo{ (M_1, M_2) \in R }
       \infer1{ (M_1 N, M_2 N) \in R } 
     \end{prooftree}
-  \] 
+  \]
 \end{definition}
 
 \begin{definition}[$\alpha$-conversion]
+	Consider the following binary relation on $\lambda$-terms:
+	
+	\[
+		\lambda x . M =_\alpha \lambda y . M[x := y]. 
+		\label{eq:alpha} \tag{$\alpha$}
+	\]
+	
+	We define the $\alpha$-conversion as the least compatible, reflexive and transitive relation that satisfies \eqref{eq:alpha}.
 \end{definition}
 
 \begin{definition}[$\beta$-reduction]
+	Consider the following binary relation on $\lambda$-terms:
+	
+	\[
+		(\lambda x . M) N \to_\beta M[x := N]. \label{eq:beta} \tag{$\beta$}
+	\]
+	
+	We define the $\beta$-reduction as the least compatible relation that satisfies \eqref{eq:beta}.
 \end{definition}
 
-% examples , Reflexive Transitive closure of a relation , \alpha equality and \beta equality
 
 \subsection{Types}
 
 \cite{Barendregt2013}
 
-\begin{definition}[Simple Types]  
+\begin{definition}[Simple Types]
+	The simple types are defined by the following grammar:
+	
+	\[
+		A, B, C ::= p \ | \ A \supset B
+	\]
+	
+	where $p$ denotes any atomic variable, typically in the range of $p, q, r$.
+\end{definition}
+
+\begin{definition}[Context]
 \end{definition}
 
 \begin{definition}[Tipification Rules]
+	\[
+	\begin{prooftree}
+		\infer0{ x:A, \Gamma \vdash x:A } 
+	\end{prooftree}
+	\qquad
+	\begin{prooftree}
+		\hypo{ x:A, \Gamma \vdash M:B }
+		\infer1{ \Gamma \vdash \lambda x . M : A \supset B  } 
+	\end{prooftree}
+	\qquad
+	\begin{prooftree}
+		\hypo{ \Gamma \vdash M : A \supset B }
+		\hypo{ \Gamma \vdash N : A }	
+		\infer2{ \Gamma \vdash M N : B } 
+	\end{prooftree}
+	\]
 \end{definition}
 
 % ---
@@ -135,20 +178,22 @@ If we were to formalise such a system like the $\lambda$-calculus introduced abo
 
 The question that every similar definition imposes is the definition of the $var$ type. Following the usual pen and paper aproach, this type would be something similar to a subset of the string type, where a variable is just a placeholder for a name.
 
-Of course this is fine when dealing with pen and paper proofs and definitions. Even, we can take advantage of conventions, like the one referenced above by Barendregt. However, this is becomes rather exhausting  when it comes to rigorously defining all this syntactical aspects.
+Of course this is fine when dealing with pen and paper proofs and definitions. To simplify this, we can even take advantage of conventions, like the one referenced above by Barendregt. However, this variable definition can get rather exhausting  when it comes to rigorously define all this syntactical aspects.
 
+There are several alternatives found in the literature that can 
+
+% POPl Mark
 % falar de substituicoes ???
 
 \subsection{De Bruijn Syntax}
 
-% definicao rigorosa de syntax de Bruijn?
-
 In the 1970s, de Bruijn started working on the \textit{AUTOMATH} proof assistant and proposed a simplified syntax to deal with generic binders \cite{deBruijn}.
-This approach is claimed to be good for meta-lingual discussion and for the computer and computer programme. In contrast, this syntax is farther away from the human reader.
+This approach is claimed to be good for meta-lingual discussion and for the computer and computer programme. In contrast, this syntax is further away from the human reader.
 
 The main idea is to treat variables as indices (represented by natural numbers) and to interpret these indices as the distance to the respective binder.
+Therefore, we will call these $\lambda$-terms the nameless $\lambda$-terms.
 % In de Bruijn syntax for $\lambda$-terms, we only have one representative for the identity terms $\lambda x.x$, $\lambda y.y$, $\lambda z.z$ \dots, that is, $\lambda .0$.
-This way, we do not decide the names for the bound variables in a term - we are obliged to use the specific indices that bind a variable to a certain binder.
+% This way, we do not decide the names for the bound variables in a term - we are obliged to use the specific index that binds a variable to the wanted binder.
 
 \begin{definition}[nameless $\lambda$-terms]
   The nameless $\lambda$-terms are defined by the following grammar:
@@ -158,11 +203,13 @@ This way, we do not decide the names for the bound variables in a term - we are 
   where $i$ ranges over the natural numbers.
 \end{definition}
 
-\subsection{Explicit Substitutions and the Sigma Calculus}
+\begin{remark}
+	In this syntax there is no $\alpha$-conversion, since there is no freedom to choose the names of bound variables.
+\end{remark}
+
+\subsection{Explicit Substitutions the \textit{Autosubst} Library}
 
 
-
-\subsection{The \textit{Autosubst} Library}
 
 %%% Local Variables:
 %%% mode: LaTeX
