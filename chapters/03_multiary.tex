@@ -3,9 +3,48 @@
 
 \section{The Multiary Lambda Calculus ($\lambda m$)}
 
-% Syntax and Typification?
+\begin{definition}[$\lambda$m-terms]
+	The $\lambda$m-terms are defined by the following grammars:
+	
+	\begin{align*} 
+		t, u \ &::= \ x \ | \ \lambda x . t \ | \ t(u, l) \ \\
+		l      &::= \ []\  | \ u :: l
+	\end{align*}
+\end{definition}
+
 \subsection{A Sequent Calculus Fragment}
-% Type Preservation?
+
+\begin{definition}[Typing Rules for $\lambda$m-terms]
+	\[
+	\begin{prooftree}
+		\infer0[Var]{ x:A, \Gamma \vdash x:A } 
+	\end{prooftree}
+	\qquad
+	\begin{prooftree}
+		\hypo{ x:A, \Gamma \vdash t:B }
+		\infer1[Abs]{ \Gamma \vdash \lambda x . t : A \supset B  } 
+	\end{prooftree}
+	\]
+	\[
+	\begin{prooftree}
+		\hypo{ \Gamma \vdash t : A \supset B }
+		\hypo{ \Gamma \vdash u : A }
+		\hypo{ \Gamma ; B \vdash l : C }	
+		\infer3[mApp]{ \Gamma \vdash t(u, l) : C } 
+	\end{prooftree}
+	\]
+	\[
+	\begin{prooftree}
+		\infer0[Nil]{ \Gamma ; A \vdash []:A } 
+	\end{prooftree}
+	\qquad
+	\begin{prooftree}
+		\hypo{ \Gamma \vdash u:A }
+		\hypo{ \Gamma ; B \vdash l:C }
+		\infer2[Cons]{ \Gamma ; A \supset B \vdash  u::l : C } 
+	\end{prooftree}
+	\]
+\end{definition}
 
 \section{The Canonical Fragment ($\vec \lambda m$)}
 
