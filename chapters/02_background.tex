@@ -176,24 +176,29 @@ If we were to formalise such a system like the $\lambda$-calculus introduced abo
   | App (s: term) (t: term).
 \end{lstlisting}
 
-The question that every similar definition imposes is the definition of the $var$ type. Following the usual pen and paper aproach, this type would be something similar to a subset of the string type, where a variable is just a placeholder for a name.
+The question that every similar definition imposes is the definition of the $var$ type. Following the usual pen and paper approach, this type would be a subset of a string type, where a variable is just a placeholder for a name.
 
-Of course this is fine when dealing with pen and paper proofs and definitions. To simplify this, we can even take advantage of conventions, like the one referenced above by Barendregt. However, this variable definition can get rather exhausting  when it comes to rigorously define all this syntactical aspects.
+Of course this is fine when dealing with pen and paper proofs and definitions. To simplify this, we can even take advantage of conventions, like the one referenced above by Barendregt. 
+However, this variable definition can get rather exhausting  when it comes to rigorously define all this syntactical aspects and the substitution operation.
 
-There are several alternatives found in the literature that can 
+There are several alternatives described in the literature of mechanisation of meta-theory. 
+This topic of binding was even proposed in the POPLmark challenge as a way to discuss the potential of proof assistants.
+
+From the solutions available for the \textit{Coq} proof assistant, there was a library that stood out: \textit{AUTOSUBST}. 
+This library used a combination of de Bruijn indices and explicit substitutions to tackle this "problem".
 
 % POPl Mark
 % falar de substituicoes ???
 
-\subsection{De Bruijn Syntax}
+\subsection{De Bruijn Syntax and Substitution}
+
+\cite{deBruijn} \cite{AutosubstSchafer}
 
 In the 1970s, de Bruijn started working on the \textit{AUTOMATH} proof assistant and proposed a simplified syntax to deal with generic binders \cite{deBruijn}.
 This approach is claimed to be good for meta-lingual discussion and for the computer and computer programme. In contrast, this syntax is further away from the human reader.
 
 The main idea is to treat variables as indices (represented by natural numbers) and to interpret these indices as the distance to the respective binder.
 Therefore, we will call these $\lambda$-terms the nameless $\lambda$-terms.
-% In de Bruijn syntax for $\lambda$-terms, we only have one representative for the identity terms $\lambda x.x$, $\lambda y.y$, $\lambda z.z$ \dots, that is, $\lambda .0$.
-% This way, we do not decide the names for the bound variables in a term - we are obliged to use the specific index that binds a variable to the wanted binder.
 
 \begin{definition}[nameless $\lambda$-terms]
   The nameless $\lambda$-terms are defined by the following grammar:
@@ -204,12 +209,12 @@ Therefore, we will call these $\lambda$-terms the nameless $\lambda$-terms.
 \end{definition}
 
 \begin{remark}
-	In this syntax there is no $\alpha$-conversion, since there is no freedom to choose the names of bound variables.
+	Nameless $\lambda$-terms have no $\alpha$-conversion since there is no freedom to choose the names of bound variables.
 \end{remark}
 
-\subsection{Explicit Substitutions and the \textit{Autosubst} Library}
+But how does this syntax define capture-avoiding substitution?
 
-
+% \subsection{Explicit Substitutions and the \textit{Autosubst} Library}
 
 %%% Local Variables:
 %%% mode: LaTeX
