@@ -56,12 +56,12 @@ First, we introduce the $\lambda$-calculus and some basic knowledge around it. T
 
 \begin{remark}
   The previous informal definition lets us take advantage of a variable naming convention.
-  With this convention, the definition of substitution over $\lambda$-terms and meta-discussion of our syntax will be simplified.
-  After defining the substitution operation we may introduce later a better and formal definition of this $\alpha$-equality.
+  With this notion of $\alpha$-equality, the definition of substitution over $\lambda$-terms and meta-discussion of our syntax will be simplified.
+  After defining the substitution operation we may introduce a better and more formal definition of the $\alpha$-conversion.
 \end{remark}
 
 \begin{convention} 
-  We will use the \textit{variable convention} introduced in \cite{Barendregt1987}, using only $\lambda$-terms that are chosen (via $\alpha$-equality) to have bound variables with different names from free variables.
+  We will use the \textit{variable convention} introduced in \cite{Barendregt1987}. Every $\lambda$-term that we refer from now on is chosen (via $\alpha$-equality) to have bound variables with different names from free variables.
 \end{convention}
 
 \begin{definition}[Substitution]
@@ -130,30 +130,53 @@ First, we introduce the $\lambda$-calculus and some basic knowledge around it. T
 	The simple types are defined by the following grammar:
 	
 	\[
-		A, B, C ::= p \ | \ A \supset B
+		A, B, C ::= p \ | \ (A \supset B)
 	\]
 	
 	where $p$ denotes any atomic variable, typically in the range of $p, q, r$.
 \end{definition}
 
+\begin{notation}
+	We will assume the usual notation conventions on simple types:
+	
+	\begin{enumerate}
+		\item Outermost parenthesis are omitted.
+		\item Types associate to the right. Therefore, the type $A \supset (B \supset C)$ may often be written simply as $A \supset B \supset C$.
+	\end{enumerate}
+\end{notation}
+
 \begin{definition}[Context]
+	A context, $\Gamma, \Delta, \dots$, is a partial function from the variables of $\lambda$-terms to simple types.
 \end{definition}
 
+\begin{notation} \hfill
+	\begin{enumerate}
+		\item We may often think of the partial function of as the set of pairs $(x, A)$ written as $x:A$.
+		\item We will also simplify the set notation of contexts as follow:
+		\begin{align*}
+			            &\mapsto \{ \} \\
+			x:A         &\mapsto \{ x:A \} \\
+			x:A, \Gamma &\mapsto \{ x:A \} \cup \Gamma \\
+		\end{align*}
+	\end{enumerate}
+\end{notation}
+
 \begin{definition}[Typing Rules for $\lambda$-terms]
+	A type-assignment or sequent is a triple, $\Gamma \vdash M:A$, that is inductively defined by the following inference rules (or typing rules):
 	\[
 	\begin{prooftree}
-		\infer0{ x:A, \Gamma \vdash x:A } 
+		\infer0[Var]{ x:A, \Gamma \vdash x:A } 
 	\end{prooftree}
 	\qquad
 	\begin{prooftree}
 		\hypo{ x:A, \Gamma \vdash M:B }
-		\infer1{ \Gamma \vdash \lambda x . M : A \supset B  } 
+		\infer1[Abs]{ \Gamma \vdash \lambda x . M : A \supset B  } 
 	\end{prooftree}
 	\qquad
 	\begin{prooftree}
 		\hypo{ \Gamma \vdash M : A \supset B }
 		\hypo{ \Gamma \vdash N : A }	
-		\infer2{ \Gamma \vdash M N : B } 
+		\infer2[App]{ \Gamma \vdash M N : B } 
 	\end{prooftree}
 	\]
 \end{definition}
@@ -190,7 +213,7 @@ This library used a combination of de Bruijn indices and explicit substitutions 
 % POPl Mark
 % falar de substituicoes ???
 
-\subsection{De Bruijn Syntax and Substitution}
+\subsection{De Bruijn Syntax}
 
 \cite{deBruijn} \cite{AutosubstSchafer}
 
@@ -212,9 +235,9 @@ Therefore, we will call these $\lambda$-terms the nameless $\lambda$-terms.
 	Nameless $\lambda$-terms have no $\alpha$-conversion since there is no freedom to choose the names of bound variables.
 \end{remark}
 
-But how does this syntax define capture-avoiding substitution?
+\subsection{Explicit Substitutions}
 
-% \subsection{Explicit Substitutions and the \textit{Autosubst} Library}
+We refer to explicit substitutions when the substitution operation is part of our syntax calculus. Often substitutions are dealt at a meta level, but as we will want to ...
 
 %%% Local Variables:
 %%% mode: LaTeX
