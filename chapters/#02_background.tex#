@@ -73,8 +73,8 @@ These concepts are introduced and motivated by the task of formalising the $\lam
   \begin{enumerate}
   \item $x[x := N] = N$
   \item $y[x := N] = y \text{, with } x \neq y$
-  \item $(\lambda y . M_1)[x := N] = \lambda y . (M_1[x := N])$
-  \item $(M_1 M_2)[x := N] = (M_1[x := N]) (M_2[x := N])$
+  \item $(\lambda y . M_1)[x := N] = \lambda y . (M_1[x := N]$)
+  \item $(M_1 M_2)[x := N] = (M_1[x := N]) (M_2[x := N]$)
   \end{enumerate}
 \end{definition}
 
@@ -265,7 +265,7 @@ We can see these explicit substitutions as sequences of terms, $\sigma = (M_i)_{
 
 % \begin{definition}[Rewriting System of $\sigma$-calculus]
 \begin{definition}[Reductions over substitutions]
-
+  
 \end{definition}
 
 %%% Local Variables:

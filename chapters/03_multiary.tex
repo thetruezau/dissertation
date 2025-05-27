@@ -3,57 +3,168 @@
 
 \section{The Multiary Lambda Calculus ($\lambda m$)}
 
-\begin{definition}[$\lambda$m-terms]
-	The $\lambda$m-terms are defined by the following grammars:
-	
-	\begin{align*} 
-		t, u \ &::= \ x \ | \ \lambda x . t \ | \ t(u, l) \ \\
-		l      &::= \ []\  | \ u :: l
-	\end{align*}
+\begin{definition}[$\lambda m$-terms]
+  The $\lambda m$-terms are defined by the following grammar:
+  
+  \begin{align*} 
+    t, u \ &::= \ x \ | \ \lambda x . t \ | \ t(u, l) \ \\
+    l      &::= \ []\  | \ u :: l
+  \end{align*}
 \end{definition}
 
-\subsection{A Sequent Calculus Fragment}
+\begin{definition}[Concatenation of $\lambda m$-lists]
+  The concatenation of two $\lambda m$-lists, $l + l'$ is defined as follows:
 
-\begin{definition}[Typing Rules for $\lambda$m-terms]
-	\[
-	\begin{prooftree}
-		\infer0[Var]{ x:A, \Gamma \vdash x:A } 
-	\end{prooftree}
-	\qquad
-	\begin{prooftree}
-		\hypo{ x:A, \Gamma \vdash t:B }
-		\infer1[Abs]{ \Gamma \vdash \lambda x . t : A \supset B  } 
-	\end{prooftree}
-	\]
-	\[
-	\begin{prooftree}
-		\hypo{ \Gamma \vdash t : A \supset B }
-		\hypo{ \Gamma \vdash u : A }
-		\hypo{ \Gamma ; B \vdash l : C }	
-		\infer3[mApp]{ \Gamma \vdash t(u, l) : C } 
-	\end{prooftree}
-	\]
-	\[
-	\begin{prooftree}
-		\infer0[Nil]{ \Gamma ; A \vdash []:A } 
-	\end{prooftree}
-	\qquad
-	\begin{prooftree}
-		\hypo{ \Gamma \vdash u:A }
-		\hypo{ \Gamma ; B \vdash l:C }
-		\infer2[Cons]{ \Gamma ; A \supset B \vdash  u::l : C } 
-	\end{prooftree}
-	\]
+  \begin{enumerate}
+  \item $[] + l' = l'$
+  \item $(u::l) + l' = u::(l + l')$.
+  \end{enumerate}
+\end{definition}
+
+% a seguinte definicao e estranha mas vamos seguir
+
+\begin{definition}[Substitution for $\lambda m$-terms]
+  The substitution over a $\lambda m$-term is mutually defined with the substitution over a $\lambda m$-list as follows:
+  
+  \begin{enumerate}
+  \item $x[x := v] = v$
+  \item $y[x := v] = y \text{, with } x \neq y$
+  \item $(\lambda y . t)[x := v] = \lambda y . (t[x := v])$
+  \item $t(u, l)[x := v] = t[x := v](u[x := v], l[x := v])$
+
+  \item $([])[x := v] = []$
+  \item $(u::l)[x := v] = u[x := v] :: l[x := v]$.
+  \end{enumerate}
+\end{definition}
+
+\begin{definition}[Reduction rules for $\lambda m$-terms]  
+  \[
+    (\lambda x . t)(u, []) \to t[x := u]
+    \label{eq:ruleb1} \tag{$\beta_1$}
+  \]
+  \[
+    (\lambda x . t)(u, v::l) \to t[x := u](v, l)
+    \label{eq:ruleb2} \tag{$\beta_2$}
+  \]
+  \[
+    t(u, l)(u', l') \to t(u, l + (u'::l'))
+    \label{eq:ruleh} \tag{$h$}
+  \]
+\end{definition}
+
+\begin{definition}[Typing Rules for $\lambda m$-terms]
+  \[
+    \begin{prooftree}
+      \infer0[Var]{ x:A, \Gamma \vdash x:A } 
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ x:A, \Gamma \vdash t:B }
+      \infer1[Abs]{ \Gamma \vdash \lambda x . t : A \supset B  } 
+    \end{prooftree}
+  \]
+  \[
+    \begin{prooftree}
+      \hypo{ \Gamma \vdash t : A \supset B }
+      \hypo{ \Gamma \vdash u : A }
+      \hypo{ \Gamma ; B \vdash l : C }	
+      \infer3[mApp]{ \Gamma \vdash t(u, l) : C } 
+    \end{prooftree}
+  \]
+  \[
+    \begin{prooftree}
+      \infer0[Nil]{ \Gamma ; A \vdash []:A } 
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ \Gamma \vdash u:A }
+      \hypo{ \Gamma ; B \vdash l:C }
+      \infer2[Cons]{ \Gamma ; A \supset B \vdash  u::l : C } 
+    \end{prooftree}
+  \]
 \end{definition}
 
 \section{The Canonical Fragment ($\vec \lambda m$)}
 
 % Syntax and Typification?
-\subsection{???}
-% Type Preservation?
 
-\subsection{Conservativeness}
+\begin{definition}[$\vec \lambda m$-terms]
+  The $\vec \lambda m$-terms are defined by the following grammar:
+  
+  \begin{align*} 
+    t, u \ &::= \ x \ | \ \lambda x . t \ | \ x(u, l) \ | \ (\lambda x . t)(u, l) \\
+    l      &::= \ []\  | \ u :: l
+  \end{align*}
+\end{definition}
+
+\begin{definition}[Substitution for $\lambda m$-terms]
+  The substitution over a $\vec \lambda m$-term is mutually defined with the substitution over a $\vec \lambda m$-list as follows:
+  
+  \begin{enumerate}
+  \item $x[x := v] = v$
+  \item $y[x := v] = y \text{, with } x \neq y$
+  \item $(\lambda y . t)[x := v] = \lambda y . (t[x := v])$
+  \item $x(u, l)[x := v] = v @ (u[x := v], l[x := v])$
+  \item $y(u, l)[x := v] = y(u[x := v], l[x := v]) \text{, with } x \neq y$
+  \item $(\lambda y . t)(u, l)[x := v] = (\lambda y . t[x := v])(u[x := v], l[x := v])$    
+    
+  \item $([])[x := v] = []$
+  \item $(u::l)[x := v] = u[x := v] :: l[x := v]$.
+  \end{enumerate}
+\end{definition}
+
+\begin{definition}[Typing Rules for $\vec \lambda m$-terms]
+  \[
+    \begin{prooftree}
+      \infer0[Var]{ x:A, \Gamma \vdash x:A } 
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ x:A, \Gamma \vdash t:B }
+      \infer1[Abs]{ \Gamma \vdash \lambda x . t : A \supset B  } 
+    \end{prooftree}
+  \]
+  \[
+    \begin{prooftree}
+      \hypo{ \Gamma, x:A \supset B \vdash u:A}
+      \hypo{ \Gamma, x:A \supset B ; B \vdash l:C }	
+      \infer2[VarApp]{ \Gamma, x:A \supset B \vdash x(u, l) : C } 
+    \end{prooftree}
+  \]
+  \[
+    \begin{prooftree}
+      \hypo{ \Gamma, x:A \vdash t:B }
+      \hypo{ \Gamma \vdash u:A }
+      \hypo{ \Gamma ; B \vdash l : C }	
+      \infer3[LamApp]{ \Gamma \vdash (\lambda x . t)(u, l) : C } 
+    \end{prooftree}
+  \]
+  \[
+    \begin{prooftree}
+      \infer0[Nil]{ \Gamma ; A \vdash []:A } 
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ \Gamma \vdash u:A }
+      \hypo{ \Gamma ; B \vdash l:C }
+      \infer2[Cons]{ \Gamma ; A \supset B \vdash  u::l : C } 
+    \end{prooftree}
+  \]
+\end{definition}
+
+\section{Formalised Results}
+
+\begin{theorem}[Subject Reduction]
+\end{theorem}
+
+\begin{theorem}[Conservativeness]
+\end{theorem}
 
 \section{Comments on the Formalisation}
 \subsection{A Nested Inductive Type}
 \subsection{Formalising a Subsystem}
+
+%%% Local Variables:
+%%% mode: LaTeX
+%%% TeX-master: "../dissertation"
+%%% End:
