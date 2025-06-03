@@ -186,9 +186,9 @@
 \section{Formalised Results}
 
 \begin{theorem}[Subject Reduction]
-  Given $\lambda m$-terms $t$ and $u$, we have the follwing:
+  Given $\lambda m$-terms $t$ and $t'$, we have the follwing:
   \[
-    \Gamma \vdash t : A \implies \Gamma \vdash t[x := u] : A
+    \Gamma \vdash t : A \ \land \ t \to t' \implies \Gamma \vdash t' : A
   \]
 \end{theorem}
 
