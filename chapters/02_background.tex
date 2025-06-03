@@ -227,7 +227,8 @@ In the 1970s, de Bruijn started working on the \textsc{Automath} proof assistant
 This approach is claimed to be good for meta-lingual discussion and for the computer and computer programme. In contrast, this syntax is further away from the human reader.
 
 The main idea is to treat variables as indices (represented by natural numbers) and to interpret these indices as the distance to the respective binder.
-\sout{Therefore, we will call these $\lambda$-terms the nameless $\lambda$-terms.}
+Therefore, we will call these terms nameless. 
+% $\lambda$-terms the nameless $\lambda$-terms.
 
 \begin{definition}[nameless $\lambda$-terms]
   The nameless $\lambda$-terms are defined by the following grammar:
@@ -254,28 +255,59 @@ Previously, a substitution  was a term that was going to replace some free varia
 A parallel substitution generalizes this concept for every free variable. 
 
 Now, we present a calculus with explicit parallel substitutions.
-We can think of a parallel substitution as sequences of terms, $\sigma = (M_i)_{i \in \mathbb{N}}$, where the term $M_i$ will replace the variable with index $i$.
+We can think of a parallel substitution as a sequence of terms, $\sigma = (M_i)_{i \in \mathbb{N}}$, where the term $M_i$ will replace the variable with index $i$.
 
 
 \begin{definition}[$\lambda \sigma$-terms]
   The (nameless) $\lambda \sigma$-terms are defined by the following grammar:  
   \begin{align*}
-    M, N         &::= \ i \ | \ (\lambda . M) \ | \ (M N) \ | \ M[\sigma] \\
+    M, N         &::= \ 0 \ | \ \lambda . M \ | \ M N \ | \ M[\sigma] \\
     \sigma, \tau &::= \ id \ | \ \uparrow \ | \ M \cdot \sigma \ | \ \sigma \circ \tau
   \end{align*}
 \end{definition}
 
-% \begin{definition}[Rewriting System of $\sigma$-calculus]
-\begin{definition}[Reductions over substitutions]
+\begin{remark} \hfill
+	\begin{enumerate}
+		\item $id$ is the identity substitution, this is, $id = (i)_{i \in \mathbb{N}}$,
+		\item $\uparrow$ is the successor substitution, this is, $\uparrow = (i+1)_{i \in \mathbb{N}}$,
+		\item $M \cdot \sigma$ is the cons substitution, this is, $M \cdot \sigma = (M, N_0, N_1, N_2, \dots)$ where $\sigma = (N_i)_{i \in \mathbb{N}}$,
+		\item $\sigma \circ \tau$ is the composition substitution that satisfies
+		\[ M[\sigma \circ \tau] = M[\sigma][\tau], \]
+		\item $M[\sigma]$ is the instantiation of the parallel substitution $\sigma$ over the term $M$
+		\item We only need the index 0 in our term syntax, as we can represent every index $i$ as $0[\underbrace{\uparrow \circ \dots \circ \uparrow}_{\text{$i$ times}}]$.
+	\end{enumerate}
+\end{remark}
 
+% \begin{definition}[Rewriting System of $\sigma$-calculus]
+Having an explicit notation for substitution, we can define the $\beta$-reduction step as 
+\[ (\lambda . M) N \to_\beta M[N \cdot id]. \]
+
+This is almost what we want. 
+In most cases, we want to calculate our term $M[N \cdot id]$ modulo explicit substitutions, recovering the expected result for the substitution. We want to describe reduction rules for substitutions.
+	
+\begin{definition}[Rewriting rules for substitutions]
+	\begin{align*}
+		& 0[id] = 0 \qquad
+		& id \circ s = s \\
+		& 0[M \cdot \sigma] = M \qquad
+		& \uparrow \circ \ id = \ \uparrow \\
+		& (M N)[\sigma] = (M[\sigma])(N[\sigma]) \qquad
+		& \uparrow \circ \ (M \cdot \sigma) = \sigma \\
+		& (\lambda . M)[\sigma] = \lambda . (M[0 \cdot (\sigma \ \circ \uparrow)]) \qquad
+		& (M \cdot \sigma) \circ \tau = M[\tau] \cdot (\sigma \circ \tau) \\
+		& M[\sigma \circ \tau] = M[\sigma][\tau] \qquad
+		& (\sigma_1 \circ \sigma_2) \circ \sigma_3 = \sigma_1 \circ (\sigma_2 \circ \sigma_3)
+	\end{align*}
 \end{definition}
+
+In \cite{Abadi}, it is proved that these rules provide a complete rewriting system to eliminate terms of the type $M[\sigma]$.
 
 \subsection{The Autosubst Library}
 \cite{AutosubstSchafer}
 
 The \textsc{Autosubst} library for the \textsc{Coq} proof assistant simplifies the formalisation of syntax with binders.
 It provides tactics to define substitutions over an inductive definition of a nameless syntax.
-Furthermore, it also has some automation available for proofs dealing with substitution lemmas and similar rewritings (?).
+It also offers some automation for proofs dealing with substitution lemmas.
 
 Taking the naive example of an inductive definition of the $\lambda$-terms in \textsc{Coq}, we now display a nameless definition of using \textsc{Autosubst}.
 
@@ -286,7 +318,7 @@ Taking the naive example of an inductive definition of the $\lambda$-terms in \t
   | App (s: term ) (t: term ) .
 \end{lstlisting}
 
-Now, to invoke the \textsc{Autosubst} definitions, we need the following lines.
+Now, to invoke the \textsc{Autosubst} definitions, we define the following instances.
 
 \begin{lstlisting}[language=Coq]
   Instance Ids_term : Ids term. derive. Defined.
@@ -303,7 +335,7 @@ These lines derive the instantiation of a substitution over a term.
 \end{enumerate}
 
 Finally, there is also the proof of the substitution lemmas. 
-Here, we see the power of this library: this process is done automatically, using the defined $derive$ tactic.
+Here, we see the power of this library: this process is done automatically, using the provided $derive$ tactic.
 
 %%% Local Variables:
 %%% mode: LaTeX
