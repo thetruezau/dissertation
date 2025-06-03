@@ -35,13 +35,12 @@ These concepts are introduced and motivated by the task of formalising the $\lam
 \end{notation}
 
 \begin{definition}[Free variables]
-  For every $\lambda$-term $M$, we recursively define the set of free variables in $M$, $FV(M)$, as follows:
-  
-  \begin{enumerate}
-  \item $FV( x ) = \{ x \}$
-  \item $FV( \lambda x . M ) = FV(M) - \{ x \}$
-  \item $FV( M N ) = FV(M) \cup FV(N)$
-  \end{enumerate}
+  For every $\lambda$-term $M$, we recursively define the set of free variables in $M$, $FV(M)$, as follows:  
+  \begin{align*}
+    & FV( x ) = \{ x \}, \\
+    & FV( \lambda x . M ) = FV(M) - \{ x \}, \\
+    & FV( M N ) = FV(M) \cup FV(N).
+  \end{align*}
 
   When a variable occurring in a term is not free it is said to be bound.
 \end{definition}
@@ -69,13 +68,12 @@ These concepts are introduced and motivated by the task of formalising the $\lam
 
 \begin{definition}[Substitution]
   For every $\lambda$-term $M$, we recursively define the substitution of the free variable $x$ by $N$ in $M$, $M[x := N]$, as follows:
-  
-  \begin{enumerate}
-  \item $x[x := N] = N$
-  \item $y[x := N] = y \text{, with } x \neq y$
-  \item $(\lambda y . M_1)[x := N] = \lambda y . (M_1[x := N])$
-  \item $(M_1 M_2)[x := N] = (M_1[x := N]) (M_2[x := N])$
-  \end{enumerate}
+  \begin{align*}
+    & x[x := N] = N; \\
+    & y[x := N] = y \text{, with } x \neq y; \\
+    & (\lambda y . M_1)[x := N] = \lambda y . (M_1[x := N]); \\
+    & (M_1 M_2)[x := N] = (M_1[x := N]) (M_2[x := N]).
+  \end{align*}
 \end{definition}
 
 \begin{remark}
@@ -83,8 +81,7 @@ These concepts are introduced and motivated by the task of formalising the $\lam
 \end{remark}
 
 \begin{definition}[Compatible Relation]
-  We say that a binary relation in $\lambda$-terms, $R$, is compatible if it satisfies:
-
+  We say that a binary relation on $\lambda$-terms, $R$, is compatible if it satisfies:
   \[
     \begin{prooftree}
       \hypo{ (M_1, M_2) \in R }
@@ -140,8 +137,7 @@ These concepts are introduced and motivated by the task of formalising the $\lam
 \end{definition}
 
 \begin{notation}
-  We will assume the usual notation conventions on simple types:
-  
+  We will assume the usual notation conventions on simple types:  
   \begin{enumerate}
   \item Outermost parenthesis are omitted.
   \item Types associate to the right. Therefore, the type $A \supset (B \supset C)$ may often be written simply as $A \supset B \supset C$.
@@ -155,11 +151,11 @@ These concepts are introduced and motivated by the task of formalising the $\lam
 \begin{notation} \hfill
   \begin{enumerate}
   \item We may often think of the partial function of as the set of pairs $(x, A)$ written as $x:A$.
-  \item We will also simplify the set notation of contexts as follow:
+  \item We will also simplify the set notation of contexts as follows:
     \begin{align*}
       &\mapsto \{ \} \\
       x:A         &\mapsto \{ x:A \} \\
-      x:A, \Gamma &\mapsto \{ x:A \} \cup \Gamma \\
+      x:A, \Gamma &\mapsto \{ x:A \} \cup \Gamma
     \end{align*}
   \end{enumerate}
 \end{notation}
@@ -193,7 +189,8 @@ We will follow assuming a basic knowledge on \textit{Coq} and its syntax to defi
 
 \subsection{How to Denote Variables?}
 
-If we were to formalise such a system like the $\lambda$-calculus introduced above, we would probably create an inductive type like the following, in \textit{Coq}.
+% If we were to formalise such a system like the $\lambda$-calculus introduced above, we would probably create an inductive type like the following, in \textit{Coq}.
+Formalising the $\lambda$-calculus in \textit{Coq} would generate an inductive definition similar to:
 
 \begin{lstlisting}[language=Coq]
   Inductive term : Type :=
@@ -204,14 +201,15 @@ If we were to formalise such a system like the $\lambda$-calculus introduced abo
 
 The question that every similar definition imposes is the definition of the $var$ type. Following the usual pen and paper approach, this type would be a subset of a string type, where a variable is just a placeholder for a name.
 
-Of course this is fine when dealing with pen and paper proofs and definitions. To simplify this, we can even take advantage of conventions, like the one referenced above by Barendregt. 
+Of course this is fine when dealing with pen and paper proofs and definitions. To simplify this, we can even take advantage of conventions, like the one referenced above (by Barendregt). 
 However, this variable definition can get rather exhausting  when it comes to rigorously define all this syntactical aspects and substitution operations.
 
 There are several alternatives described in the literature of mechanisation of meta-theory. 
-This topic of binding was even proposed in the POPLmark challenge \cite{POPLmark} as a way to discuss the potential of proof assistants.
+% This topic of binding was \sout{even} proposed in the POPLmark challenge \cite{POPLmark} as a way to discuss the potential of proof assistants.
+The POPLmark challenge \cite{POPLmark} points to the topic of binding as a way to discuss the potential of modern proof assistants.
 
 % Among the available solutions for the \textit{Coq} proof assistant, the \textit{AUTOSUBST} library .
-The \textit{AUTOSUBST} library for the \textit{Coq} proof assistant stood out as a great solution for our case. 
+The \textsc{Autosubst} library for the \textsc{Coq} proof assistant stood out as a great solution for our case. 
 This library uses a combination of de Bruijn indices and explicit substitutions to \sout{tackle this "problem"}.
 
 % POPl Mark
@@ -221,7 +219,7 @@ This library uses a combination of de Bruijn indices and explicit substitutions 
 
 \cite{deBruijn} \cite{AutosubstSchafer}
 
-In the 1970s, de Bruijn started working on the \textit{AUTOMATH} proof assistant and proposed a simplified syntax to deal with generic binders \cite{deBruijn}.
+In the 1970s, de Bruijn started working on the \textsc{Automath} proof assistant and proposed a simplified syntax to deal with generic binders \cite{deBruijn}.
 This approach is claimed to be good for meta-lingual discussion and for the computer and computer programme. In contrast, this syntax is further away from the human reader.
 
 The main idea is to treat variables as indices (represented by natural numbers) and to interpret these indices as the distance to the respective binder.
@@ -251,12 +249,11 @@ Having a reserved syntax for substitutions motivates us to generalise this notio
 Previously, the substitution object was a term that was going to take the place of some free variable.
 A parallel substitution generalizes this concept to replace every free variable. 
 
-Now, we present a calculus with explicit substitutions.
-We can see these explicit substitutions as sequences of terms, $\sigma = (M_i)_{i \in \mathbb{N}}$, where the term $M_i$ will replace the index $i$.
+Now, we present a calculus with explicit parallel substitutions.
+We can see these explicit substitutions as sequences of terms, $\sigma = (M_i)_{i \in \mathbb{N}}$, where the term $M_i$ will replace the variable with index $i$.
 
 \begin{definition}[$\lambda \sigma$-terms]
-  The (nameless) $\lambda \sigma$-terms are defined by the following grammar:
-  
+  The (nameless) $\lambda \sigma$-terms are defined by the following grammar:  
   \begin{align*}
     M, N         &::= \ i \ | \ (\lambda . M) \ | \ (M N) \ | \ M[\sigma] \\
     \sigma, \tau &::= \ id \ | \ \uparrow \ | \ M \cdot \sigma \ | \ \sigma \circ \tau
@@ -267,6 +264,41 @@ We can see these explicit substitutions as sequences of terms, $\sigma = (M_i)_{
 \begin{definition}[Reductions over substitutions]
 
 \end{definition}
+
+\subsection{The Autosubst Library}
+\cite{AutosubstSchafer}
+
+The \textsc{Autosubst} library for the \textsc{Coq} proof assistant simplifies the formalisation of syntax with binders.
+It provides tactics to define substitutions over an inductive definition of a nameless syntax.
+Furthermore, it also has some automation available for proofs dealing with substitution lemmas and similar rewritings (?).
+
+Taking the naive example of an inductive definition of the $\lambda$-terms in \textsc{Coq}, we now display a nameless definition of using \textsc{Autosubst}.
+
+\begin{lstlisting}[language=Coq]
+  Inductive term: Type :=
+  | Var (x: var )
+  | Lam (t: {bind term} )
+  | App (s: term ) (t: term ) .
+\end{lstlisting}
+
+Now, to invoke the \textsc{Autosubst} definitions, we need the following lines.
+
+\begin{lstlisting}[language=Coq]
+  Instance Ids_term : Ids term. derive. Defined.
+  Instance Rename_term : Rename term. derive. Defined.
+  Instance Subst_term : Subst term. derive. Defined.
+  Instance SubstLemmas_term : SubstLemmas term. derive. Defined.
+\end{lstlisting}
+
+These lines derive the instantiation of a substitution over a term.
+\begin{enumerate}
+\item Defining the function that maps every index into the corresponding variable term ($i \mapsto (Var \ i)$).
+\item Defining the recursive function that instantiates a variable renaming over a term.
+\item Defining the recursive function that instantiates a parallel substitution over a term (using the already defined renamings).
+\end{enumerate}
+
+Finally, there is also the proof of the substitution lemmas. 
+Here, we see the power of this library: this process is done automatically, using the defined $derive$ tactic.
 
 %%% Local Variables:
 %%% mode: LaTeX

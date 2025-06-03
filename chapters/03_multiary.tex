@@ -4,8 +4,7 @@
 \section{The Multiary Lambda Calculus ($\lambda m$)}
 
 \begin{definition}[$\lambda m$-terms]
-  The $\lambda m$-terms are defined by the following grammar:
-  
+  The $\lambda m$-terms are defined by the following grammar:  
   \begin{align*} 
     t, u \ &::= \ x \ | \ \lambda x . t \ | \ t(u, l) \ \\
     l      &::= \ []\  | \ u :: l
@@ -13,28 +12,23 @@
 \end{definition}
 
 \begin{definition}[Concatenation of $\lambda m$-lists]
-  The concatenation of two $\lambda m$-lists, $l + l'$ is defined as follows:
-
-  \begin{enumerate}
-  \item $[] + l' = l'$
-  \item $(u::l) + l' = u::(l + l')$.
-  \end{enumerate}
+  The concatenation of two $\lambda m$-lists, $l + l'$, is defined as follows:
+  \begin{align*}
+  & [] + l' = l', \\
+  & (u::l) + l' = u::(l + l').
+  \end{align*}
 \end{definition}
 
-% a seguinte definicao e estranha mas vamos seguir
-
 \begin{definition}[Substitution for $\lambda m$-terms]
-  The substitution over a $\lambda m$-term is mutually defined with the substitution over a $\lambda m$-list as follows:
-  
-  \begin{enumerate}
-  \item $x[x := v] = v$
-  \item $y[x := v] = y \text{, with } x \neq y$
-  \item $(\lambda y . t)[x := v] = \lambda y . (t[x := v])$
-  \item $t(u, l)[x := v] = t[x := v](u[x := v], l[x := v])$
-
-  \item $([])[x := v] = []$
-  \item $(u::l)[x := v] = u[x := v] :: l[x := v]$.
-  \end{enumerate}
+  The substitution over a $\lambda m$-term is mutually defined with the substitution over a $\lambda m$-list as follows:  
+  \begin{align*}
+  & x[x := v] = v ; \\
+  & y[x := v] = ya \text{, with } x \neq y ; \\
+  & (\lambda y . t)[x := v] = \lambda y . (t[x := v]) ; \\
+  & t(u, l)[x := v] = t[x := v](u[x := v], l[x := v]) ; \\    
+  & ([])[x := v] = [] ; \\ 
+  & (u::l)[x := v] = u[x := v] :: l[x := v] .
+  \end{align*}
 \end{definition}
 
 \begin{definition}[Reduction rules for $\lambda m$-terms]  
@@ -51,6 +45,44 @@
     \label{eq:ruleh} \tag{$h$}
   \]
 \end{definition}
+
+\begin{definition}[Compatible Relation]
+  Let $R$ and $R'$ be two binary relations on $\lambda m$-terms and $\lambda m$-lists respectively.
+  We say they are compatible when they satisfy:
+  \[
+    \begin{prooftree}
+      \hypo{ (t, t') \in R }
+      \infer1{ (\lambda x . t, \lambda x . t') \in R } 
+    \end{prooftree}
+    \quad \ \
+    \begin{prooftree}
+      \hypo{ (t, t') \in R }
+      \infer1{ (t(u, l), t'(u, l)) \in R } 
+    \end{prooftree}
+    \quad \ \
+    \begin{prooftree}
+      \hypo{ (u, u') \in R }
+      \infer1{ (t(u, l), t(u', l)) \in R } 
+    \end{prooftree}
+    \quad \ \
+    \begin{prooftree}
+      \hypo{ (l, l') \in R' }
+      \infer1{ (t(u, l), t(u, l')) \in R } 
+    \end{prooftree}
+  \]
+  \[
+    \begin{prooftree}
+      \hypo{ (u, u') \in R }
+      \infer1{ (u::l, u'::l) \in R' } 
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ (l, l') \in R' }
+      \infer1{ (u::l, u::l') \in R' } 
+    \end{prooftree}
+  \]
+\end{definition}
+
 
 \begin{definition}[Typing Rules for $\lambda m$-terms]
   \[
@@ -100,17 +132,16 @@
 \begin{definition}[Substitution for $\lambda m$-terms]
   The substitution over a $\vec \lambda m$-term is mutually defined with the substitution over a $\vec \lambda m$-list as follows:
   
-  \begin{enumerate}
-  \item $x[x := v] = v$
-  \item $y[x := v] = y \text{, with } x \neq y$
-  \item $(\lambda y . t)[x := v] = \lambda y . (t[x := v])$
-  \item $x(u, l)[x := v] = v @ (u[x := v], l[x := v])$
-  \item $y(u, l)[x := v] = y(u[x := v], l[x := v]) \text{, with } x \neq y$
-  \item $(\lambda y . t)(u, l)[x := v] = (\lambda y . t[x := v])(u[x := v], l[x := v])$    
-    
-  \item $([])[x := v] = []$
-  \item $(u::l)[x := v] = u[x := v] :: l[x := v]$.
-  \end{enumerate}
+  \begin{align*}
+  & x[x := v] = v ; \\
+  & y[x := v] = y \text{, with } x \neq y ; \\
+  & (\lambda y . t)[x := v] = \lambda y . (t[x := v]) ; \\
+  & x(u, l)[x := v] = v @ (u[x := v], l[x := v]) ; \\
+  & y(u, l)[x := v] = y(u[x := v], l[x := v]) \text{, with } x \neq y ; \\
+  & (\lambda y . t)(u, l)[x := v] = (\lambda y . t[x := v])(u[x := v], l[x := v]) ; \\
+  & ([])[x := v] = [] ; \\
+  & (u::l)[x := v] = u[x := v] :: l[x := v] .
+  \end{align*}
 \end{definition}
 
 \begin{definition}[Typing Rules for $\vec \lambda m$-terms]
@@ -155,14 +186,36 @@
 \section{Formalised Results}
 
 \begin{theorem}[Subject Reduction]
+  Given $\lambda m$-terms $t$ and $u$, we have the follwing:
+  \[
+    \Gamma \vdash t : A \implies \Gamma \vdash t[x := u] : A
+  \]
 \end{theorem}
 
 \begin{theorem}[Conservativeness]
+  Given $\vec \lambda m$-terms $t$ and $t'$, we have the follwing:
+  \[
+    t \to^{*}_{\vec \lambda m} t' \Longleftrightarrow
+    t \to^{*}_{\lambda m} t'
+  \]
 \end{theorem}
 
 \section{Comments on the Formalisation}
+
 \subsection{A Nested Inductive Type}
+\begin{itemize}
+\item AUTOSUBST excavation for support
+\item induction principle and further proofs
+\item generalization or specification?
+\end{itemize}
+
 \subsection{Formalising a Subsystem}
+
+\begin{itemize}
+\item Carrgying a predicate
+\item Subset types in Coq
+\item A self contained representation
+\end{itemize}
 
 %%% Local Variables:
 %%% mode: LaTeX

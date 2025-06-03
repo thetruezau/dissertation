@@ -40,11 +40,19 @@
 % \usepackage{algorithm}
 % \usepackage{algpseudocode}
 \usepackage{fancyhdr}
+
 % \usepackage{minted}
-\usepackage{listings}
 \usepackage[inline]{enumitem}
 \usepackage[normalem]{ulem}
+
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily,
+  frame=shadowbox,
+}
+
 \usepackage{ebproof}
+\usepackage{tikz-cd}
 
 % Definitions, Lemmas and Theorems
 \newtheorem*{theorem}{Theorem}
@@ -135,15 +143,15 @@
         Bind, Delimit, Definition, Let, Ltac, Fixpoint, CoFixpoint, Add,
         Morphism, Relation, Implicit, Arguments, Unset, Contextual,
         Strict, Prenex, Implicits, Inductive, CoInductive, Record,
-        Structure, Canonical, Coercion, Context, Class, Global, Instance,
+        Structure, Coercion, Context, Class, Global, Instance,
         Program, Infix, Theorem, Lemma, Corollary, Proposition, Fact,
         Remark, Example, Proof, Goal, Save, Qed, Defined, Hint, Resolve,
         Rewrite, View, Search, Show, Print, Printing, All, Eval, Check,
         Projections, inside, outside, Def},
     % Gallina
     morekeywords=[2]{forall, exists, exists2, fun, fix, cofix, struct,
-        match, with, end, as, in, return, let, if, is, then, else, for, of,
-        nosimpl, when},
+      match, with, end, as, in, return, let, if, is, then, else, for, of, using,
+      nosimpl, when},
     % Sorts
     morekeywords=[3]{Type, Prop, Set, true, false, option},
     % Various tactics, some are std Coq subsumed by ssr, for the manual purpose
@@ -189,7 +197,7 @@
     % Style for sorts keywords
     keywordstyle=[3]{\ttfamily\color{ltblue}},
     % Style for tactics keywords
-    keywordstyle=[4]{\ttfamily\color{dkblue}},
+    keywordstyle=[4]{\ttfamily\color{blue}},
     % Style for terminators keywords
     keywordstyle=[5]{\ttfamily\color{dkred}},
     %Style for iterators
@@ -200,6 +208,8 @@
     commentstyle={\ttfamily\color{dkgreen}},
     %moredelim=**[is][\ttfamily\color{red}]{/&}{&/},
     literate=
+    {lambda}{{$\lambda$}}1
+    {lambdac}{{$\lambda c$}}1
     {\\forall}{{\color{dkgreen}{$\forall\;$}}}1
     {\\exists}{{$\exists\;$}}1
     {<-}{{$\leftarrow\;$}}1
@@ -221,7 +231,8 @@
     {\\mapsto}{{$\mapsto\;$}}1
     {\\hline}{{\rule{\linewidth}{0.5pt}}}1
     %
-}[keywords,comments,strings]
+  }[keywords,comments,strings]
+
 
 % *******************************************************************
 \begin{document}

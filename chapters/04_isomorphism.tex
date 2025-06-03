@@ -1,2 +1,22 @@
 \chapter{The Isomorphic Fragment of Lambda Calculus in $\lambda m$}
 \label{c:isomorphism}
+
+% https://q.uiver.app/#q=WzAsNixbMiwyLCJcXGJveGVke1xcdmVjIFxcbGFtYmRhIG19Il0sWzIsNCwiXFxib3hlZHtcXHNtYWxse1xcYmV0YSBoLW5mc319Il0sWzAsMiwiXFxib3hlZFxcbGFtYmRhIl0sWzAsNCwiXFxib3hlZHtcXHNtYWxse1xcYmV0YS1uZnN9fSJdLFszLDBdLFszLDEsIlxcYm94ZWR7XFxsYW1iZGEgbX0iXSxbMCwxLCJcXGRvd25hcnJvd197XFxiZXRhJ30iLDFdLFsyLDMsIlxcZG93bmFycm93X1xcYmV0YSIsMV0sWzIsMCwiXFxjb25nIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn19fV0sWzMsMSwiXFxjb25nIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn19fV0sWzUsMCwiXFxkb3duYXJyb3dfaCIsMV0sWzUsMSwiXFxkb3duYXJyb3dfe1xcYmV0YSBofSIsMSx7ImxhYmVsX3Bvc2l0aW9uIjo0MCwib2Zmc2V0IjotMX1dXQ==
+\[\begin{tikzcd}
+	&&& {} \\
+	&&& {\boxed{\lambda m}} \\
+	{\boxed\lambda} && {\boxed{\vec \lambda m}} \\
+	\\
+	{\boxed{\small{\beta-nfs}}} && {\boxed{\small{\beta h-nfs}}}
+	\arrow["{\downarrow_h}"{description}, from=2-4, to=3-3]
+	\arrow["{\downarrow_{\beta h}}"{description, pos=0.4}, shift left, from=2-4, to=5-3]
+	\arrow["\cong"{description}, <->, from=3-1, to=3-3]
+	\arrow["{\downarrow_\beta}"{description}, from=3-1, to=5-1]
+	\arrow["{\downarrow_{\beta'}}"{description}, from=3-3, to=5-3]
+	\arrow["\cong"{description}, <->, from=5-1, to=5-3]
+\end{tikzcd}\]
+
+%%% Local Variables:
+%%% mode: LaTeX
+%%% TeX-master: "../dissertation"
+%%% End:
