@@ -121,6 +121,7 @@ These concepts are introduced and motivated by the task of formalising the $\lam
   We define the $\beta$-reduction as the least compatible relation that satisfies \eqref{eq:beta}.
 \end{definition}
 
+% ---
 
 \subsection{Types}
 
@@ -137,7 +138,7 @@ These concepts are introduced and motivated by the task of formalising the $\lam
 \end{definition}
 
 \begin{notation}
-  We will assume the usual notation conventions on simple types:  
+  We will assume the usual notation conventions on simple types. 
   \begin{enumerate}
   \item Outermost parenthesis are omitted.
   \item Types associate to the right. Therefore, the type $A \supset (B \supset C)$ may often be written simply as $A \supset B \supset C$.
@@ -184,8 +185,11 @@ These concepts are introduced and motivated by the task of formalising the $\lam
 
 \section{Mechanising Meta-theory in \textit{Coq}}
 
+Having introduced the ordinary $\lambda$-calculus, we take it as an object of formalisation.
+It helps motivating the main decisions behind our mechanisations.
+
 The formalisation we aim at is dependent on the theory provided by the \textit{Coq} proof assistant - the Calculus of Inductive Constructions.
-We will follow assuming a basic knowledge on \textit{Coq} and its syntax to define inductive types and proof techniques.
+We will follow assuming a basic knowledge on \textit{Coq} and its syntax. % to define inductive types and proof techniques.
 
 \subsection{How to Denote Variables?}
 
@@ -206,11 +210,11 @@ However, this variable definition can get rather exhausting  when it comes to ri
 
 There are several alternatives described in the literature of mechanisation of meta-theory. 
 % This topic of binding was \sout{even} proposed in the POPLmark challenge \cite{POPLmark} as a way to discuss the potential of proof assistants.
-The POPLmark challenge \cite{POPLmark} points to the topic of binding as a way to discuss the potential of modern proof assistants.
+The POPLmark challenge \cite{POPLmark} points to the topic of binding as central for discussing the potential of modern-day proof assistants.
 
 % Among the available solutions for the \textit{Coq} proof assistant, the \textit{AUTOSUBST} library .
 The \textsc{Autosubst} library for the \textsc{Coq} proof assistant stood out as a great solution for our case. 
-This library uses a combination of de Bruijn indices and explicit substitutions to \sout{tackle this "problem"}.
+This library uses a combination of de Bruijn indices and explicit parallel substitutions to \sout{tackle this "problem"}.
 
 % POPl Mark
 % falar de substituicoes ???
@@ -228,7 +232,7 @@ The main idea is to treat variables as indices (represented by natural numbers) 
 \begin{definition}[nameless $\lambda$-terms]
   The nameless $\lambda$-terms are defined by the following grammar:
 
-  \[ M, N \ ::= \ i \ | \ (\lambda . M) \ | \ (M N) \]
+  \[ M, N \ ::= \ i \ | \ \lambda . M \ | \ M N \]
 
   where $i$ ranges over the natural numbers.
 \end{definition}
@@ -243,14 +247,15 @@ The main idea is to treat variables as indices (represented by natural numbers) 
 
 We refer to explicit substitutions \cite{Abadi} when the substitution operation is part of the syntax calculus.
 Often, substitutions are dealt at a meta level.
-However, a definition of capture-avoiding substitution over nameless $\lambda$-terms will require some manipulations over these explicit objects \cite{deBruijn}.
+However, a definition of capture-avoiding substitution over nameless $\lambda$-terms will require manipulations over substitution objects \cite{deBruijn}.
 
-Having a reserved syntax for substitutions motivates us to generalise this notion.
-Previously, the substitution object was a term that was going to take the place of some free variable.
-A parallel substitution generalizes this concept to replace every free variable. 
+Furthermore, having a reserved syntax for substitution helps us generalising this notion.
+Previously, a substitution  was a term that was going to replace some free variable.
+A parallel substitution generalizes this concept for every free variable. 
 
 Now, we present a calculus with explicit parallel substitutions.
-We can see these explicit substitutions as sequences of terms, $\sigma = (M_i)_{i \in \mathbb{N}}$, where the term $M_i$ will replace the variable with index $i$.
+We can think of a parallel substitution as sequences of terms, $\sigma = (M_i)_{i \in \mathbb{N}}$, where the term $M_i$ will replace the variable with index $i$.
+
 
 \begin{definition}[$\lambda \sigma$-terms]
   The (nameless) $\lambda \sigma$-terms are defined by the following grammar:  
