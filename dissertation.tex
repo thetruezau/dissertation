@@ -34,12 +34,16 @@
 \usepackage{subcaption}
 \usepackage[title]{appendix}
 % \usepackage{multico}
+
+\usepackage{beton}
+
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amssymb}
 % \usepackage{algorithm}
 % \usepackage{algpseudocode}
 \usepackage{fancyhdr}
+\usepackage{comment}
 
 % \usepackage{minted}
 \usepackage[inline]{enumitem}
@@ -54,9 +58,11 @@
 \usepackage{ebproof}
 \usepackage{tikz-cd}
 
+\input{macros}
+
 % Definitions, Lemmas and Theorems
-\newtheorem*{theorem}{Theorem}
-\newtheorem*{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
 
 \newtheorem*{definition}{Definition}
 \newtheorem*{notation}{Notation}
@@ -191,7 +197,7 @@
     % Style for (listings') identifiers
     identifierstyle={\ttfamily\color{black}},
     % Style for declaration keywords
-    keywordstyle=[1]{\ttfamily\color{dkviolet}},
+    keywordstyle=[1]{\ttfamily\color{violet}},
     % Style for gallina keywords
     keywordstyle=[2]{\ttfamily\color{dkgreen}},
     % Style for sorts keywords
@@ -199,7 +205,7 @@
     % Style for tactics keywords
     keywordstyle=[4]{\ttfamily\color{blue}},
     % Style for terminators keywords
-    keywordstyle=[5]{\ttfamily\color{dkred}},
+    keywordstyle=[5]{\ttfamily\color{red}},
     %Style for iterators
     %keywordstyle=[6]{\ttfamily\color{dkpink}},
     % Style for strings
@@ -208,8 +214,7 @@
     commentstyle={\ttfamily\color{dkgreen}},
     %moredelim=**[is][\ttfamily\color{red}]{/&}{&/},
     literate=
-    {lambda}{{$\lambda$}}1
-    {lambdac}{{$\lambda c$}}1
+    {gamma}{{$\Gamma\;$}}1
     {\\forall}{{\color{dkgreen}{$\forall\;$}}}1
     {\\exists}{{$\exists\;$}}1
     {<-}{{$\leftarrow\;$}}1
@@ -235,6 +240,7 @@
 
 
 % *******************************************************************
+
 \begin{document}
 \include{acronyms} % Import acronyms
 

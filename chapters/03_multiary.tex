@@ -1,29 +1,29 @@
-\chapter{The Multiary Lambda Calculus and Its Canonical Fragment }
+\chapter{The Multiary Lambda Calculus}
 \label{c:multiary}
 
-\section{The Multiary Lambda Calculus ($\lambda m$)}
+\section{The Multiary Lambda Calculus ($\LamM$)}
 
-\begin{definition}[$\lambda m$-terms]
-  The $\lambda m$-terms are defined by the following grammar:  
+\begin{definition}[$\LamM$-terms]
+  The $\LamM$-terms are defined by the following grammar:  
   \begin{align*} 
     t, u \ &::= \ x \ | \ \lambda x . t \ | \ t(u, l) \ \\
-    l      &::= \ []\  | \ u :: l
+    l      &::= \ []\  | \ u :: l.
   \end{align*}
 \end{definition}
 
-\begin{definition}[Concatenation of $\lambda m$-lists]
-  The concatenation of two $\lambda m$-lists, $l + l'$, is defined as follows:
+\begin{definition}[Concatenation]
+  The concatenation of two $\LamM$-lists, $l + l'$, is recursively defined as follows:
   \begin{align*}
   & [] + l' = l', \\
   & (u::l) + l' = u::(l + l').
   \end{align*}
 \end{definition}
 
-\begin{definition}[Substitution for $\lambda m$-terms]
-  The substitution over a $\lambda m$-term is mutually defined with the substitution over a $\lambda m$-list as follows:  
+\begin{definition}[Substitution for $\LamM$-terms]
+  The substitution over a $\LamM$-term is mutually defined with the substitution over a $\LamM$-list as follows:  
   \begin{align*}
   & x[x := v] = v ; \\
-  & y[x := v] = ya \text{, with } x \neq y ; \\
+  & y[x := v] = y \text{, with } x \neq y ; \\
   & (\lambda y . t)[x := v] = \lambda y . (t[x := v]) ; \\
   & t(u, l)[x := v] = t[x := v](u[x := v], l[x := v]) ; \\    
   & ([])[x := v] = [] ; \\ 
@@ -31,7 +31,7 @@
   \end{align*}
 \end{definition}
 
-\begin{definition}[Reduction rules for $\lambda m$-terms]  
+\begin{definition}[Reduction rules for $\LamM$-terms]  
   \[
     (\lambda x . t)(u, []) \to t[x := u]
     \label{eq:ruleb1} \tag{$\beta_1$}
@@ -46,8 +46,78 @@
   \]
 \end{definition}
 
+\begin{definition}[$h$-normal forms]
+  We inductively define the sets of $\LamM$-terms (or canonical terms) and $\LamM$-lists in $h$-normal form, respectively $Can$ and $CanList$, as follows:
+  \[
+    \begin{prooftree}
+      \infer0{ x \in Can } 
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{ t \in Can }
+      \infer1{ \lambda x . t \in Can } 
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{ u \in Can }            
+      \hypo{ l \in CanList }
+      \infer2{ x(u, l) \in Can }
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{ t \in Can } 
+      \hypo{ u \in Can }            
+      \hypo{ l \in CanList }
+      \infer3{ (\lambda x. t)(u, l) \in Can }
+    \end{prooftree}
+  \]
+  \[
+    \begin{prooftree}
+      \infer0{ [] \in CanList } 
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ u \in Can }            
+      \hypo{ l \in CanList }
+      \infer2{ u::l \in CanList }
+    \end{prooftree}
+  \]
+\end{definition}
+
+\begin{definition}[$\beta h$-normal forms]
+  We inductively define the sets of $\LamM$-terms and $\LamM$-lists in $\beta h$-normal form, respectively NF and NL, as follows:
+  \[
+    \begin{prooftree}
+      \infer0{ x \in \text{NF} }
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ t \in \text{NF} }
+      \infer1{ \lambda x . t \in \text{NF} } 
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ u \in \text{NF} } 
+      \hypo{ l \in \text{NL} }
+      \infer2{ x(u, l) \in \text{NF} }
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \infer0{ [] \in \text{NL} } 
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ u \in \text{NF} }
+      \hypo{ l \in \text{NL} }
+      \infer2{ u::l \in \text{NL} }
+    \end{prooftree}
+  \]
+\end{definition}
+
+% ---
+
 \begin{definition}[Compatible Relation]
-  Let $R$ and $R'$ be two binary relations on $\lambda m$-terms and $\lambda m$-lists respectively.
+  Let $R$ and $R'$ be two binary relations on $\LamM$-terms and $\LamM$-lists respectively.
   We say they are compatible when they satisfy:
   \[
     \begin{prooftree}
@@ -84,7 +154,7 @@
 \end{definition}
 
 
-\begin{definition}[Typing Rules for $\lambda m$-terms]
+\begin{definition}[Typing Rules for $\LamM$-terms]
   \[
     \begin{prooftree}
       \infer0[Var]{ x:A, \Gamma \vdash x:A } 
@@ -116,38 +186,53 @@
   \]
 \end{definition}
 
-\section{The Canonical Fragment ($\vec \lambda m$)}
+For this system, we still have the usual result of subject reduction.
 
-% Syntax and Typification?
+\begin{lemma}[Substitution Admissibility]
+\end{lemma}
 
-\begin{definition}[$\vec \lambda m$-terms]
-  The $\vec \lambda m$-terms are defined by the following grammar:
-  
+\begin{theorem}[Subject Reduction]
+\end{theorem}
+
+\section{The System $\LamV$}
+
+\begin{definition}[$\LamV$-terms]
+  The $\LamV$-terms and $\LamV$-lists are simultaneously defined by the following grammar:
   \begin{align*} 
-    t, u \ &::= \ x \ | \ \lambda x . t \ | \ x(u, l) \ | \ (\lambda x . t)(u, l) \\
+    t, u \ &::= \ var(x) \ | \ \lambda x . t \ | \ app_{v}(x, u, l) \ | \ app_\lambda (x. t, u, l) \\
     l      &::= \ []\  | \ u :: l
   \end{align*}
 \end{definition}
 
-\begin{definition}[Substitution for $\lambda m$-terms]
-  The substitution over a $\vec \lambda m$-term is mutually defined with the substitution over a $\vec \lambda m$-list as follows:
-  
+\begin{definition}
+  For every $\LamV$-terms $t, u$ and $\LamV$-list $l$, we define the operation $t@(u, l)$, by the following equations:
   \begin{align*}
-  & x[x := v] = v ; \\
-  & y[x := v] = y \text{, with } x \neq y ; \\
+    & var(x)@(u, l) = app_v(x, u, l), \\
+    & (\lambda x. t)@(u, l) = app_\lambda (x. t, u, l), \\ 
+    & app_v(x, u', l')@(u, l) = app_v(x, u', l'+(u::l)) \\
+    & app_\lambda (x. t, u', l')@(u, l) = app_\lambda (x. t, u', l'+(u::l)),
+  \end{align*}
+  where the list concatenation, $l + l'$, is defined simlarly as in $\LamM$.  
+\end{definition}
+
+\begin{definition}[Substitution for $\LamV$-terms]
+  The substitution over a $\LamV$-term is mutually defined with the substitution over a $\LamV$-list as follows:
+  \begin{align*}
+  & var(x)[x := v] = v ; \\
+  & var(y)[x := v] = y \text{, with } x \neq y ; \\
   & (\lambda y . t)[x := v] = \lambda y . (t[x := v]) ; \\
-  & x(u, l)[x := v] = v @ (u[x := v], l[x := v]) ; \\
-  & y(u, l)[x := v] = y(u[x := v], l[x := v]) \text{, with } x \neq y ; \\
-  & (\lambda y . t)(u, l)[x := v] = (\lambda y . t[x := v])(u[x := v], l[x := v]) ; \\
+  & app_v(x, u, l)[x := v] = v @ (u[x := v], l[x := v]) ; \\
+  & app_v(y, u, l)[x := v] = app_v(y, u[x := v], l[x := v]) \text{, with } x \neq y ; \\
+  & app_\lambda (y . t, u, l)[x := v] = app_\lambda (y . t[x := v], u[x := v], l[x := v]) ; \\
   & ([])[x := v] = [] ; \\
   & (u::l)[x := v] = u[x := v] :: l[x := v] .
   \end{align*}
 \end{definition}
 
-\begin{definition}[Typing Rules for $\vec \lambda m$-terms]
+\begin{definition}[Typing Rules for $\LamV$-terms]
   \[
     \begin{prooftree}
-      \infer0[Var]{ x:A, \Gamma \vdash x:A } 
+      \infer0[Var]{ x:A, \Gamma \vdash var(x):A } 
     \end{prooftree}
     \qquad
     \begin{prooftree}
@@ -159,7 +244,7 @@
     \begin{prooftree}
       \hypo{ \Gamma, x:A \supset B \vdash u:A}
       \hypo{ \Gamma, x:A \supset B ; B \vdash l:C }	
-      \infer2[VarApp]{ \Gamma, x:A \supset B \vdash x(u, l) : C } 
+      \infer2[VarApp]{ \Gamma, x:A \supset B \vdash app_v (x, u, l) : C } 
     \end{prooftree}
   \]
   \[
@@ -167,7 +252,7 @@
       \hypo{ \Gamma, x:A \vdash t:B }
       \hypo{ \Gamma \vdash u:A }
       \hypo{ \Gamma ; B \vdash l : C }	
-      \infer3[LamApp]{ \Gamma \vdash (\lambda x . t)(u, l) : C } 
+      \infer3[LamApp]{ \Gamma \vdash app_\lambda (x . t, u, l) : C } 
     \end{prooftree}
   \]
   \[
@@ -186,36 +271,224 @@
 \section{Formalised Results}
 
 \begin{theorem}[Subject Reduction]
-  Given $\lambda m$-terms $t$ and $t'$, we have the follwing:
+  Given $\LamM$-terms $t$ and $t'$, the follwing holds:
   \[
-    \Gamma \vdash t : A \ \land \ t \to t' \implies \Gamma \vdash t' : A
+    \Gamma \vdash t : A \ \land \ t \to t' \implies \Gamma \vdash t' : A.
   \]
 \end{theorem}
+
+\begin{lstlisting}[language=Coq]
+  Theorem type_preservation : 
+    forall t t', step t t' -> forall gamma A, sequent gamma t A -> sequent gamma t' A.
+  Proof.
+    intros t t' H.
+    induction H using sim_comp_ind with (P0 := list_type_preservation) ;
+      autounfold in * ; intros ;
+      try (now inversion H ; econstructor ; eauto) ;
+      try (now inversion H0 ; econstructor ; eauto).
+  
+    - inversion b.
+      + inversion H0.
+        * eapply beta1_type_preservation ; eassumption.
+        * eapply beta2_type_preservation ; eassumption.
+      + eapply h_type_preservation ; eassumption.
+  Qed.
+
+  Corollary type_preservation' gamma t t' A :
+    sequent gamma t A /\ step t t' -> sequent gamma t' A.
+  Proof.
+    intro H. destruct H as [H1 H2].
+    eapply type_preservation ; eassumption.
+  Qed.
+\end{lstlisting}
 
 \begin{theorem}[Conservativeness]
-  Given $\vec \lambda m$-terms $t$ and $t'$, we have the follwing:
+  Given $\LamVM$-terms $t$ and $t'$, we have the follwing:
   \[
-    t \to^{*}_{\vec \lambda m} t' \Longleftrightarrow
-    t \to^{*}_{\lambda m} t'
+    t \to^{*}_{\LamVM} t' \Longleftrightarrow
+    t \to^{*}_{\LamM} t'
   \]
 \end{theorem}
 
-\section{Comments on the Formalisation}
+\begin{lstlisting}[language=Coq]
+  Theorem conservativeness :
+    forall t t', Canonical.multistep t t' <-> LambdaM.multistep (i t) (i t').
+  Proof.
+    split.
+    - intro H.
+      induction H as [| t1 t2 t3].
+      + constructor.
+      + apply multistep_trans with (i t2).
+        * apply conservativeness1. assumption.
+        * assumption.
 
-\subsection{A Nested Inductive Type}
-\begin{itemize}
-\item AUTOSUBST excavation for support
-\item induction principle and further proofs
-\item generalization or specification?
-\end{itemize}
+    - intro H.
+      rewrite<- inversion2 with t.
+      rewrite<- inversion2 with t'.
+
+      induction H as [| t1 t2 t3].
+      + constructor.
+      + apply multistep_trans with (h t2).
+        * apply conservativeness2. assumption.
+        * assumption.
+  Qed.
+\end{lstlisting}
+
+\section{A Closer Look at the Mechanisation}
+
+In this section, we discuss several differences between the formalisations on the proof assistant and those presented on the literature.
+As we have already discussed binding and de Bruijn notation, we are not taking this into account from now on.
+
+\subsection{Mutually Inductive Type vs Nested Inductive Type}
+
+% \begin{itemize}
+% \item AUTOSUBST excavation for support
+% \item induction principle and further proofs
+% \item generalization or specification?
+% \end{itemize}
+
+Creating a mutually inductive definition for $\LamM$ in \textit{Rocq} is a simple task:
+
+\begin{lstlisting}[language=Coq]
+  Inductive term: Type :=
+  | Var (x: var)
+  | Lam (t: {bind term})
+  | mApp (t: term) (u: term) (l: list)
+  with list: Type :=
+  | Nil
+  | Cons (u: term) (l: list). 
+\end{lstlisting}
+
+However, as reported in the final section of \cite{AutosubstSchafer}, \textsc{Autosubst} offers no support for mutually inductive definitions.
+The $derive$ tactic would not generate the desired instances for the $Rename$ and $Subst$ classes, failing to iterate through the custom list type.
+
+As we tried to keep the decision of using \textsc{Autosubst}, there were two possible directions:
+
+\begin{enumerate}
+\item Manually define every instance required and prove substitution lemmas;
+\item Remove the mutual dependency in the term definition.
+\end{enumerate}
+
+The first formalisation attempts followed the first option.
+This meant that everything \textit{Autosubst} could provide automatically was done by hand.
+This implementation followed the approach explained in \cite{AutosubstSchafer}.
+\dots
+
+At some point, the idea of using the polymorphic list type provided by the \textit{Rocq} standard library came up.
+
+\begin{lstlisting}[language=Coq]
+  Inductive term: Type :=
+  | Var (x: var)
+  | Lam (t: {bind term})
+  | mApp (t: term) (u: term) (l: list term).
+\end{lstlisting}
+
+% Inspecting the \textit{Autosubst} code repository, one can find that there is some support for these kinds of mutually inductive definitions.
+This way, there was no need of having a mutual inductive type for our terms.
+After some further inspection of the library source code, we noticed that nested inductive types that depend on lists are already supported by default.
+
+% This is obtained by an auxiliary function, $mmap$, that iterates through lists of terms.
+\dots falar da funcao mmap? \dots
+
+The downside of using nested inductive types in the \textit{Rocq Prover} is the generated induction principles.
+This is issue is already well documented in \cite{CoqArt}.
+With this approach, we need to provide the dedicated induction principles to the proof assistant.
+
+\begin{lstlisting}[language=Coq]
+Section dedicated_induction_principle.
+  Variable P : term -> Prop.
+  Variable Q : list term -> Prop.
+  Hypothesis HVar : forall x, P (Var x).
+  Hypothesis HLam : forall t: {bind term}, P t -> P (Lam t).
+  Hypothesis HmApp : forall t u l, P t -> P u -> Q l -> P (mApp t u l).
+  Hypothesis HNil : Q [].
+  Hypothesis HCons : forall u l, P u -> Q l -> Q (u::l).
+  
+  Proposition sim_term_ind : forall t, P t.
+  Proof.
+    fix rec 1. destruct t.
+    - now apply HVar.
+    - apply HLam. now apply rec.
+    - apply HmApp.
+      + now apply rec.
+      + now apply rec.
+      + assert (forall l, Q l). {
+            fix rec' 1. destruct l0.
+            - apply HNil.
+            - apply HCons.
+              + now apply rec.
+              + now apply rec'. }          
+        now apply H.
+  Qed.      
+  
+  Proposition sim_list_ind : forall l, Q l.
+  Proof.
+    fix rec 1. destruct l.
+    - now apply HNil.
+    - apply HCons.
+      + now apply sim_term_ind.
+      + now apply rec.
+  Qed.          
+End dedicated_induction_principle.
+\end{lstlisting}
+
+\dots
 
 \subsection{Formalising a Subsystem}
 
-\begin{itemize}
-\item Carrgying a predicate
-\item Subset types in Coq
-\item A self contained representation
-\end{itemize}
+% \begin{itemize}
+% \item Carrgying a predicate
+% \item Subset types in Coq
+% \item A self contained representation
+% \end{itemize}
+
+A relevant part of the mechanisation, was to represent subsystems in the proof assistant in a simple way.
+We isolate a subsyntax of $\LamM$ by defining a predicate over its terms:
+
+\begin{lstlisting}[language=Coq]
+Inductive is_canonical: term -> Prop :=
+| cVar (x: var) : is_canonical (Var x)
+| cLam (t: {bind term}) : is_canonical t -> is_canonical (Lam t)                                                      
+| cVarApp (x: var) (u: term) (l: list term) :
+  is_canonical u -> is_canonical_list l -> is_canonical (mApp (Var x) u l)
+| cLamApp (t: {bind term}) (u: term) (l: list term) :
+  is_canonical t -> is_canonical u -> is_canonical_list l ->
+  is_canonical (mApp (Lam t) u l)
+  
+with is_canonical_list: list term -> Prop :=
+| cNil : is_canonical_list []
+| cCons (u: term) (l: list term) :
+  is_canonical u -> is_canonical_list l -> is_canonical_list (u::l).
+\end{lstlisting}
+
+This subsystem of canonical terms, that previously was presented as the system $\LamVM$, can be mechanised in many ways:
+
+\begin{enumerate}
+\item Use solely the predicate over $\LamM$-terms (for example, to declare that a property $P$ is satisfied by every canonical term, one would have the proposition $\forall (t: \LamM), is\_canonical(t) \implies P(t)$);
+\item Use the subset types provided by the standard library, that correspond to a pair of term $t$ and a proof that $t$ satisfies some predicate (in our case, $t$ would satisfy the predicate of being canonical);
+\item Have an isolated syntax (another inductive type) for these canonical terms.
+\end{enumerate}
+
+\begin{figure}
+  % https://q.uiver.app/#q=WzAsNyxbMiwxLCJcXGJveGVke1xcdmVjIFxcbGFtYmRhIG19Il0sWzIsMywiXFxib3hlZHtcXHNtYWxse1xcYmV0YSBoLW5mc319Il0sWzAsMSwiXFxib3hlZHtcXHZlYyBcXGxhbWJkYSBNfSJdLFswLDMsIlxcYm94ZWR7XFxzbWFsbHtcXGJldGEtbmZzfX0iXSxbMywwLCJcXGJveGVke1xcbGFtYmRhIG19Il0sWzEsNF0sWzEsMF0sWzAsMSwiXFxkb3duYXJyb3dfe1xcYmV0YSd9IiwxXSxbMiwzLCJcXGRvd25hcnJvd19cXGJldGEiLDFdLFsyLDAsIlxcY29uZyIsMSx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6ImFycm93aGVhZCJ9fX1dLFszLDEsIlxcY29uZyIsMSx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6ImFycm93aGVhZCJ9fX1dLFs0LDAsIlxcZG93bmFycm93X2giLDFdLFs0LDEsIlxcZG93bmFycm93X3tcXGJldGEgaH0iLDEseyJsYWJlbF9wb3NpdGlvbiI6NDAsIm9mZnNldCI6LTF9XSxbMiw0LCJpIiwxXSxbNCwyLCJoIiwxLHsib2Zmc2V0IjozfV0sWzYsNSwiIiwxLHsiY3VydmUiOjIsInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d
+\[\begin{tikzcd}
+    & {} && {\boxed{\lambda m}} \\
+    {\boxed{\vec \lambda M}} && {\boxed{\vec \lambda m}} \\
+    \\
+    {\boxed{\small{\beta-nfs}}} && {\boxed{\small{\beta h-nfs}}} \\
+    & {}
+    \arrow[bend right, dashed, no head, from=1-2, to=5-2]
+    \arrow["h"{description}, shift right=3, from=1-4, to=2-1]
+    \arrow["{\downarrow_h}"{description}, from=1-4, to=2-3]
+    \arrow["{\downarrow_{\beta h}}"{description, pos=0.4}, shift left, from=1-4, to=4-3]
+    \arrow["i"{description}, from=2-1, to=1-4]
+    \arrow["\cong"{description}, <->, from=2-1, to=2-3]
+    \arrow["{\downarrow_\beta}"{description}, from=2-1, to=4-1]
+    \arrow["{\downarrow_{\beta'}}"{description}, from=2-3, to=4-3]
+    \arrow["\cong"{description}, <->, from=4-1, to=4-3]
+  \end{tikzcd}\]
+\caption{Systems formalised in \textit{Rocq}}
+\end{figure}
 
 %%% Local Variables:
 %%% mode: LaTeX
