@@ -53,7 +53,7 @@ This is of great interest as $\LamV$ typing rules resemble a sequent calculus st
 \subsection{Isomorphism at the level of terms}
 
 \begin{lemma}
-  \label{lemma3}
+  \label{inversion_lemma}
   \begin{align*}
     \theta \circ \psi' &= \theta'    
   \end{align*}
@@ -64,18 +64,18 @@ This is of great interest as $\LamV$ typing rules resemble a sequent calculus st
 
 
 \begin{theorem}
-  \label{theorem5}
+  \label{theorem7}
   \begin{align*}
     \theta \circ \psi &= id_{\Lam \text{-terms}}
   \end{align*}
 \end{theorem}
 \begin{proof}
-  The proof proceeds by induction on the structure of $\Lam$-terms and uses as lemma for the application case the~\cref{lemma3}.
+  The proof proceeds by induction on the structure of $\Lam$-terms and uses as lemma for the application case the~\cref{inversion_lemma}.
 \end{proof}
 
 
 \begin{theorem}
-  \label{theorem6}
+  \label{theorem8}
   \begin{align*}
     \psi \circ \theta &= id_{\LamV \text{-terms}} \\
     \psi \circ \theta' &= \psi'    
@@ -93,7 +93,7 @@ First, we need to introduce some lemmata that establish the preservation of subs
 Proofs of lemmas will now be omitted as they are all formalized in the proof assistant and usually proceed routinely.
 
 \begin{lemma}
-  \label{lemma4}
+  \label{theta_app_lemma}
   For every $\LamV$-terms $t, u$ and $\LamV$-list $l$,
   \[ \theta(t@(u, l)) = \theta'(\theta(t) \ \theta(u), l) \]
   and also, for every $\Lam$-term $M$, $\LamV$-term $u'$ and $\LamV$-lists $l, l'$,
@@ -103,27 +103,27 @@ Proofs of lemmas will now be omitted as they are all formalized in the proof ass
 The following lemma is obtained as a corollary.
 
 \begin{lemma}
-  \label{lemma5}
+  \label{psi_app_lemma}
   For every $\Lam$-term $M$, $\LamV$-term $u$ and $\LamV$-list $l$,
   \[ \psi'(M, u :: l) = \psi(M)@(u, l). \]
 \end{lemma}
 
-~\cref{lemma6} states that $\theta$ preserves the substitution operation.
-We use~\cref{lemma4} to prove this result.
+~\cref{theta_subst_lemma} states that $\theta$ preserves the substitution operation.
+We use~\cref{theta_app_lemma} to prove this result.
 
 \begin{lemma}
-  \label{lemma6}
+  \label{theta_subst_lemma}
   For every $\LamV$-terms $t, u$,
   \[ \theta(t[x := u]) = \theta(t)[x := \theta(u)] \]
   and also, for every $\Lam$-term $M$,  $\LamV$-term $u$ and $\LamV$-list $l$,
   \[ \theta'(M[x := \theta(u)], l[x := u]) = \theta'(M, l)[x := u]. \]
 \end{lemma}
 
-~\cref{lemma7} states that $\psi$ preserves the substitution operation (taking $l = []$).
-We use~\cref{lemma5} to prove this result.
+~\cref{psi_subst_lemma} states that $\psi$ preserves the substitution operation (taking $l = []$).
+We use~\cref{psi_app_lemma} to prove this result.
 
 \begin{lemma}
-  \label{lemma7}
+  \label{psi_subst_lemma}
   For every $\Lam$-terms $M, N$ and $\LamV$-list $l$,
   \[ \psi'(M[x := N], l[x := \psi(N)]) = \psi'(M, l)[x := \psi(N)]. \]
 \end{lemma}
@@ -131,13 +131,13 @@ We use~\cref{lemma5} to prove this result.
 Now, we can state the isomorphism at the level of reduction.
 
 \begin{lemma}
-  \label{lemma8}
+  \label{theta_step_lemma}
   For every $\Lam$-terms $M, N$ and $\LamV$-list $l$,
   \[ M \to_{\beta} N \implies \theta'(M, l) \to_{\beta} \theta'(N, l). \]
 \end{lemma}
 
 \begin{theorem}
-  \label{theorem7}
+  \label{theorem9}
   For every $\LamV$-terms $t, t'$,
   \[ t \to_{\beta} t' \implies \theta(t) \to_{\beta} \theta(t') \]
   and also, for every $\Lam$-term $M$ and $\LamV$-lists $l, l'$,
@@ -145,23 +145,52 @@ Now, we can state the isomorphism at the level of reduction.
 \end{theorem}
 \begin{proof}
   The proof proceeds by simultaneous induction on the structure if the step relation on $\LamV$-terms.
-  ~\cref{lemma8} is useful for the cases of compatibility steps and~\cref{lemma6} is crucial for cases dealing with $\beta$ steps.
+  ~\cref{theta_app_lemma} is useful for the cases of compatibility steps and~\cref{theta_subst_lemma} is crucial for cases dealing with $\beta$ steps.
 \end{proof}
 
 
 \begin{theorem}
-  \label{theorem8}
+  \label{theorem10}
   For every $\Lam$-terms $M, N$ and $\LamV$-list $l$,
   \[ M \to_{\beta} N \implies \psi'(M, l) \to_{\beta} \psi(N, l). \]
 \end{theorem}
 \begin{proof}
   The proof proceeds by simultaneous induction on the structure if the step relation on $\Lam$-terms.
-  ~\cref{lemma7} is crucial for cases dealing with $\beta$ steps.
+  ~\cref{psi_subst_lemma} is crucial for cases dealing with $\beta$ steps.
 \end{proof}
 
 \subsection{Isomorphism at the level of typing rules}
 
-\dots
+\begin{theorem}[$\theta$ admissibility]
+  \label{theorem11}
+  The following rules are admissible:
+  \[ \begin{prooftree}
+      \hypo{ \Gamma \vdash t : A }
+      \infer1{ \Gamma \vdash \theta(t) : A } 
+    \end{prooftree}
+    \qquad \qquad
+    \begin{prooftree}
+      \hypo{ \Gamma \vdash M : A }
+      \hypo{ \Gamma ; A \vdash l : B }
+      \infer2{ \Gamma \vdash \theta'(M, l) : B }.
+    \end{prooftree} \]
+\end{theorem}
+\begin{proof}
+  The proof proceeds easily by simultaneous induction on the structure of the typing rules of $\LamV$-terms.
+\end{proof}
+
+\begin{theorem}[$\psi'$ admissibility]
+  \label{theorem12}
+  The following rules is admissible:
+  \[ \begin{prooftree}
+      \hypo{ \Gamma \vdash M : A }
+      \hypo{ \Gamma ; A \vdash l : B }
+      \infer2{ \Gamma \vdash \psi'(M, l) : B }.
+    \end{prooftree} \]
+\end{theorem}
+\begin{proof}
+  The proof proceeds easily by induction on the structure of the typing rules of $\Lam$-terms.
+\end{proof}
 
 %%% Local Variables:
 %%% mode: LaTeX

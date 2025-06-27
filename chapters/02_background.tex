@@ -318,7 +318,7 @@ Taking the naive example of an inductive definition of the $\Lam$-terms in \text
   | App (s: term ) (t: term ) .
 \end{lstlisting}
 
-Here, the annotation $\{bind \ term\}$ is as alias of the type $term$.
+Here, the annotation $\{bind \ term\}$ is an alias of the type $term$.
 We write this annotation in order to mark our binders in the syntax we want to formalise.  
 
 This way, we may invoke the \textit{Autosubst} classes, automatically deriving the desired instances.
@@ -355,8 +355,6 @@ We define the one step $\beta$-reduction altogether with the compatibility steps
                       step (App s t) (App s t').
 \end{lstlisting}
 
-\vspace{2em} \hrule \vspace{2em}
-
 Formalising the typing system:
 
 \begin{lstlisting}[language=Coq]
@@ -370,7 +368,8 @@ Formalising the typing system:
 \end{lstlisting}
 
 \begin{enumerate}
-\item Contextos infinitos?
+\item Contextos infinitos
+\item Regras de tipificacao diferentes como em \cite{AutosubstManual}
 \end{enumerate}
 
 %%% Local Variables:

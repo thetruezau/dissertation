@@ -285,7 +285,7 @@
   \end{align*}
 \end{definition}
 
-\begin{definition}[Reduction rules for $\LamM$-terms]  
+\begin{definition}[Reduction rules for $\LamV$-terms]  
   \begin{align*}
     & app_\lambda (x . t, u, []) \to_{\beta_1} t[x := u]
     \\
@@ -407,7 +407,7 @@ We now see that the defined maps establish a bijection between the $\LamV$-terms
 
 \vspace{2em} \hrule \vspace{2em}
 
-HERE - Whats a subsystem after all? Which results.
+HERE - Whats a subsystem after all? Which results?
 
 \vspace{2em} \hrule \vspace{2em}
 
@@ -470,7 +470,7 @@ To say that $\LamV$ is a subsystem of $\LamM$ we present the following result of
 
 As a corollary of $\LamV$ being a subsystem in the sense that we mentioned, we can derive its subject reduction from the subject reduction in $\LamM$.
 
-\begin{corollary}[Subject Reduction in $\LamV$]
+\begin{corollary}[Subject Reduction for $\LamV$]
   Given $\LamV$-terms $t$ and $t'$, the follwing holds:
   \[
     \Gamma \vdash t : A \ \land \ t \to_{\beta} t' \implies \Gamma \vdash t' : A.
