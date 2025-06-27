@@ -116,9 +116,64 @@ Using this definition, we also eliminate our problem of identifying terms modulo
 Variable capture can also be avoided, but this requires some care when defining the substitution operations.
 \sout{The next question to answer is: What are these substitutions and how do we instantiate them in our terms?}
 
-\subsection{Explicit Substitutions and the Sigma Calculus}
+\subsection{Explicit Parallel Substitutions}
 
+\cite{AutosubstSchafer}
 
+We refer to explicit substitutions \cite{Abadi} when the substitution operation is part of the syntax calculus.
+Often, substitutions are dealt at a meta level.
+However, a definition of capture-avoiding substitution over nameless $\Lam$-terms will require manipulations over substitution objects \cite{deBruijn}.
+
+Furthermore, having a reserved syntax for substitution helps us generalising this notion.
+Previously, a substitution  was a term that was going to replace some free variable.
+A parallel substitution generalizes this concept for every free variable. 
+
+Now, we present a calculus with explicit parallel substitutions.
+We can think of a parallel substitution as a sequence of terms, $\sigma = (M_i)_{i \in \mathbb{N}}$, where the term $M_i$ will replace the variable with index $i$.
+
+\begin{definition}[$\Lam \sigma$-terms]
+  The (nameless) $\Lam \sigma$-terms are defined by the following grammar:  
+  \begin{align*}
+    M, N         &::= \ 0 \ | \ \lambda . M \ | \ M N \ | \ M[\sigma] \\
+    \sigma, \tau &::= \ id \ | \ \uparrow \ | \ M \cdot \sigma \ | \ \sigma \circ \tau
+  \end{align*}
+\end{definition}
+
+\begin{remark} \hfill
+	\begin{enumerate}
+		\item $id$ is the identity substitution, this is, $id = (i)_{i \in \mathbb{N}}$,
+		\item $\uparrow$ is the successor substitution, this is, $\uparrow = (i+1)_{i \in \mathbb{N}}$,
+		\item $M \cdot \sigma$ is the cons substitution, this is, $M \cdot \sigma = (M, N_0, N_1, N_2, \dots)$ where $\sigma = (N_i)_{i \in \mathbb{N}}$,
+		\item $\sigma \circ \tau$ is the composition substitution that satisfies
+		\[ M[\sigma \circ \tau] = M[\sigma][\tau], \]
+		\item $M[\sigma]$ is the instantiation of the parallel substitution $\sigma$ over the term $M$
+		\item We only need the index 0 in our term syntax, as we can represent every index $i$ as $0[\underbrace{\uparrow \circ \dots \circ \uparrow}_{\text{$i$ times}}]$.
+	\end{enumerate}
+\end{remark}
+
+% \begin{definition}[Rewriting System of $\sigma$-calculus]
+Having an explicit notation for substitution, we can define the $\beta$-reduction step as 
+\[ (\lambda . M) N \to_\beta M[N \cdot id]. \]
+
+This is almost what we want. 
+In most cases, we want to calculate our term $M[N \cdot id]$ modulo explicit substitutions, recovering the expected result for the substitution. We want to describe reduction rules for substitutions.
+	
+\begin{definition}[Rewriting rules for substitutions]
+	\begin{align*}
+		& 0[id] = 0 \qquad
+		& id \circ s = s \\
+		& 0[M \cdot \sigma] = M \qquad
+		& \uparrow \circ \ id = \ \uparrow \\
+		& (M N)[\sigma] = (M[\sigma])(N[\sigma]) \qquad
+		& \uparrow \circ \ (M \cdot \sigma) = \sigma \\
+		& (\lambda . M)[\sigma] = \lambda . (M[0 \cdot (\sigma \ \circ \uparrow)]) \qquad
+		& (M \cdot \sigma) \circ \tau = M[\tau] \cdot (\sigma \circ \tau) \\
+		& M[\sigma \circ \tau] = M[\sigma][\tau] \qquad
+		& (\sigma_1 \circ \sigma_2) \circ \sigma_3 = \sigma_1 \circ (\sigma_2 \circ \sigma_3)
+	\end{align*}
+\end{definition}
+
+In \cite{Abadi}, it is proved that these rules provide a complete rewriting system to eliminate terms of the form $M[\sigma]$.
 
 \subsection{The \textit{Autosubst} Library}
 

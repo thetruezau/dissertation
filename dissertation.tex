@@ -5,6 +5,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 \documentclass[12pt, a4paper]{report} % Page and font size
+\setlength{\parindent}{0cm}
 
 % Packages
 \usepackage[margin=1in]{geometry}
@@ -44,6 +45,7 @@
 % \usepackage{algpseudocode}
 \usepackage{fancyhdr}
 \usepackage{comment}
+\usepackage{cleveref}
 
 % \usepackage{minted}
 \usepackage[inline]{enumitem}
@@ -62,7 +64,9 @@
 
 % Definitions, Lemmas and Theorems
 \newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
 \newtheorem{lemma}{Lemma}
+\crefname{lemma}{Lemma}{Lemmas}
 
 \newtheorem*{definition}{Definition}
 \newtheorem*{notation}{Notation}
@@ -215,6 +219,8 @@
     %moredelim=**[is][\ttfamily\color{red}]{/&}{&/},
     literate=
     {gamma}{{$\Gamma\;$}}1
+    {beta1}{{$\beta_1\;$}}1
+    {beta2}{{$\beta_2\;$}}1
     {\\forall}{{\color{dkgreen}{$\forall\;$}}}1
     {\\exists}{{$\exists\;$}}1
     {<-}{{$\leftarrow\;$}}1

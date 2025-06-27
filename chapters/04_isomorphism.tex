@@ -1,20 +1,167 @@
-\chapter{The Isomorphic Fragment of Lambda Calculus in $\lambda m$}
+\chapter{An isomorphism with the simply typed $\Lam$-calculus}
 \label{c:isomorphism}
+% https://q.uiver.app/#q=WzAsNCxbMiwwLCJcXGJveGVke1xcdmVjIFxcbGFtYmRhfSJdLFsyLDIsIlxcYm94ZWR7XFxzbWFsbHtcXHZlYyBcXGJldGEtbmZzfX0iXSxbMCwwLCJcXGJveGVkXFxsYW1iZGEiXSxbMCwyLCJcXGJveGVke1xcc21hbGx7XFxiZXRhLW5mc319Il0sWzAsMSwiXFxkb3duYXJyb3dfe1xcdmVjIFxcYmV0YX0iLDFdLFsyLDMsIlxcZG93bmFycm93X1xcYmV0YSIsMV0sWzIsMCwiXFxjb25nIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn19fV0sWzMsMSwiXFxjb25nIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn19fV1d
+\[
+  \begin{tikzcd}
+    {\boxed \Lam} && {\boxed \LamV} \\
+    \\
+    {\boxed{\small{\beta-nfs}}} && {\boxed{\small{\vec \beta-nfs}}}
+    \arrow["\cong"{description}, <->, from=1-1, to=1-3]
+    \arrow["{\downarrow_\beta}"{description}, from=1-1, to=3-1]
+    \arrow["{\downarrow_{\vec \beta}}"{description}, from=1-3, to=3-3]
+    \arrow["\cong"{description}, <->, from=3-1, to=3-3]
+  \end{tikzcd}
+\]
 
-% https://q.uiver.app/#q=WzAsNixbMiwyLCJcXGJveGVke1xcdmVjIFxcbGFtYmRhIG19Il0sWzIsNCwiXFxib3hlZHtcXHNtYWxse1xcYmV0YSBoLW5mc319Il0sWzAsMiwiXFxib3hlZFxcbGFtYmRhIl0sWzAsNCwiXFxib3hlZHtcXHNtYWxse1xcYmV0YS1uZnN9fSJdLFszLDBdLFszLDEsIlxcYm94ZWR7XFxsYW1iZGEgbX0iXSxbMCwxLCJcXGRvd25hcnJvd197XFxiZXRhJ30iLDFdLFsyLDMsIlxcZG93bmFycm93X1xcYmV0YSIsMV0sWzIsMCwiXFxjb25nIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn19fV0sWzMsMSwiXFxjb25nIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn19fV0sWzUsMCwiXFxkb3duYXJyb3dfaCIsMV0sWzUsMSwiXFxkb3duYXJyb3dfe1xcYmV0YSBofSIsMSx7ImxhYmVsX3Bvc2l0aW9uIjo0MCwib2Zmc2V0IjotMX1dXQ==
-\[\begin{tikzcd}
-	&&& {} \\
-	&&& {\boxed{\lambda m}} \\
-	{\boxed\lambda} && {\boxed{\vec \lambda m}} \\
-	\\
-	{\boxed{\small{\beta-nfs}}} && {\boxed{\small{\beta h-nfs}}}
-	\arrow["{\downarrow_h}"{description}, from=2-4, to=3-3]
-	\arrow["{\downarrow_{\beta h}}"{description, pos=0.4}, shift left, from=2-4, to=5-3]
-	\arrow["\cong"{description}, <->, from=3-1, to=3-3]
-	\arrow["{\downarrow_\beta}"{description}, from=3-1, to=5-1]
-	\arrow["{\downarrow_{\vec \beta}}"{description}, from=3-3, to=5-3]
-	\arrow["\cong"{description}, <->, from=5-1, to=5-3]
-\end{tikzcd}\]
+In our background chapter, the simply typed $\Lam$-calculus was introduced.
+Now, we show an isomorphism between the system $\LamV$ introduced in the previous chapter and the simply typed $\Lam$-calculus.
+This isomorphism will come at the level of syntax, reduction and typing rules.
+
+This is of great interest as $\LamV$ typing rules resemble a sequent calculus style. Thus, we have a correspondence of natural deduction (typing rules of $\Lam$-calculus) and a fragment of sequent calculus.
+
+\section{Mappings $\theta$ and $\psi$}
+
+\begin{definition}
+  Consider the following maps $\theta$ and $\theta'$:
+  \begin{align*}
+    \theta : \LamV \text{-terms} &\to \Lam \text{-terms} \\
+    var(x) &\mapsto x \\
+    \lambda x . t &\mapsto \lambda x . \theta(t) \\
+    app_v (x, u, l) &\mapsto \theta'(x, u::l) \\
+    app_\lambda (x. t, u, l) &\mapsto \theta'(\lambda x . \theta(t), u::l)
+  \end{align*}
+  \begin{align*}
+    \theta' : (\Lam \text{-terms} \times \LamV \text{-lists}) & \to \Lam \text{-terms} \\
+    (M, []) &\mapsto M \\
+    (M, u::l) &\mapsto \theta'(M \ \theta(u), l).
+  \end{align*}
+\end{definition}
+  
+\begin{definition}
+  Consider the following map $\psi'$:
+  \begin{align*}
+    \psi' : (\Lam \text{-terms} \times \LamV \text{-lists}) &\to \LamV \text{-terms} \\
+    (x, []) &\mapsto var(x) \\
+    (x, u::l) &\mapsto app_v (x, u, l) \\
+    (\lambda x . M, []) &\mapsto \lambda x . \psi(M) \\
+    (\lambda x . M, u::l) &\mapsto app_\lambda (x . \psi(M), u, l) \\
+    (M N, l) &\mapsto \psi'(M, \psi(N)::l),              
+  \end{align*}
+  where $\psi(M)$ is defined as $\psi'(M, [])$.
+\end{definition}
+
+\subsection{Isomorphism at the level of terms}
+
+\begin{lemma}
+  \label{lemma3}
+  \begin{align*}
+    \theta \circ \psi' &= \theta'    
+  \end{align*}
+\end{lemma}
+\begin{proof}
+  The proof proceeds by induction on the structure of $\Lam$-terms.
+\end{proof}
+
+
+\begin{theorem}
+  \label{theorem5}
+  \begin{align*}
+    \theta \circ \psi &= id_{\Lam \text{-terms}}
+  \end{align*}
+\end{theorem}
+\begin{proof}
+  The proof proceeds by induction on the structure of $\Lam$-terms and uses as lemma for the application case the~\cref{lemma3}.
+\end{proof}
+
+
+\begin{theorem}
+  \label{theorem6}
+  \begin{align*}
+    \psi \circ \theta &= id_{\LamV \text{-terms}} \\
+    \psi \circ \theta' &= \psi'    
+  \end{align*}
+\end{theorem}
+\begin{proof}
+  The proof proceeds by simultaneous induction on the structure of $\LamV$-terms and $\LamV$-lists.
+\end{proof}
+
+
+\subsection{Isomorphism at the level of reduction}
+
+First, we need to introduce some lemmata that establish the preservation of substitution operations by the mappings $\theta, \theta'$ and $\psi'$.
+
+Proofs of lemmas will now be omitted as they are all formalized in the proof assistant and usually proceed routinely.
+
+\begin{lemma}
+  \label{lemma4}
+  For every $\LamV$-terms $t, u$ and $\LamV$-list $l$,
+  \[ \theta(t@(u, l)) = \theta'(\theta(t) \ \theta(u), l) \]
+  and also, for every $\Lam$-term $M$, $\LamV$-term $u'$ and $\LamV$-lists $l, l'$,
+  \[ \theta'(M, l+(u'::l')) = \theta'(\theta'(M, l) \ \theta(u'), l'). \]
+\end{lemma}
+
+The following lemma is obtained as a corollary.
+
+\begin{lemma}
+  \label{lemma5}
+  For every $\Lam$-term $M$, $\LamV$-term $u$ and $\LamV$-list $l$,
+  \[ \psi'(M, u :: l) = \psi(M)@(u, l). \]
+\end{lemma}
+
+~\cref{lemma6} states that $\theta$ preserves the substitution operation.
+We use~\cref{lemma4} to prove this result.
+
+\begin{lemma}
+  \label{lemma6}
+  For every $\LamV$-terms $t, u$,
+  \[ \theta(t[x := u]) = \theta(t)[x := \theta(u)] \]
+  and also, for every $\Lam$-term $M$,  $\LamV$-term $u$ and $\LamV$-list $l$,
+  \[ \theta'(M[x := \theta(u)], l[x := u]) = \theta'(M, l)[x := u]. \]
+\end{lemma}
+
+~\cref{lemma7} states that $\psi$ preserves the substitution operation (taking $l = []$).
+We use~\cref{lemma5} to prove this result.
+
+\begin{lemma}
+  \label{lemma7}
+  For every $\Lam$-terms $M, N$ and $\LamV$-list $l$,
+  \[ \psi'(M[x := N], l[x := \psi(N)]) = \psi'(M, l)[x := \psi(N)]. \]
+\end{lemma}
+
+Now, we can state the isomorphism at the level of reduction.
+
+\begin{lemma}
+  \label{lemma8}
+  For every $\Lam$-terms $M, N$ and $\LamV$-list $l$,
+  \[ M \to_{\beta} N \implies \theta'(M, l) \to_{\beta} \theta'(N, l). \]
+\end{lemma}
+
+\begin{theorem}
+  \label{theorem7}
+  For every $\LamV$-terms $t, t'$,
+  \[ t \to_{\beta} t' \implies \theta(t) \to_{\beta} \theta(t') \]
+  and also, for every $\Lam$-term $M$ and $\LamV$-lists $l, l'$,
+  \[ l \to_{\beta} l' \implies \theta'(M, l) \to_{\beta} \theta(M, l'). \]
+\end{theorem}
+\begin{proof}
+  The proof proceeds by simultaneous induction on the structure if the step relation on $\LamV$-terms.
+  ~\cref{lemma8} is useful for the cases of compatibility steps and~\cref{lemma6} is crucial for cases dealing with $\beta$ steps.
+\end{proof}
+
+
+\begin{theorem}
+  \label{theorem8}
+  For every $\Lam$-terms $M, N$ and $\LamV$-list $l$,
+  \[ M \to_{\beta} N \implies \psi'(M, l) \to_{\beta} \psi(N, l). \]
+\end{theorem}
+\begin{proof}
+  The proof proceeds by simultaneous induction on the structure if the step relation on $\Lam$-terms.
+  ~\cref{lemma7} is crucial for cases dealing with $\beta$ steps.
+\end{proof}
+
+\subsection{Isomorphism at the level of typing rules}
+
+\dots
 
 %%% Local Variables:
 %%% mode: LaTeX
