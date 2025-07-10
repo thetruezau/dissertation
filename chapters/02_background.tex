@@ -126,7 +126,7 @@ For what types and the simply typed lambda calculus is about we refer to \cite{B
 \begin{definition}[$\beta$-reduction]
   Consider the following binary relation on $\Lam$-terms:  
   \[
-    \alpha = \{ ((\lambda x . M) N, M[x := N]) \
+    \beta = \{ ((\lambda x . M) N, M[x := N]) \
                 | \ \text{for every $M, N$} \}.
   \]  
   We call one step $\beta$-reduction to the relation $\to_\beta$ and multistep $\beta$-reduction to the relation $\twoheadrightarrow_\beta$.
@@ -221,7 +221,6 @@ For what types and the simply typed lambda calculus is about we refer to \cite{B
 
 Having introduced the ordinary $\Lam$-calculus, we take it as our goal of formalisation.
 This helps motivating the main decisions behind our mechanisations.
-
 The variations of $\Lam$-calculus that we are going to introduce will follow closely the approach described here with the corresponding adaptions.
 
 % The mechanisation done is dependent on the theory provided by the \textit{Rocq Prover} - the Calculus of Inductive Constructions.
@@ -229,20 +228,25 @@ The variations of $\Lam$-calculus that we are going to introduce will follow clo
 
 \subsection{The \textit{Rocq Prover}}
 
-For what refers to the \textit{Rocq Prover} (former \textit{Coq Proof Assistant}) we refer to \cite{CoqArt}.
+% For what refers to the \textit{Rocq Prover} (former \textit{Coq Proof Assistant}) we refer to \cite{CoqArt} \cite{RocqManual}.
 
-(calculus of inductive constructions)
+% (calculus of inductive constructions)
 
-(Check Kathrin Stark introduction)
+The \textit{Rocq Prover} is an interactive theorem prover.
+This is a tool that helps in the formalisation of mathematical results and that can generate machine-verified proofs via interaction with a human.
 
-(Exemplo do tipo inductivo para inteiros?)
+\dots
 
-(Tipos mutuamente inductivos? Combined Schemes?)
+% (Check Kathrin Stark introduction)
+
+% (Exemplo do tipo inductivo para inteiros?)
+
+% (Tipos mutuamente inductivos? Combined Schemes?)
 
 \subsection{Syntax with binders}
 
 % If we were to formalise such a system like the $\Lam$-calculus introduced above, we would probably create an inductive type like the following, in \textit{Coq}.
-Formalising the untyped $\Lam$-calculus syntax in \textit{Rocq} would lead us to an inductive definition similar to:
+Formalising the untyped $\Lam$-calculus syntax in \textit{Rocq} would result in an inductive definition similar to:
 
 \begin{lstlisting}[language=Coq]
   Inductive term : Type :=
@@ -251,25 +255,22 @@ Formalising the untyped $\Lam$-calculus syntax in \textit{Rocq} would lead us to
   | App (s: term) (t: term).
 \end{lstlisting}
 
-The question that every similar definition imposes is the definition of the $var$ type. Following the usual pen and paper approach, this type would be a subset of a string type, where a variable is just a placeholder for a name.
+The question that every similar definition imposes is the definition of the \lst$var$ type. Following the usual pen-and-paper approach, this type would be a subset of a string type, where a variable is just a placeholder for a name.
 
-Of course this is fine when dealing with pen and paper proofs and definitions. To simplify this, we can even take advantage of conventions, like the one referenced above (by Barendregt). 
+Of course this is fine when dealing with proofs and definitions in a paper.
+To simplify this, we can even take advantage of conventions, like the one referenced above (by Barendregt).
 However, this variable definition can get rather exhausting  when it comes to rigorously define all this syntactical aspects and substitution operations.
 
 There are several alternatives described in the literature of mechanisation of meta-theory. 
 % This topic of binding was \sout{even} proposed in the POPLmark challenge \cite{POPLmark} as a way to discuss the potential of proof assistants.
 The POPLmark challenge \cite{POPLmark} points to the topic of binding as central for discussing the potential of modern-day proof assistants.
+From the many alternatives, we chose to focus in the nameless syntax proposed by de~Bruijn.
 
-% Among the available solutions for the \textit{Coq} proof assistant, the \textit{AUTOSUBST} library .
-The \textit{Autosubst} library for the \textit{Rocq Prover} stood out as a great solution for our case. 
-This library uses a combination of de Bruijn indices and explicit parallel substitutions to \sout{tackle this "problem"}.
-
+% Autosubst ? not yet
 % POPl Mark
 % falar de substituicoes ???
 
-\subsection{De Bruijn syntax}
-
-\cite{deBruijn} \cite{AutosubstSchafer}
+\subsection{De~Bruijn syntax}
 
 In the 1970s, de Bruijn started working on the \textit{Automath} proof assistant and proposed a simplified syntax to deal with generic binders \cite{deBruijn}.
 This approach is claimed to be good for meta-lingual discussion and for the computer and computer programme. In contrast, this syntax is further away from the human reader.
@@ -290,10 +291,35 @@ Therefore, we will call these terms nameless.
   Nameless $\Lam$-terms have no $\alpha$-conversion since there is no freedom to choose the names of bound variables.
 \end{remark}
 
-% Referir ainda parallel substitutions
+Now, we will construct a different formulation for the concept of substitution.
+
+\begin{definition}[Substitution]
+  A substitution over nameless $\Lam$-terms is a function mapping natural numbers (indices) to $\Lam$-terms.
+\end{definition}
+
+Here are some examples of useful substitutions:
+\begin{align*}
+  id(k) &= k \\
+  \uparrow(k) &= (k+1); \\
+  (M \cdot \sigma)(k) &=
+                        \begin{cases}
+                          M & \ \text{if $k = 0$} \\
+                          \sigma(k-1) & \ \text{if $k > 0$}.
+                        \end{cases}
+\end{align*}
+
+\begin{definition}[Subsitution instantiation]
+  The operation of instantiating a substitution $\sigma$ over a nameless $\Lam$-term $M$, $M[\sigma]$, is defined recursively by the following equations:
+  \begin{align*}
+    & i[\sigma] = \sigma(i); \\
+    & (\lambda . M)[\sigma] = \lambda . (M[0 \cdot (\uparrow \circ \ \sigma)]); \\
+    & (M_1 M_2)[\sigma] = (M_1[\sigma]) (M_2[\sigma]).
+  \end{align*}
+\end{definition}
 
 \subsection{Autosubst library}
-\cite{AutosubstSchafer}
+
+% \cite{AutosubstSchafer}
 
 The \textit{Autosubst} library for the \textit{Rocq Prover} simplifies the formalisation of syntax with binders.
 % This is obtained using the theory of explicit substitutions to fragment and clarify the description of substitution operations.
@@ -318,7 +344,7 @@ Taking the naive example of an inductive definition of the $\Lam$-terms in \text
   | App (s: term ) (t: term ) .
 \end{lstlisting}
 
-Here, the annotation $\{bind \ term\}$ is an alias of the type $term$.
+Here, the annotation \lst ${bind term}$ is an alias of the type \lst$term$.
 We write this annotation in order to mark our binders in the syntax we want to formalise.  
 
 This way, we may invoke the \textit{Autosubst} classes, automatically deriving the desired instances.
@@ -332,13 +358,13 @@ This way, we may invoke the \textit{Autosubst} classes, automatically deriving t
 
 The first three lines derive the operations necessary to define the (parallel) substitution over a term.
 \begin{enumerate}
-\item Defining the function that maps every index into the corresponding variable term ($i \mapsto (Var \ i)$).
+\item Defining the function that maps every index into the corresponding variable term ($i \mapsto $ \lst$(Var i)$).
 \item Defining the recursive function that instantiates a variable renaming over a term.
 \item Defining the recursive function that instantiates a parallel substitution over a term (using the already defined renamings).
 \end{enumerate}
 
 Finally, there is also the proof of the substitution lemmas. 
-Here, we see the power of this library: this process is done automatically, using the provided $derive$ tactic.
+Here, we see the power of this library: this process is done automatically, using the provided \lst$derive$ tactic.
 
 \subsection{Mechanising $\Lam$-calculus}
 
@@ -367,10 +393,10 @@ Formalising the typing system:
     sequent gamma s (Arr A B) -> sequent gamma t A -> sequent gamma (App s t) B.
 \end{lstlisting}
 
-\begin{enumerate}
-\item Contextos infinitos
-\item Regras de tipificacao diferentes como em \cite{AutosubstManual}
-\end{enumerate}
+The typing system definition is based on \cite{AutosubstManual}.
+
+% \item Contextos infinitos
+% \item Regras de tipificacao diferentes como em \cite{AutosubstManual}
 
 %%% Local Variables:
 %%% mode: LaTeX

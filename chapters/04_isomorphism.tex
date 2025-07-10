@@ -14,6 +14,7 @@
 \]
 
 In our background chapter, the simply typed $\Lam$-calculus was introduced.
+
 Now, we show an isomorphism between the system $\LamV$ introduced in the previous chapter and the simply typed $\Lam$-calculus.
 This isomorphism will come at the level of syntax, reduction and typing rules.
 
@@ -89,7 +90,6 @@ This is of great interest as $\LamV$ typing rules resemble a sequent calculus st
 \subsection{Isomorphism at the level of reduction}
 
 First, we need to introduce some lemmata that establish the preservation of substitution operations by the mappings $\theta, \theta'$ and $\psi'$.
-
 Proofs of lemmas will now be omitted as they are all formalized in the proof assistant and usually proceed routinely.
 
 \begin{lemma}
@@ -159,7 +159,7 @@ Now, we can state the isomorphism at the level of reduction.
   ~\cref{psi_subst_lemma} is crucial for cases dealing with $\beta$ steps.
 \end{proof}
 
-\subsection{Isomorphism at the level of typing rules}
+\subsection{Isomorphism at the level of typed terms}
 
 \begin{theorem}[$\theta$ admissibility]
   \label{theorem11}

@@ -52,10 +52,6 @@
 \usepackage[normalem]{ulem}
 
 \usepackage{listings}
-\lstset{
-  basicstyle=\ttfamily,
-  frame=shadowbox,
-}
 
 \usepackage{ebproof}
 \usepackage{tikz-cd}
@@ -64,11 +60,14 @@
 
 % Definitions, Lemmas and Theorems
 \newtheorem{theorem}{Theorem}
+\crefname{theorem}{Theorem}{Theorems}
 \newtheorem{corollary}{Corollary}
 \newtheorem{lemma}{Lemma}
 \crefname{lemma}{Lemma}{Lemmas}
 
-\newtheorem*{definition}{Definition}
+\newtheorem{definition}{Definition}
+\crefname{definition}{Definition}{Definitions}
+
 \newtheorem*{notation}{Notation}
 \newtheorem*{remark}{Remark}
 \newtheorem*{convention}{Convention}
@@ -136,114 +135,54 @@
   \fancyfoot[C]{\thepage}
 }
 
-\newcommand\code[1]{{\tt\small #1}}
-\definecolor{dkgreen}{rgb}{0,0.6,0}
-\definecolor{ltblue}{rgb}{0,0.4,0.4}
-\definecolor{dkviolet}{rgb}{0.3,0,0.5}
 % lstlisting coq style (inspired from a file of Assia Mahboubi)
-\lstdefinelanguage{Coq}{ 
-    % Anything betweeen $ becomes LaTeX math mode
-    mathescape=true,
-    % Comments may or not include Latex commands
-    texcl=false, 
-    % Vernacular commands
-    morekeywords=[1]{Section, Module, End, Require, Import, Export,
-        Variable, Variables, Parameter, Parameters, Axiom, Hypothesis,
-        Hypotheses, Notation, Local, Tactic, Reserved, Scope, Open, Close,
-        Bind, Delimit, Definition, Let, Ltac, Fixpoint, CoFixpoint, Add,
-        Morphism, Relation, Implicit, Arguments, Unset, Contextual,
-        Strict, Prenex, Implicits, Inductive, CoInductive, Record,
-        Structure, Coercion, Context, Class, Global, Instance,
-        Program, Infix, Theorem, Lemma, Corollary, Proposition, Fact,
-        Remark, Example, Proof, Goal, Save, Qed, Defined, Hint, Resolve,
-        Rewrite, View, Search, Show, Print, Printing, All, Eval, Check,
-        Projections, inside, outside, Def},
-    % Gallina
-    morekeywords=[2]{forall, exists, exists2, fun, fix, cofix, struct,
-      match, with, end, as, in, return, let, if, is, then, else, for, of, using,
-      nosimpl, when},
-    % Sorts
-    morekeywords=[3]{Type, Prop, Set, true, false, option},
-    % Various tactics, some are std Coq subsumed by ssr, for the manual purpose
-    morekeywords=[4]{pose, set, move, case, elim, apply, clear, hnf,
-        intro, intros, generalize, rename, pattern, after, destruct,
-        induction, using, refine, inversion, injection, rewrite, congr,
-        unlock, compute, ring, field, fourier, replace, fold, unfold,
-        change, cutrewrite, simpl, have, suff, wlog, suffices, without,
-        loss, nat_norm, assert, cut, trivial, revert, bool_congr, nat_congr,
-        symmetry, transitivity, auto, split, left, right, autorewrite},
-    % Terminators
-    morekeywords=[5]{by, done, exact, reflexivity, tauto, romega, omega,
-        assumption, solve, contradiction, discriminate},
-    % Control
-    morekeywords=[6]{do, last, first, try, idtac, repeat},
-    % Comments delimiters, we do turn this off for the manual
-    morecomment=[s]{(*}{*)},
-    % Spaces are not displayed as a special character
-    showstringspaces=false,
-    % String delimiters
-    morestring=[b]",
-    morestring=[d]’,
-    % Size of tabulations
-    tabsize=3,
-    % Enables ASCII chars 128 to 255
-    extendedchars=false,
-    % Case sensitivity
-    sensitive=true,
-    % Automatic breaking of long lines
-    breaklines=false,
-    % Default style fors listings
-    basicstyle=\small,
-    % Position of captions is bottom
-    captionpos=b,
-    % flexible columns
-    columns=[l]flexible,
-    % Style for (listings') identifiers
-    identifierstyle={\ttfamily\color{black}},
-    % Style for declaration keywords
-    keywordstyle=[1]{\ttfamily\color{violet}},
-    % Style for gallina keywords
-    keywordstyle=[2]{\ttfamily\color{dkgreen}},
-    % Style for sorts keywords
-    keywordstyle=[3]{\ttfamily\color{ltblue}},
-    % Style for tactics keywords
-    keywordstyle=[4]{\ttfamily\color{blue}},
-    % Style for terminators keywords
-    keywordstyle=[5]{\ttfamily\color{red}},
-    %Style for iterators
-    %keywordstyle=[6]{\ttfamily\color{dkpink}},
-    % Style for strings
-    stringstyle=\ttfamily,
-    % Style for comments
-    commentstyle={\ttfamily\color{dkgreen}},
-    %moredelim=**[is][\ttfamily\color{red}]{/&}{&/},
-    literate=
-    {gamma}{{$\Gamma\;$}}1
-    {beta1}{{$\beta_1\;$}}1
-    {beta2}{{$\beta_2\;$}}1
-    {\\forall}{{\color{dkgreen}{$\forall\;$}}}1
-    {\\exists}{{$\exists\;$}}1
-    {<-}{{$\leftarrow\;$}}1
-    {=>}{{$\Rightarrow\;$}}1
-    {==}{{\code{==}\;}}1
-    {==>}{{\code{==>}\;}}1
-    %    {:>}{{\code{:>}\;}}1
-    {->}{{$\rightarrow\;$}}1
-    {<->}{{$\leftrightarrow\;$}}1
-    {<==}{{$\leq\;$}}1
-    {\#}{{$^\star$}}1 
-    {\\o}{{$\circ\;$}}1 
-    {\@}{{$\cdot$}}1 
-    {\/\\}{{$\wedge\;$}}1
-    {\\\/}{{$\vee\;$}}1
-    {++}{{\code{++}}}1
-    {~}{{$\sim$}}1
-    {\@\@}{{$@$}}1
-    {\\mapsto}{{$\mapsto\;$}}1
-    {\\hline}{{\rule{\linewidth}{0.5pt}}}1
-    %
-  }[keywords,comments,strings]
+\newcommand{\lst}{\lstinline}
+\lstdefinelanguage{Coq}%
+  {morekeywords={Variable,Inductive,CoInductive,Fixpoint,CoFixpoint,%
+      Definition,Lemma,Theorem,Axiom,Local,Save,Grammar,Syntax,Intro,%
+      Trivial,Qed,Intros,Symmetry,Simpl,Rewrite,Apply,Elim,Assumption,%
+      Left,Cut,Case,Auto,Unfold,Exact,Right,Hypothesis,Pattern,Destruct,%
+      Constructor,Defined,Fix,Record,Proof,Induction,Hints,Exists,let,in,%
+      Parameter,Split,Red,Reflexivity,Transitivity,if,then,else,Opaque,%
+      Transparent,Inversion,Absurd,Generalize,Mutual,Cases,of,end,Analyze,%
+      AutoRewrite,Functional,Scheme,params,Refine,using,Discriminate,Try,%
+      Require,Load,Import,Scope,Set,Open,Section,End,match,with,Ltac,%
+      Instance,%
+      bind,as,%
+      % , exists, forall
+	},%
+   sensitive, %
+   morecomment=[n]{(*}{*)},%
+   morestring=[d]",%
+   literate={=>}{{$\Rightarrow$}}1 {>->}{{$\rightarrowtail$}}2{->}{{$\rightarrow$}}1
+   {\/\\}{{$\wedge$}}1
+   {|-}{{$\vdash$}}1
+   {\\\/}{{$\vee$}}1
+   {~}{{$\sim$}}1
+   {exists}{{$\exists\!\!$}}1
+   {forall}{{$\forall\!\!$}}1
+   {beta1}{{$\beta_1$}}1
+   {beta2}{{$\beta_2$}}1
+   {sigma}{{$\sigma$}}1
+   {theta}{{$\theta$}}1
+   {tau}{{$\tau$}}1
+   {rho}{{$\rho$}}1
+   % {xi}{{$\xi$}}1
+   {exi}{exi}3 % insufficient patch to print reflexivity correctly
+   {zeta}{{$\zeta$}}1
+   {Gamma}{{$\Gamma$}}1
+   {Delta}{{$\Delta$}}1
+   {\\rhd}{{$\rhd$}}1
+   %{>>}{\scomp}1
+   %{<>}{{$\neq$}}1 indeed... no.
+  }[keywords,comments,strings]%
 
+\lstset{
+   basicstyle=\ttfamily,
+   keywordstyle=\bfseries\color{blue}
+  }
+\lstset{language=Coq}
+\lstset{columns=fullflexible, keepspaces}
 
 % *******************************************************************
 
@@ -262,11 +201,11 @@
 \pagenumbering{roman}
 \setcounter{page}{2} % Cover page is the first page, but not numbered
 % \include{front/copyright}\clearpage
-\include{front/acknowledgments}\clearpage
-\include{front/integrity}\clearpage
-\input{front/resumo}\clearpage
-\input{front/abstract}\clearpage
-\input{front/quote}\clearpage
+% \include{front/acknowledgments}\clearpage
+% \include{front/integrity}\clearpage
+% \input{front/resumo}\clearpage
+% \input{front/abstract}\clearpage
+% \input{front/quote}\clearpage
 \setcounter{tocdepth}{1} % Only go down to section level on ToC
 \tableofcontents\fancyhead[R]{\textit{Contents}}
 % \listoffigures\fancyhead[R]{\textit{List of Figures}}
@@ -287,8 +226,8 @@
 \input{chapters/04_isomorphism}
 \input{chapters/05_discussion}
 
-\input{chapters/10_conclusions}
-\input{chapters/appendix/appendix}
+% \input{chapters/10_conclusions}
+% \input{chapters/appendix/appendix}
 \fancyhead[R]{\textit{Bibliography}}\bibliography{dissertation}
 
 \end{document}

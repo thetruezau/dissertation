@@ -91,44 +91,6 @@
 
 % ---
 
-\begin{definition}[$h$-normal forms]
-  We inductively define the sets of $\LamM$-terms (or canonical terms) and $\LamM$-lists in $h$-normal form, respectively $Can$ and $CanList$, as follows:
-  \[
-    \begin{prooftree}
-      \infer0{ x \in Can } 
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{ t \in Can }
-      \infer1{ \lambda x . t \in Can } 
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{ u \in Can }            
-      \hypo{ l \in CanList }
-      \infer2{ x(u, l) \in Can }
-    \end{prooftree}
-    \quad
-    \begin{prooftree}
-      \hypo{ t \in Can } 
-      \hypo{ u \in Can }            
-      \hypo{ l \in CanList }
-      \infer3{ (\lambda x. t)(u, l) \in Can }
-    \end{prooftree}
-  \]
-  \[
-    \begin{prooftree}
-      \infer0{ [] \in CanList } 
-    \end{prooftree}
-    \qquad
-    \begin{prooftree}
-      \hypo{ u \in Can }            
-      \hypo{ l \in CanList }
-      \infer2{ u::l \in CanList }
-    \end{prooftree}
-  \]
-\end{definition}
-
 \begin{definition}[$\beta h$-normal forms]
   We inductively define the sets of $\LamM$-terms and $\LamM$-lists in $\beta h$-normal form, respectively NF and NL, as follows:
   \[
@@ -193,10 +155,163 @@
   \]
 \end{definition}
 
-% For this system, we still have the usual result of subject reduction.
+% ---
+% 123
+% ---
+
+\subsection{The canonical subsystem}
+
+As we have identified the $\beta h$-normal forms, we can also identify the set of $h$-normal forms, given by the following definition.
+
+\begin{definition}[$h$-normal forms]
+  We inductively define the sets of $\LamM$-terms and $\LamM$-lists in $h$-normal form, respectively $Can$ and $CanList$, as follows:
+  \[
+    \begin{prooftree}
+      \infer0{ x \in Can } 
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{ t \in Can }
+      \infer1{ \lambda x . t \in Can } 
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{ u \in Can }            
+      \hypo{ l \in CanList }
+      \infer2{ x(u, l) \in Can }
+    \end{prooftree}
+    \quad
+    \begin{prooftree}
+      \hypo{ t \in Can } 
+      \hypo{ u \in Can }            
+      \hypo{ l \in CanList }
+      \infer3{ (\lambda x. t)(u, l) \in Can }
+    \end{prooftree}
+  \]
+  \[
+    \begin{prooftree}
+      \infer0{ [] \in CanList } 
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ u \in Can }            
+      \hypo{ l \in CanList }
+      \infer2{ u::l \in CanList }
+    \end{prooftree}
+  \]
+
+  We also call canonical terms to the $\LamM$-terms in the set $Can$.
+\end{definition}
+
+Now, we will describe how this class of terms in $\LamM$ generates a subsystem.
+
+First, we define the function $app : Can \times Can \times Can \to Can$ that will behave as a multiary application constructor closed for the canonical terms.
+
+\begin{definition}
+  Given $t, u \in Can$ and $l \in CanList$, the operation $app(t, u, l)$ is defined by the following equations:
+  \begin{align*}
+    & app(x, u, l) = x(u, l), \\
+    & app(\lambda x. t, u, l) = (\lambda x. t)(u, l), \\ 
+    & app(x(u', l'), u, l) = x(u', l' + (u::l)) \\
+    & app((\lambda x. t)(u', l'), u, l) = (\lambda x. t)(u', l'+(u::l)).
+  \end{align*}  
+\end{definition}
+
+\begin{lemma}
+  \label{app_is_multistep}
+  For every $\LamM$-terms $t, u$, and $\LamM$-list $l$, 
+  \[ t(u, l) \twoheadrightarrow_h app(t, u, l). \]
+\end{lemma}
+\begin{proof}
+  The proof proceeds easily by inspection of term $t$.
+  For the cases where $t$ is not an application, we have an equality.
+\end{proof}
+
+Then, we can define a function that collapses $\LamM$-terms to their $h$-normal form.
+
+\begin{definition}
+  Consider the following map $h$:
+  \begin{align*}
+    h : \LamM \text{-terms} &\to Can \\
+    x &\mapsto x \\
+    \lambda x . t &\mapsto \lambda x . h(t) \\
+    t(u,l) &\mapsto app(h(t), h(u), h'(l)),
+  \end{align*}
+  where $h'$ is simply defined as
+  $h'([]) \mapsto []$ and $h'(u::l) = h(u)::h'(l)$.
+\end{definition}
+
+\begin{theorem}
+  \label{h_is_multistep}
+  For every $\LamM$-term $t$,
+  \[ t \twoheadrightarrow_h h(t), \]
+  and also, for every $\LamM$-list $l$,
+  \[ l \twoheadrightarrow_h h'(l). \]
+\end{theorem}
+\begin{proof}
+  The proof proceeds easily by simultaneous induction on the structure of term $t$ and list $l$.
+
+  As $h$ is defined using $app$, \cref{app_is_multistep} is crucial for the case where $t$ is an application. 
+\end{proof}
+
+\begin{theorem}[$h$ surjectivity]
+  \label{h_is_surjective}
+  For every $t \in Can$,
+  \[ t = h(t). \]
+\end{theorem}
+\begin{proof}
+  The proof proceeds easily by simultaneous induction on the structure of the canonical term $t$.
+\end{proof}
+
+For the purpose of defining a subsystem of $\LamM$, we induce a reduction relation for these canonical terms given a reduction relation on the $\LamM$-terms and -lists.
+
+\begin{definition}[Canonical Closure]
+  Let $R$ and $R'$ be two binary relations on $\LamM$-terms and $\LamM$-lists respectively.
+  We inductively define the canonical closure of each relation as follows:
+  \[
+    \begin{prooftree}
+      \hypo{ (t, t') \in R }
+      \infer1{ (h(t), h(t')) \in R_c } 
+    \end{prooftree}
+    \qquad \qquad
+    \begin{prooftree}
+      \hypo{ (l, l') \in R' }
+      \infer1{ (h(l), h(l')) \in R'_c } 
+    \end{prooftree}
+  \]
+\end{definition}
+
+In the same manner, we introduce the typing judgements for canonical terms.
+
+\begin{definition}[Canonical Typing System]
+  \label{canonical_typing}
+  We inductively define the canonical type-assignement, defined over every $\LamM$-term $t$ and $\LamM$-list $l$:
+  \[
+    \begin{prooftree}
+      \hypo{ \Gamma \vdash t:A }
+      \infer1{ \Gamma \vdash_c h(t):A } 
+    \end{prooftree}
+    \qquad \qquad
+    \begin{prooftree}
+      \hypo{ \Gamma ; A \vdash l:B }
+      \infer1{ \Gamma ; A \vdash_c h(l):B }.
+    \end{prooftree}
+  \]
+\end{definition}
+
+We conclude our presentation of the canonical subsystem of $\LamM$.
+This presentation does not exaclty coincide with \cite{JCES2002}.
+We still want present a self-contained version of this subsystem, that we will call $\LamV$.
+We then prove that out self-contained version of the canonical terms is isomorphic to the susbsytem now described.
+
+% ---
+% 123
+% ---
+
+\subsection{Subject reduction for $\LamM$}
 
 \begin{lemma}[Substitution Admissibility]
-  \label{lemma1}
+  \label{type_substitution}
   The following rules are admissible:
   \[
     \begin{prooftree}
@@ -218,7 +333,7 @@
 
 
 \begin{lemma}[Append Admissibility]
-  \label{lemma2}
+  \label{append_is_admissible}
   The following rules is admissible:
   \[
     \begin{prooftree}
@@ -234,6 +349,7 @@
 
 
 \begin{theorem}[Subject Reduction]
+  \label{type_preservation}
   Given $\LamM$-terms $t$ and $t'$, the follwing holds:
   \[
     \Gamma \vdash t : A \ \land \ t \to_{\beta h} t' \implies \Gamma \vdash t' : A.
@@ -242,12 +358,13 @@
 \begin{proof}
   The proof proceeds by simultaneous induction on the structure of the relation $\to_{\beta h}$.
 
-  $(i)$ For the case where we have as hypothesis $\beta(t, t')$, we easily prove it using~\cref{lemma1}.
-  
-  $(ii)$ For the case where we have as hypothesis $h(t, t')$, we easily prove it using~\cref{lemma2}.
+  $(i)$ We easily prove the case $t \to_\beta t'$ using substitution admissability in~\cref{type_substitution}.
+
+  $(ii)$ We easily prove the case $t \to_h t'$ using append admissability in~\cref{append_admissibility}.
 \end{proof}
 
 % ---------------------------------------------------
+% 123
 % ---------------------------------------------------
 
 \section{The system $\LamV$}
@@ -261,7 +378,7 @@
 \end{definition}
 
 \begin{definition}
-  Given $\LamV$-terms $t, u$ and $\LamV$-list $l$, we define the operation $t@(u, l)$, by the following equations:
+  Given $\LamV$-terms $t, u$ and $\LamV$-list $l$, the operation $t@(u, l)$ is defined by the following equations:
   \begin{align*}
     & var(x)@(u, l) = app_v(x, u, l), \\
     & (\lambda x. t)@(u, l) = app_\lambda (x. t, u, l), \\ 
@@ -284,6 +401,95 @@
   & (u::l)[x := v] = u[x := v] :: l[x := v] .
   \end{align*}
 \end{definition}
+
+
+\begin{definition}[Compatible Relation]
+  Let $R$ and $R'$ be two binary relations on $\LamV$-terms and $\LamV$-lists respectively.
+  We say they are compatible when they satisfy:
+  \[
+    \begin{prooftree}
+      \hypo{ (t, t') \in R }
+      \infer1{ (\lambda x . t, \lambda x . t') \in R } 
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ (t, t') \in R }
+      \infer1{ (app_\lambda (x.t, u, l), app_\lambda (x.t', u, l)) \in R } 
+    \end{prooftree}
+  \]
+  \[
+    \begin{prooftree}
+      \hypo{ (u, u') \in R }
+      \infer1{ (app_\lambda (x.t, u, l), app_\lambda (x.t, u', l)) \in R }
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ (l, l') \in R' }
+      \infer1{ (app_\lambda (x.t, u, l), app_\lambda (x.t, u, l')) \in R } 
+    \end{prooftree}
+  \]
+  \[
+    \begin{prooftree}
+      \hypo{ (u, u') \in R }
+      \infer1{ (app_v (x, u, l), app_v (x, u', l)) \in R } 
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ (l, l') \in R' }
+      \infer1{ (app_v (x, u, l), app_v (x, u, l')) \in R } 
+    \end{prooftree}
+  \]
+  \[
+    \begin{prooftree}
+      \hypo{ (u, u') \in R }
+      \infer1{ (u::l, u'::l) \in R' } 
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ (l, l') \in R' }
+      \infer1{ (u::l, u::l') \in R' } 
+    \end{prooftree}
+  \]
+\end{definition}
+
+
+\begin{lemma}[Compatibility lemmas]
+  \label{compatibility_lemmas}
+  Let $R$ and $R'$ be two binary relations on $\LamV$-terms and $\LamV$-lists respectively.
+  If $R$ and $R'$ are compatible, then they satisfy:
+    \[
+    \begin{prooftree}
+      \hypo{ (l_1, l_1') \in R' }
+      \infer1{ (l_1+l_2, l_1'+l_2) \in R' } 
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ (l_2, l_2') \in R' }
+      \infer1{ (l_1+l_2, l_1+l_2') \in R' }
+    \end{prooftree}
+  \]
+  \[
+    \begin{prooftree}
+      \hypo{ (t, t') \in R }
+      \infer1{ (t@(u,l), t'@(u,l)) \in R } 
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ (u, u') \in R }
+      \infer1{ (t@(u,l), t@(u',l)) \in R } 
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ (l, l') \in R' }
+      \infer1{ (t@(u,l), t@(u,l')) \in R } 
+    \end{prooftree}
+  \]
+\end{lemma}
+\begin{proof}
+  The proof proceeds easily by induction on lists for the append cases.
+
+  For the compatibility cases of @ operation, proof follows by inspection of the principle argument and application of the append cases. 
+\end{proof}
 
 \begin{definition}[Reduction rules for $\LamV$-terms]  
   \begin{align*}
@@ -334,141 +540,406 @@
   \]
 \end{definition}
 
-\subsection{$\LamV$ as a subsystem of $\LamM$}
+% ---
+% 123
+% ---
+
+\section{$\LamV$ as a subsystem of $\LamM$}
 
 \begin{definition}
-  Consider the following maps $\iota$ and $\pi$:
+  Consider the following maps $i$ and $p$:
   \begin{align*}
-    \iota : \LamV \text{-terms} &\to \LamM \text{-terms} \\
+    i : \LamV \text{-terms} &\to Can \\
     var(x) &\mapsto x \\
-    \lambda x . t &\mapsto \lambda x . \iota(t) \\
-    app_v (x, u, l) &\mapsto x(\iota(u), \iota'(l)) \\
-    app_\lambda (x. t, u, l) &\mapsto (\lambda x . \iota(t))(\iota(u), \iota'(l)),
+    \lambda x . t &\mapsto \lambda x . i(t) \\
+    app_v (x, u, l) &\mapsto x(i(u), i'(l)) \\
+    app_\lambda (x. t, u, l) &\mapsto (\lambda x . i(t))(i(u), i'(l)),
   \end{align*}
-  where $\iota'$ is simply defined as
-  $\iota'([]) \mapsto []$ and $\iota'(u::l) = \iota(u)::\iota'(l)$;
+  where $i'$ is simply defined as
+  $i'([]) \mapsto []$ and $i'(u::l) = i(u)::i'(l)$;
   \begin{align*}
-    \pi : \LamM \text{-terms} &\to \LamV \text{-terms} \\
+    p : \LamM \text{-terms} &\to \LamV \text{-terms} \\
     x &\mapsto var(x) \\
-    \lambda x . t &\mapsto \lambda x . \pi(t) \\
-    t(u, l) &\mapsto \pi(t)@(\pi(u), \pi'(l)),
+    \lambda x . t &\mapsto \lambda x . p(t) \\
+    t(u, l) &\mapsto p(t)@(p(u), p'(l)),
   \end{align*}
-  where $\pi'$ is simply defined as
-  $\pi'([]) \mapsto []$ and $\pi'(u::l) = \pi(u)::\pi'(l)$.
+  where $p'$ is simply defined as
+  $p'([]) \mapsto []$ and $p'(u::l) = p(u)::p'(l)$.
 \end{definition}
 
-We now see that the defined maps establish a bijection between the $\LamV$-terms and the subsyntax of $\LamM$-terms in the set $Can$.
+The following diagram summarizes the maps defined.
+
+% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQAdDtAWwCNgXRvX5R6AAh4BfEFNLpMufIRRli1Ok1bsuvAQGF6YGXIXY8BIuVLqaDFm0Sdu-QR1owAxuKEi+Ykw0YKABzeCJQADMAJwgeJGsQHAgkMhBhPhhGAAVFCxV0mEicEDstRxAAC1l5EBi4pAAmGmTUsod2LFL0+kycvOV2aKwQypLTOtj4xETWxGbNDqc0boys3PNBp2HR8copIA
+\[
+  \begin{tikzcd}
+    & \pmb{\lambda m} \arrow[d, "h"] \arrow[ld, "p"'] \\
+    \pmb{\vec \lambda} \arrow[r, "i"'] & Can                                      
+  \end{tikzcd}
+\]
+
+We show some useful lemmas for the following results.
+
+\begin{lemma}
+  \label{i_app_comm}
+  Given $\LamV$-terms $t,u$ and $\LamV$-list $l$, 
+  \[ i(t@(u,l)) = app(i(t), i(u), i'(l)). \]
+\end{lemma}
+\begin{proof}
+  The proof proceeds easily by inspection of the $\LamV$-term $t$. 
+\end{proof}
+
+% We now see that the defined maps establish a bijection between the $\LamV$-terms and the subsyntax of $\LamM$-terms in the set $Can$.
+
+\subsection{Isomorphism at the level of terms}
 
 \begin{theorem}
-  \label{theorem2}
+  \label{comm_i_p_h}
   \begin{align*}
-    \iota \circ \pi &= id_{Can} \\
-    \iota' \circ \pi' &= id_{CanList}    
+    i \circ p &= h \\
+    i' \circ p' &= h'    
   \end{align*}
 \end{theorem}
 \begin{proof}
-  The proof proceeds easily by simultaneous induction on the structure of the $Can$-term. 
+  The proof proceeds easily by simultaneous induction on the structure of the $\LamM$-term, using~\cref{i_app_comm} in the application case.
+\end{proof}
+
+\begin{corollary}
+  \label{inversion_ip}
+  \begin{align*}
+    i \circ p|_{Can} &= id_{Can} \\
+    i' \circ p'|_{CanList} &= id_{CanList}
+  \end{align*}
+\end{corollary}
+\begin{proof}
+  Each inversion is obtained via rewriting with~\cref{h_is_surjective} and then using~\cref{comm_i_p_h}.
 \end{proof}
 
 \begin{theorem}
-  \label{theorem3}
+  \label{inversion_pi}
   \begin{align*}
-    \pi \circ \iota &= id_{\LamV \text{-terms}} \\
-    \pi' \circ \iota' &= id_{\LamV \text{-terms}}    
+    p \circ i &= id_{\LamV \text{-terms}} \\
+    p' \circ i' &= id_{\LamV \text{-terms}}    
   \end{align*}
 \end{theorem}
 \begin{proof}
   The proof proceeds easily by simultaneous induction on the structure of the $\LamV$-term. 
 \end{proof}
 
-\begin{theorem}[$\iota$ admissibility]
-  \label{theorem4}
-  The following rule is admissible:
-  \[ \begin{prooftree}
-      \hypo{ \Gamma \vdash t : A }
-      \infer1{ \Gamma \vdash \iota(t) : A } 
-    \end{prooftree} \]
-\end{theorem}
+% ---
+% ---
+
+\subsection{Isomorphism at the level of reduction}
+
+In our subsytem of canonical terms, the substitution is not closed for the substitution operation.
+We have the following result that relates the two notions of substitution.
+
+\begin{lemma}
+  \label{i_subst_pres}
+  For every $\LamV$-terms $t, u$,
+  \[ i(t[x := u]) = h(i(t)[x := i(u)]) \]
+  and also, for every $\LamV$-term $u$ and $\LamV$-list $l$,
+  \[ i'(l[x := u]) = h'(i'(l)[x := i(u)]). \]
+\end{lemma}
 \begin{proof}
-  \dots
+  The proof proceeds easily by simultaneous induction on the structure of the $\LamV$-term $t$.
+
+  For the case where $t = app_v (x, u, l)$, we use~\cref{i_app_comm} to rewrite the term $i(t[x := v]) = i(v@(u,l))$ as $app(i(v), i(u), i'(l))$.
 \end{proof}
 
-\begin{theorem}[$\pi$ admissibility]
-  \label{theorem5}
-  The following rule is admissible:
-  \[ \begin{prooftree}
-      \hypo{ \Gamma \vdash t : A }
-      \infer1{ \Gamma \vdash \pi(t) : A } 
-    \end{prooftree} \]
-\end{theorem}
+\begin{lemma}
+  \label{p_subst_pres}
+  For every $\LamM$-terms $t, u$,
+  \[ p(t[x := u]) = p(t)[x := p(u)] \]
+  and also, for every $\LamM$-term $u$ and $\LamM$-list $l$,
+  \[ p'(l[x := u]) = p'(l)[x := p(u)]. \]
+\end{lemma}
 \begin{proof}
-  \dots
+  The proof proceeds easily by simultaneous induction on the structure of the $\LamM$-term $t$.
 \end{proof}
 
-\vspace{2em} \hrule \vspace{2em}
+The following technical lemma says that we can derive the compatibilty rules from the system $\LamV$ given the canonoical closure of compatible relation on $\LamM$.
 
-HERE - Whats a subsystem after all? Which results?
+\begin{lemma}
+  \label{step_can_is_compatible}
+  Let $R$ and $R'$ be two binary relations on $\LamM$-terms and $\LamM$-lists respectively.
 
-\vspace{2em} \hrule \vspace{2em}
+  The following binary relations are compatible in $\LamV$:
+  \begin{align*}
+    I &= \{ (t, t') \ | \ i(t) \ {\to_R}_c \ i(t'), \text{for every $\LamV$-terms $t, t'$} \} \\
+    I' &= \{ (l, l') \ | \ i'(l) \ {\to_{R'}}_c \ i'(l'), \text{for every $\LamV$-lists $l, l'$} \}
+  \end{align*}
+\end{lemma}
+\begin{proof}
+  We provide proof for one of the compatibility cases:
+  \[ \begin{prooftree}
+      \hypo{ (t, t') \in I }
+      \infer1{ (app_\lambda (x.t, u, l), app_\lambda (x.t', u, l)) \in I }
+    \end{prooftree} . \]
 
-To say that $\LamV$ is a subsystem of $\LamM$ we present the following result of conservativeness, relating the reduction relations in both systems.
+  From the definition of $I$, $(t, t') \in I \implies i(t) \ {\to_R}_c \ i(t')$.
+
+  Then, from the definition of the canonical closure relation, we have that there exist $\LamM$-terms $t_1$ and $t_2$ such that $h(t_1) = i(t)$ and $h(t_2) = i(t')$ and $t_1 \to_R t_2$.
+
+  We have:
+  \[ \begin{prooftree}
+      \hypo{ t_1 \to_R t_2 }
+      \infer1[\text{(compatibility of $\to_R$)}]{ \lambda x.t_1 \to_R \lambda x.t_2 }
+      \infer1[\text{(compatibility of $\to_R$)}]{ (\lambda x.t_1)(i(u), i'(l)) \to_R (\lambda x.t_2)(i(u), i'(l)) }
+      \infer1[\text{(compatibility of $\to_R$)}]{ (\lambda x.t_1)(i(u), i'(l)) \to_R (\lambda x.t_2)(i(u), i'(l)) }
+      \infer1[\text{(canonical closure definition)}]{ h((\lambda x.t_1)(i(u), i'(l))) \ {\to_R}_c \ h((\lambda x.t_2)(i(u), i'(l))) }.
+    \end{prooftree} \]
+
+  Computing $h$, we get $(\lambda x.h(t_1))(h(i(u)), h'(i'(l))) \ {\to_R}_c \ (\lambda x.h(t_2))(h(i(u)), h'(i'(l)))$.
+
+  As $i(u) \in Can$, $h(i(u)) = i(u)$.
+  And also, because $i'(l) \in CanList$, we get that $h'(i'(l)) = i'(l)$.
+  \begin{align*}
+    &(\lambda x.h(t_1))(i(u), i'(l)) = (\lambda x.i(t))(i(u), i'(l)) = i(app_\lambda (x.t, u, l)) \\
+    {\to_R}_c \ &(\lambda x.h(t_2))(i(u), i'(l)) = (\lambda x.i(t'))(i(u), i'(l)) = i(app_\lambda (x.t', u, l))
+  \end{align*}
+
+  Therefore, by definition of $I$, we get that $(app_\lambda (x.t, u, l), app_\lambda (x.t', u, l)) \in I$.
+\end{proof}
+
+\begin{theorem}
+  \label{i_step_pres}
+  For every $\LamV$-terms $t, t'$,
+  \[ t \to_{\beta} t' \implies i(t) {\to_{\beta}}_c i(t') \]
+  and also, for every $\LamV$-lists $l, l'$,
+  \[ l \to_{\beta} l' \implies i'(l) {\to_{\beta}}_c i(l'). \]
+\end{theorem}
+\begin{proof}
+  The proof proceeds by simultaneous induction on the step relation of $\LamV$-terms.
+
+  \cref{i_subst_pres} deals with substitution preservation in the $\beta$ reduction cases.
+
+  \cref{step_can_is_compatible} deals with all the compatibility cases.
+\end{proof}
+
+\begin{theorem}
+  \label{p_step_pres}
+  For every $t, t' \in Can$,
+  \[ t {\to_{\beta}}_c t' \implies p(t) \to_{\beta} p(t') \]
+  and also, for every $l, l' \in CanList$,
+  \[ l {\to_{\beta}}_c l' \implies p'(l) \to_{\beta} p(l'). \]
+\end{theorem}
+\begin{proof}
+  The proof proceeds by simultaneous induction on the step relation of canonical terms.
+  
+  \cref{compatibility_lemmas} may be useful for compatibility steps.
+
+  \cref{p_subst_pres} deals with substitution preservation in the $\beta$ reduction cases.  
+\end{proof}
+
+% ---
+% 123
+% ---
+
+\subsection{Isomorphism at the level of typed terms}
+
+\begin{lemma}[Append admissibility]
+  \label{append_admissibility}
+  The following rule is admissible in $\LamV$:
+  \[ \begin{prooftree}
+      \hypo{ \Gamma ; A \vdash l : B }
+      \hypo{ \Gamma ; B \vdash l' : C }
+      \infer2{ \Gamma ; A \vdash l+l' : C } 
+    \end{prooftree} . \]
+\end{lemma}
+\begin{proof}
+  The proof proceeds easily by induction on the list $l$.
+\end{proof}
+
+
+\begin{lemma}[@ admissibility]
+  \label{app_admissibility}
+  The following rule is admissible in $\LamV$:
+  \[ \begin{prooftree}
+      \hypo{ \Gamma \vdash t : A \supset B }
+      \hypo{ \Gamma \vdash u : A }
+      \hypo{ \Gamma ; B \vdash l : C }      
+      \infer3{ \Gamma \vdash t@(u,l) : C } 
+    \end{prooftree} . \]
+\end{lemma}
+\begin{proof}
+  The proof proceeds easily by inspection of $t$, using \cref{append_admissibility} when $t$ is an application. 
+\end{proof}
+
+
+\begin{theorem}[$i$ admissibility]
+  \label{i_admissibility}
+    For every $\LamV$-term $t$ and $\LamV$-list $l$, the following rules are admissible:
+  \[ \begin{prooftree}
+      \hypo{ \Gamma \vdash t : A }
+      \infer1{ \Gamma \vdash_c i(t) : A } 
+    \end{prooftree}
+    \qquad \qquad \qquad
+    \begin{prooftree}
+      \hypo{ \Gamma ; A \vdash l : B }
+      \infer1{ \Gamma ; A \vdash_c i'(l) : B } 
+    \end{prooftree}. \]
+\end{theorem}
+\begin{proof}
+  The proof proceeds easily by simultaneous induction on the typing rules of $\LamV$.
+\end{proof}
+
+
+\begin{theorem}[$p$ admissibility]
+  \label{p_admissibility}
+  For every $t \in Can$ and $l \in CanList$, the following rules are admissible:
+  \[ \begin{prooftree}
+      \hypo{ \Gamma \vdash_c t : A }
+      \infer1{ \Gamma \vdash p(t) : A } 
+    \end{prooftree}
+    \qquad \qquad \qquad
+    \begin{prooftree}
+      \hypo{ \Gamma ; A \vdash_c l : B }
+      \infer1{ \Gamma ; A \vdash p'(l) : B } 
+    \end{prooftree}. \]
+\end{theorem}
+\begin{proof}
+  From~\cref{h_is_surjective} we have that $t = h(t)$ and $l = h'(l)$.
+
+  Then, inverting~\cref{canonical_typing}, we have (in $\LamM$):
+  \[ \Gamma \vdash t : A
+    \qquad \qquad \qquad
+    \Gamma ; A \vdash l : B . \]
+  
+  Therefore, the proof proceeds easily by simultaneous induction on the typing rules of $\LamM$.
+
+  \cref{app_admissibility} is crucial for the application case.
+\end{proof}
+
+Our argument for the isomorphism between the canonical subsystem in $\LamM$ and $\LamV$ ends here.
+
+From now on, we will use the self contained representation, system $\LamV$, to talk about canonical terms.
+
+% ---
+% 123
+% ---
+
+\section{Conservativeness}
+
+The result of conservativeness establishes the connection between reduction in $\LamV$ and in $\LamM$.
 
 \begin{theorem}[Conservativeness]
+  \label{conservativeness}
   For every $\LamV$-terms $t$ and $t'$, we have:
   \[
     t \twoheadrightarrow_\beta t' \iff
-    \iota(t) \twoheadrightarrow_{\beta h} \iota(t')
+    i(t) \twoheadrightarrow_{\beta h} i(t')
   \]
 \end{theorem}
 \begin{proof}
-  Let $t$ and $t'$ be $\LamV$-terms.
-
   $\boxed \implies~$
+  Let $t$ and $t'$ be $\LamV$-terms.
 
   For this implication it suffices to mimic $\beta$ steps of the system $\LamV$ in the system $\LamM$.
 
-  We translate a sequence of reductions as follows:
-  % https://q.uiver.app/#q=WzAsOSxbMSwwLCJ0Il0sWzMsMCwidCciXSxbMCwxLCJcXGlvdGEodCkiXSxbNCwxLCJcXGlvdGEodCcpIl0sWzEsMSwidF8wIl0sWzUsMSwiKFxcdGV4dHtpbn0gXFwgXFxsYW1iZGEgbSkiXSxbNSwwLCIoXFx0ZXh0e2lufSBcXCBcXHZlYyBcXGxhbWJkYSkiXSxbMiwxLCJcXGNkb3RzIl0sWzMsMSwidF9rIl0sWzAsMSwiX1xcYmV0YSJdLFswLDIsIlxcaW90YSIsMV0sWzEsMywiXFxpb3RhIiwxXSxbMiw0LCJfXFxiZXRhIl0sWzQsNywiX2giXSxbNyw4LCJfaCJdLFs4LDMsIl9oIl1d
+  Case $t \to_{\beta_1} t'$:
+  % https://q.uiver.app/#q=WzAsMTIsWzAsMiwiYXBwX3tcXGxhbWJkYX0oeC50LCB1LCBbXSkiXSxbMCw0LCJ0W3g6PXVdIl0sWzEsMSwiKFxcbGFtYmRhIHguIGkodCkpKGkodSksIGknKGwpKSJdLFsxLDUsImkodFt4Oj11XSkiXSxbMSwyLCJpKHQpW3ggOj0gaSh1KV0iXSxbMSw0LCJoKGkodClbeDo9aSh1KV0pIl0sWzAsMCwiKFxcdGV4dHtpbn0gXFwgXFx2ZWMgXFxsYW1iZGEpIl0sWzEsMCwiKFxcdGV4dHtpbn0gXFwgXFxsYW1iZGEgbSkiXSxbMCwzXSxbMiwzXSxbMiw0XSxbMiw1XSxbMCwyLCJpIiwxXSxbMSwzLCJpIiwxXSxbMiw0LCJfe1xcYmV0YV8xfSIsMl0sWzUsMywiIiwyLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNCw1LCJfaCIsMix7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6ImVwaSJ9fX1dLFswLDEsIl97XFxiZXRhXzF9IiwyXSxbOSwxMCwibGVtbWEiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMTAsMTEsImxlbW1hIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d
   \[\begin{tikzcd}
-      & t && {t'} && {(\text{in} \ \vec \lambda)} \\
-      {\iota(t)} & {t_0} & \cdots & {t_k} & {\iota(t')} & {(\text{in} \ \lambda m)}
-      \arrow["{_\beta}", from=1-2, to=1-4]
-      \arrow["\iota"{description}, from=1-2, to=2-1]
-      \arrow["\iota"{description}, from=1-4, to=2-5]
-      \arrow["{_\beta}", from=2-1, to=2-2]
-      \arrow["{_h}", from=2-2, to=2-3]
-      \arrow["{_h}", from=2-3, to=2-4]
-      \arrow["{_h}", from=2-4, to=2-5]
-    \end{tikzcd}\]
+	{(\text{in} \ \LamV)} & {(\text{in} \ \LamM)} \\
+	& {(\lambda x. i(t))(i(u), i'(l))} \\
+	{app_{\lambda}(x.t, u, [])} & {i(t)[x := i(u)]} \\
+	{} && {} \\
+	{t[x:=u]} & {h(i(t)[x:=i(u)])} & {} \\
+	& {i(t[x:=u])} & {}
+	\arrow["{_{\beta_1}}"', from=2-2, to=3-2]
+	\arrow["i"{description}, from=3-1, to=2-2]
+	\arrow["{_{\beta_1}}"', from=3-1, to=5-1]
+	\arrow["{_h}"', two heads, from=3-2, to=5-2]
+	\arrow["\text{\cref{h_is_multistep}}"{description}, draw=none, from=4-3, to=5-3]
+	\arrow["i"{description}, from=5-1, to=6-2]
+	\arrow[equals, from=5-2, to=6-2]
+	\arrow["\text{\cref{i_subst_pres}}"{description}, draw=none, from=5-3, to=6-3]
+      \end{tikzcd}\]
   
-  $\boxed \Longleftarrow$
-
-  This implication follows easily by the properties of map $\pi$:
-  \begin{enumerate}
-  \item Preserves $\beta$-steps in $\LamM$;
-  \item Collapses $h$-steps in $\LamM$.
-  \end{enumerate}
-
-  We translate a sequence of reductions as follows:  
-  % https://q.uiver.app/#q=WzAsMTIsWzAsMCwiXFxpb3RhKHQpIl0sWzQsMCwiXFxpb3RhKHQnKSJdLFsxLDAsInRfMCJdLFs1LDAsIihcXHRleHR7aW59IFxcIFxcbGFtYmRhIG0pIl0sWzIsMCwiXFxjZG90cyJdLFszLDAsInRfayJdLFs1LDEsIihcXHRleHR7aW59IFxcIFxcdmVjIFxcbGFtYmRhKSJdLFswLDEsIlxccGkoXFxpb3RhKHQpKSA9IHQiXSxbNCwxLCJcXHBpKFxcaW90YSh0KSkgPSB0Il0sWzEsMSwiXFxwaSh0XzApIl0sWzIsMSwiXFxjZG90cyJdLFszLDEsIlxccGkodF9rKSJdLFswLDJdLFsyLDRdLFs1LDEsIl9oIl0sWzAsNywiXFxwaSIsMV0sWzQsNV0sWzgsMSwiXFxpb3RhIiwxXSxbMiw5XSxbNyw5XSxbOSwxMF0sWzEwLDExXSxbMTEsOF1d
+  Case $t \to_{\beta_2} t'$:
+  % https://q.uiver.app/#q=WzAsMTUsWzEsMiwiKGkodClbeCA6PSBpKHUpXSkoaSh2KSwgaScobCkpIl0sWzAsMCwiXFxzbWFsbHsoXFx0ZXh0e2lufSBcXCBcXHZlYyBcXGxhbWJkYSl9Il0sWzEsMCwiXFxzbWFsbHsoXFx0ZXh0e2lufSBcXCBcXGxhbWJkYSBtKX0iXSxbMSwxLCIoXFxsYW1iZGEgeC4gaSh0KSkoaSh1KSwgaSh2KTo6aScobCkpIl0sWzEsMywiaChpKHQpW3ggOj0gaSh1KV0pKGkodiksIGknKGwpKSJdLFsxLDYsImkodFt4Oj11XUAodixsKSkiXSxbMSw1LCJhcHAoaSh0W3g6PXVdKSwgaSh2KSwgaScobCkpIl0sWzEsNCwiKGkodFt4IDo9IHVdKShpKHYpLCBpJyhsKSkiXSxbMCwyLCJhcHBfe1xcbGFtYmRhfSh4LnQsIHUsIHY6OmwpIl0sWzAsNSwidFt4Oj11XUAodiwgbCkiXSxbMiw1XSxbMiw0XSxbMiwzXSxbMiwyXSxbMiw2XSxbMywwLCJfe1xcYmV0YV8yfSJdLFswLDQsIl9oIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoiZXBpIn19fV0sWzQsNywiIiwwLHsic2hvcnRlbiI6eyJzb3VyY2UiOjMwLCJ0YXJnZXQiOjMwfSwibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNiw1LCIiLDEseyJzaG9ydGVuIjp7InNvdXJjZSI6MzAsInRhcmdldCI6MzB9LCJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs3LDYsIl9oIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoiZXBpIn19fV0sWzgsMywiaSIsMV0sWzksNSwiaSIsMV0sWzgsOSwiX3tcXGJldGFfMn0iXSxbMTEsMTAsImxlbW1hIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEyLDExLCJsZW1tYSBcXCBpc3Vic3RwcmVzIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEzLDEyLCJsZW1tYSIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsxMCwxNCwibGVtbWEgXFwgaWFwcGNvbW0iLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=
   \[\begin{tikzcd}
-      {\iota(t)} & {t_0} & \cdots & {t_k} & {\iota(t')} & {(\text{in} \ \lambda m)} \\
-      {\pi(\iota(t)) = t} & {\pi(t_0)} & \cdots & {\pi(t_k)} & {\pi(\iota(t)) = t} & {(\text{in} \ \vec \lambda)}
-      \arrow[from=1-1, to=1-2]
-      \arrow["\pi"{description}, from=1-1, to=2-1]
-      \arrow[from=1-2, to=1-3]
-      \arrow[from=1-2, to=2-2]
-      \arrow[from=1-3, to=1-4]
-      \arrow["{_h}", from=1-4, to=1-5]
-      \arrow[from=2-1, to=2-2]
-      \arrow[from=2-2, to=2-3]
-      \arrow[from=2-3, to=2-4]
-      \arrow[from=2-4, to=2-5]
-      \arrow["\iota"{description}, from=2-5, to=1-5]
-    \end{tikzcd}\]
-\end{proof}
+	{\small{(\text{in} \ \LamV)}} & {\small{(\text{in} \ \LamM)}} \\
+	& {(\lambda x. i(t))(i(u), i(v)::i'(l))} \\
+	{app_{\lambda}(x.t, u, v::l)} & {(i(t)[x := i(u)])(i(v), i'(l))} & {} \\
+	& {h(i(t)[x := i(u)])(i(v), i'(l))} & {} \\
+	& {(i(t[x := u])(i(v), i'(l))} & {} \\
+	{t[x:=u]@(v, l)} & {app(i(t[x:=u]), i(v), i'(l))} & {} \\
+	& {i(t[x:=u]@(v,l))} & {}
+	\arrow["{_{\beta_2}}", from=2-2, to=3-2]
+	\arrow["i"{description}, from=3-1, to=2-2]
+	\arrow["{_{\beta_2}}", from=3-1, to=6-1]
+	\arrow["{_h}", two heads, from=3-2, to=4-2]
+	\arrow["\text{\cref{h_is_multistep}}"{description}, draw=none, from=3-3, to=4-3]
+	\arrow[equals, from=4-2, to=5-2]
+	\arrow["\text{\cref{i_subst_pres}}"{description}, draw=none, from=4-3, to=5-3]
+	\arrow["{_h}", two heads, from=5-2, to=6-2]
+	\arrow["\text{\cref{app_is_multistep}}"{description}, draw=none, from=5-3, to=6-3]
+	\arrow["i"{description}, from=6-1, to=7-2]
+	\arrow[equals, from=6-2, to=7-2]
+	\arrow["\text{\cref{i_app_comm}}"{description}, draw=none, from=6-3, to=7-3]
+      \end{tikzcd}\]
+  
+    $\boxed \Longleftarrow$
+    Let $t$ and $t'$ be $\LamM$-terms.    
+    
+  For this implication, we first show how a reduction $t \to_{\beta h} t'$ in $\LamM$ is directly translated to a reduction $p(t) \to_{\beta} p(t')$ in $\LamV$. 
+  
+  Case $t \to_{\beta_1} t'$:
+  % https://q.uiver.app/#q=WzAsMTAsWzAsMiwiKFxcbGFtYmRhIHgudCkodSwgW10pIl0sWzAsMywidFt4Oj11XSJdLFsxLDIsImFwcF97XFxsYW1iZGF9ICh4LnAodCksIHAodSksIFtdKSJdLFsxLDMsInAodClbeDo9cCh1KV0iXSxbMSw0LCJwKHRbeDo9dV0pIl0sWzEsMSwiKFxcbGFtYmRhIHgucCh0KSlAKHAodSksIFtdKSJdLFswLDAsIihcXHRleHR7aW59IFxcIFxcTGFtTSkiXSxbMSwwLCIoXFx0ZXh0e2lufSBcXCBcXExhbVYpIl0sWzIsM10sWzIsNF0sWzAsMSwiX3tcXGJldGFfMX0iXSxbMiwzLCJfe1xcYmV0YV8xfSJdLFszLDQsIiIsMix7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzAsNSwicCIsMV0sWzUsMiwiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSw0LCJwIiwxXSxbOCw5LCJcXHRleHR7XFxjcmVme3Bfc3Vic3RfcHJlc319IiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d
+  \[\begin{tikzcd}
+	{(\text{in} \ \LamM)} & {(\text{in} \ \LamV)} \\
+	& {(\lambda x.p(t))@(p(u), [])} \\
+	{(\lambda x.t)(u, [])} & {app_{\lambda} (x.p(t), p(u), [])} \\
+	{t[x:=u]} & {p(t)[x:=p(u)]} & {} \\
+	& {p(t[x:=u])} & {}
+	\arrow[equals, from=2-2, to=3-2]
+	\arrow["p"{description}, from=3-1, to=2-2]
+	\arrow["{_{\beta_1}}", from=3-1, to=4-1]
+	\arrow["{_{\beta_1}}", from=3-2, to=4-2]
+	\arrow["p"{description}, from=4-1, to=5-2]
+	\arrow[equals, from=4-2, to=5-2]
+	\arrow["{\text{\cref{p_subst_pres}}}"{description}, draw=none, from=4-3, to=5-3]
+      \end{tikzcd}\]
 
-As a corollary of $\LamV$ being a subsystem in the sense that we mentioned, we can derive its subject reduction from the subject reduction in $\LamM$.
+    Case $t \to_{\beta_2} t'$:
+    % https://q.uiver.app/#q=WzAsMTAsWzAsMiwiKFxcbGFtYmRhIHgudCkodSwgdjo6bCkiXSxbMCwzLCJ0W3g6PXVdKHYsIGwpIl0sWzEsMiwiYXBwX3tcXGxhbWJkYX0gKHgucCh0KSwgcCh1KSwgcCcobCkpIl0sWzEsMywicCh0KVt4Oj1wKHUpXUAocCh2KSwgcCcobCkpIl0sWzEsNCwicCh0W3g6PXVdKUAocCh2KSwgcCcobCkpIl0sWzEsMSwiKFxcbGFtYmRhIHgucCh0KSlAKHAodSksIHAnKGwpKSJdLFswLDAsIihcXHRleHR7aW59IFxcIFxcTGFtTSkiXSxbMSwwLCIoXFx0ZXh0e2lufSBcXCBcXExhbVYpIl0sWzIsM10sWzIsNF0sWzAsMSwiX3tcXGJldGFfMn0iXSxbMiwzLCJfe1xcYmV0YV8yfSJdLFszLDQsIiIsMix7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzAsNSwicCIsMV0sWzUsMiwiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSw0LCJwIiwxXSxbOCw5LCJcXHRleHR7XFxjcmVme2NvbXBhdGliaWxpdHlfbGVtbWFzfSBhbmQgXFxjcmVme3Bfc3Vic3RfcHJlc319IiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d
+    \[\begin{tikzcd}
+	{(\text{in} \ \LamM)} & {(\text{in} \ \LamV)} \\
+	& {(\lambda x.p(t))@(p(u), p'(l))} \\
+	{(\lambda x.t)(u, v::l)} & {app_{\lambda} (x.p(t), p(u), p'(l))} \\
+	{t[x:=u](v, l)} & {p(t)[x:=p(u)]@(p(v), p'(l))} & {} \\
+	& {p(t[x:=u])@(p(v), p'(l))} & {}
+	\arrow[equals, from=2-2, to=3-2]
+	\arrow["p"{description}, from=3-1, to=2-2]
+	\arrow["{_{\beta_2}}", from=3-1, to=4-1]
+	\arrow["{_{\beta_2}}", from=3-2, to=4-2]
+	\arrow["p"{description}, from=4-1, to=5-2]
+	\arrow[equals, from=4-2, to=5-2]
+	\arrow["{\text{\cref{compatibility_lemmas} and \cref{p_subst_pres}}}"{description}, draw=none, from=4-3, to=5-3]
+      \end{tikzcd}\]
+
+    Case $t \to_h t'$:
+    % https://q.uiver.app/#q=WzAsOCxbMCwxLCJ0KHUsIGwpKHUnLCBsJykiXSxbMCwyLCJ0KHUsIGwrKHUnOjpsJykpIl0sWzEsMSwiKHAodClAKHAodSksIHAnKGwpKSlAKHAodScpLCBwJyhsJykpIl0sWzEsMiwicCh0KUAocCh1KSwgcCcobCsodSc6OmwnKSkpIl0sWzEsMCwiKFxcdGV4dHtpbn0gXFwgXFxMYW1WKSJdLFswLDAsIihcXHRleHR7aW59IFxcIFxcTGFtTSkiXSxbMiwxXSxbMiwyXSxbMCwxLCJfaCJdLFswLDIsInAiLDFdLFsxLDMsInAiLDFdLFsyLDMsIiIsMSx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzYsNywiXFx0ZXh0e1xcY3JlZnt1bmtub3duX2xlbW1hfX0iLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=
+    \[\begin{tikzcd}
+	{(\text{in} \ \LamM)} & {(\text{in} \ \LamV)} \\
+	{t(u, l)(u', l')} & {(p(t)@(p(u), p'(l)))@(p(u'), p'(l'))} & {} \\
+	{t(u, l+(u'::l'))} & {p(t)@(p(u), p'(l+(u'::l')))} & {}
+	\arrow["p"{description}, from=2-1, to=2-2]
+	\arrow["{_h}", from=2-1, to=3-1]
+	\arrow[equals, from=2-2, to=3-2]
+	\arrow["{\text{\cref{unknown_lemma}}}"{description}, draw=none, from=2-3, to=3-3]
+	\arrow["p"{description}, from=3-1, to=3-2]
+      \end{tikzcd}\]
+
+    From these cases, we proved that:
+    \begin{align*}
+      & t \twoheadrightarrow_{\beta h} t' \implies p(t) \twoheadrightarrow_{\beta} p(t'), \ \text{for every $\LamM$-terms $t, t'$} \\
+      \text{(which implies)} \quad & i(t) \twoheadrightarrow_{\beta h} i(t') \implies p(i(t)) \twoheadrightarrow_{\beta} p(i(t')), \ \text{for every $\LamV$-terms $t, t'$} \\
+      \text{(simplifying)} \quad & i(t) \twoheadrightarrow_{\beta h} i(t') \implies t \twoheadrightarrow_{\beta} t', \ \text{for every $\LamV$-terms $t, t'$}
+    \end{align*}
+  \end{proof}
+
+As a corollary of conservativeness, we can derive subject reduction for $\LamV$ from $\LamM$.
 
 \begin{corollary}[Subject Reduction for $\LamV$]
   Given $\LamV$-terms $t$ and $t'$, the follwing holds:
@@ -477,16 +948,25 @@ As a corollary of $\LamV$ being a subsystem in the sense that we mentioned, we c
   \]
 \end{corollary}
 \begin{proof}
-  
+  \[ \begin{prooftree}      
+      \hypo{ \Gamma \vdash t:A }
+      \infer[left label=\text{\cref{i_admissibility}}]1{ \Gamma \vdash_c i(t):A }
+      \infer[dashed,left label=\text{Inversion of \cref{canonical_typing}}]1{ \Gamma \vdash t_0:A }
+      \hypo{ t_0 \twoheadrightarrow_{h} h(t_0) }
+      \infer[dashed,left label=\text{\cref{type_preservation} with $\twoheadrightarrow$}]2{ \Gamma \vdash i(t):A }
+      \hypo{ t \to_{\beta} t' }
+      \infer[dashed]1[\text{\cref{conservativeness}}]{ i(t) \twoheadrightarrow_{\beta h} i(t') }
+      \infer[dashed]2[\text{\cref{type_preservation} with $\twoheadrightarrow$}]{ \Gamma \vdash i(t'):A }
+      \infer1[\text{\cref{canonical_typing}}]{ \Gamma \vdash_c h(i(t')):A }
+      \infer[dashed]1[\text{\cref{h_is_surjective}}]{ \Gamma \vdash_c i(t'):A }
+      \infer1[\text{\cref{p_admissibility}}]{ \Gamma \vdash p(i(t')):A }
+      \infer[dashed]1[\text{\cref{inversion_pi}}]{ \Gamma \vdash t':A }
+    \end{prooftree} \]
 \end{proof}
 
 \section{Mechanisation in \textit{Rocq}}
 
-O que apresentar aqui?
-
-Resultados de subject reduction + Conservatividade?
-
-Com que detalhe?
+\dots
 
 \begin{lstlisting}[language=Coq]
 (* syntax *)
@@ -557,7 +1037,7 @@ Creating a mutually inductive definition for $\LamM$ in \textit{Rocq} is a simpl
 \end{lstlisting}
 
 However, as reported in the final section of \cite{AutosubstSchafer}, \textsc{Autosubst} offers no support for mutually inductive definitions.
-The $derive$ tactic would not generate the desired instances for the $Rename$ and $Subst$ classes, failing to iterate through the custom list type.
+The \lst$derive$ tactic would not generate the desired instances for the \lst$Rename$ and \lst$Subst$ classes, failing to iterate through the custom list type.
 
 As we tried to keep the decision of using \textsc{Autosubst}, there were two possible directions:
 
@@ -568,20 +1048,20 @@ As we tried to keep the decision of using \textsc{Autosubst}, there were two pos
 
 The first formalisation attempts followed the first option.
 This meant that everything \textit{Autosubst} could provide automatically was done by hand.
-For this purpose, We closely followed the definitions in \cite{AutosubstSchafer}.
+For this, we closely followed the definitions given in \cite{AutosubstSchafer}.
 
 % At some point, the idea of using the polymorphic list type provided by the \textit{Rocq} standard library came up.
 % Inspecting the \textit{Autosubst} code repository, one can find that there is some support for these kinds of mutually inductive definitions.
 
 After some closer inspection of the library source code, we found that there was native support for the use of types depending on polymorphic lists.
 This way, there was no need of having a mutual inductive type for our terms.
-After some further inspection of the library source code, we noticed that nested inductive types that depend on lists are already supported by default.
+% After some further inspection of the library source code, we noticed that nested inductive types that depend on lists are already supported by default.
 
 % This is obtained by an auxiliary function, $mmap$, that iterates through lists of terms.
 % \dots falar da funcao mmap? \dots
 
 The downside of using nested inductive types in the \textit{Rocq Prover} is the generated induction principles.
-This is issue is already well documented in \cite{CoqArt}.
+This issue is already well documented in \cite{CoqArt}.
 With this approach, we need to provide the dedicated induction principles to the proof assistant.
 
 \begin{lstlisting}[language=Coq]
@@ -651,34 +1131,9 @@ with is_canonical_list: list term -> Prop :=
   is_canonical u -> is_canonical_list l -> is_canonical_list (u::l).
 \end{lstlisting}
 
-This subsystem of canonical terms, that previously was presented as the system $\LamVM$, can be mechanised in many ways:
+This is the same idea that we introduced when inductively defining the sets of $\LamM$-terms $Can$ and of $\LamM$-lists $CanList$.
 
-\begin{enumerate}
-\item Use solely the predicate over $\LamM$-terms (for example, to declare that a property $P$ is satisfied by every canonical term, one would have the proposition $\forall (t: \LamM), is\_canonical(t) \implies P(t)$);
-\item Use the subset types provided by the standard library, that correspond to a dependent pair of term $t$ and a proof that $t$ satisfies a given predicate (in our case, $t$ would satisfy the predicate of being canonical);
-\item Have an isolated syntax (another inductive type) for these canonical terms.
-\end{enumerate}
-
-\begin{figure}
-  % https://q.uiver.app/#q=WzAsNyxbMiwxLCJcXGJveGVke1xcdmVjIFxcbGFtYmRhIG19Il0sWzIsMywiXFxib3hlZHtcXHNtYWxse1xcYmV0YSBoLW5mc319Il0sWzAsMSwiXFxib3hlZHtcXHZlYyBcXGxhbWJkYSBNfSJdLFswLDMsIlxcYm94ZWR7XFxzbWFsbHtcXGJldGEtbmZzfX0iXSxbMywwLCJcXGJveGVke1xcbGFtYmRhIG19Il0sWzEsNF0sWzEsMF0sWzAsMSwiXFxkb3duYXJyb3dfe1xcYmV0YSd9IiwxXSxbMiwzLCJcXGRvd25hcnJvd19cXGJldGEiLDFdLFsyLDAsIlxcY29uZyIsMSx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6ImFycm93aGVhZCJ9fX1dLFszLDEsIlxcY29uZyIsMSx7InN0eWxlIjp7InRhaWwiOnsibmFtZSI6ImFycm93aGVhZCJ9fX1dLFs0LDAsIlxcZG93bmFycm93X2giLDFdLFs0LDEsIlxcZG93bmFycm93X3tcXGJldGEgaH0iLDEseyJsYWJlbF9wb3NpdGlvbiI6NDAsIm9mZnNldCI6LTF9XSxbMiw0LCJpIiwxXSxbNCwyLCJoIiwxLHsib2Zmc2V0IjozfV0sWzYsNSwiIiwxLHsiY3VydmUiOjIsInN0eWxlIjp7ImJvZHkiOnsibmFtZSI6ImRhc2hlZCJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d
-\[\begin{tikzcd}
-    & {} && {\boxed{\LamM}} \\
-    {\boxed{\LamV}} && {\boxed{\LamVM}} \\
-    \\
-    {\boxed{\small{\beta-nfs}}} && {\boxed{\small{\beta h-nfs}}} \\
-    & {}
-    \arrow[bend right, dashed, no head, from=1-2, to=5-2]
-    \arrow["\pi"{description}, shift right=3, from=1-4, to=2-1]
-    \arrow["{\downarrow_h}"{description}, from=1-4, to=2-3]
-    \arrow["{\downarrow_{\beta h}}"{description, pos=0.4}, shift left, from=1-4, to=4-3]
-    \arrow["\iota"{description}, from=2-1, to=1-4]
-    \arrow["\cong"{description}, <->, from=2-1, to=2-3]
-    \arrow["{\downarrow_\beta}"{description}, from=2-1, to=4-1]
-    \arrow["{\downarrow_{\beta'}}"{description}, from=2-3, to=4-3]
-    \arrow["\cong"{description}, <->, from=4-1, to=4-3]
-  \end{tikzcd}\]
-\caption{Systems formalised in \textit{Rocq}}
-\end{figure}
+\subsubsection{Digression over subset types}
 
 %%% Local Variables:
 %%% mode: LaTeX
