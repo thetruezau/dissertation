@@ -31,13 +31,13 @@
 \usepackage{hyperref}
 \usepackage{bookmark}
 \usepackage[acronym, shortcuts, style=index]{glossaries}
+
 \makeglossaries
 \usepackage{subcaption}
 \usepackage[title]{appendix}
 % \usepackage{multico}
 
 \usepackage{beton}
-
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amssymb}
@@ -50,6 +50,7 @@
 % \usepackage{minted}
 \usepackage[inline]{enumitem}
 \usepackage[normalem]{ulem}
+\usepackage{soul}
 
 \usepackage{listings}
 
@@ -61,12 +62,15 @@
 % Definitions, Lemmas and Theorems
 \newtheorem{theorem}{Theorem}
 \crefname{theorem}{Theorem}{Theorems}
-\newtheorem{corollary}{Corollary}
 \newtheorem{lemma}{Lemma}
 \crefname{lemma}{Lemma}{Lemmas}
+\newtheorem{claim}{Claim}
+\crefname{claim}{Claim}{Claims}
 
 \newtheorem{definition}{Definition}
 \crefname{definition}{Definition}{Definitions}
+
+\newtheorem{corollary}{Corollary}
 
 \newtheorem*{notation}{Notation}
 \newtheorem*{remark}{Remark}
@@ -139,13 +143,13 @@
 \newcommand{\lst}{\lstinline}
 \lstdefinelanguage{Coq}%
   {morekeywords={Variable,Inductive,CoInductive,Fixpoint,CoFixpoint,%
-      Definition,Lemma,Theorem,Axiom,Local,Save,Grammar,Syntax,Intro,%
-      Trivial,Qed,Intros,Symmetry,Simpl,Rewrite,Apply,Elim,Assumption,%
-      Left,Cut,Case,Auto,Unfold,Exact,Right,Hypothesis,Pattern,Destruct,%
-      Constructor,Defined,Fix,Record,Proof,Induction,Hints,Exists,let,in,%
-      Parameter,Split,Red,Reflexivity,Transitivity,if,then,else,Opaque,%
-      Transparent,Inversion,Absurd,Generalize,Mutual,Cases,of,end,Analyze,%
-      AutoRewrite,Functional,Scheme,params,Refine,using,Discriminate,Try,%
+      Definition,Lemma,Theorem,Axiom,Local,Save,Grammar,Syntax,intro,%
+      trivial,Qed,intros,Symmetry,Simpl,Rewrite,apply,elim,assumption,%
+      left,Cut,Case,auto,unfold,exact,right,Hypothesis,Pattern,destruct,%
+      constructor,Defined,Fix,Record,Proof,induction,Hints,exists,let,in,%
+      Parameter,split,Red,reflexivity,transitivity,if,then,else,Opaque,%
+      Transparent,inversion,Absurd,Generalize,Mutual,Cases,of,end,Analyze,%
+      AutoRewrite,Functional,Scheme,params,Refine,using,discriminate,Try,%
       Require,Load,Import,Scope,Set,Open,Section,End,match,with,Ltac,%
       Instance,%
       bind,as,%
@@ -223,8 +227,9 @@
 % Include your chapters here
 \input{chapters/02_background}
 \input{chapters/03_multiary}
-\input{chapters/04_isomorphism}
-\input{chapters/05_discussion}
+\input{chapters/04_canonical}
+\input{chapters/05_isomorphism}
+\input{chapters/06_discussion}
 
 % \input{chapters/10_conclusions}
 % \input{chapters/appendix/appendix}
