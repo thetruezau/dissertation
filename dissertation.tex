@@ -5,7 +5,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 \documentclass[12pt, a4paper]{report} % Page and font size
-\setlength{\parindent}{0cm}
+\setlength{\parindent}{0.5cm}
 
 % Packages
 \usepackage[margin=1in]{geometry}
@@ -171,7 +171,7 @@
    {theta}{{$\theta$}}1
    {tau}{{$\tau$}}1
    {rho}{{$\rho$}}1
-   % {xi}{{$\xi$}}1
+   {xi}{{$\xi$}}1
    {exi}{exi}3 % insufficient patch to print reflexivity correctly
    {zeta}{{$\zeta$}}1
    {Gamma}{{$\Gamma$}}1
@@ -198,7 +198,7 @@
 % Adobe Illustrator files are in front/cover/illustrator
 \begin{titlepage}
   % \includepdf[pages={1,2}, fitpaper]{front/cover/title.pdf}
-  % \includepdf{front/cover/cover.pdf}
+  \includepdf{front/cover/cover.pdf}
 \end{titlepage}
 
 % Front matter
@@ -214,7 +214,7 @@
 \tableofcontents\fancyhead[R]{\textit{Contents}}
 % \listoffigures\fancyhead[R]{\textit{List of Figures}}
 % \listoftables\fancyhead[R]{\textit{List of Tables}}
-\printglossaries\fancyhead[R]{\textit{Acronyms}}
+% \printglossaries\fancyhead[R]{\textit{Acronyms}}
 
 % Header with section number and name
 \fancyhead[R]{\rightmark}

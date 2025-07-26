@@ -1,10 +1,15 @@
 \chapter{Multiary $\Lam$-calculus and its canonical subsystem}
 \label{c:multiary}
 
+This chapter introduces the main system that was studied in this thesis: the multiary $\Lam$-calculus ($\LamM$).
+We introduce this system as the system $\pmb{\lambda \mathcal{P}h}$ found in~\cite[Chapter~3]{JCES2002} and $\pmb{\lambda^m}$ found in~\cite{JCESLuis}.
+We also give an alternative description for a subsystem of $h$-normal forms in $\LamM$ (corresponding to the system $\pmb{\lambda \mathcal{P}}$ found in~\cite[Chapter~3]{JCES2002}).
+In the end of this chapter one can find a detailed overview of the mechanisations done.
+
 \section{The system $\LamM$}
 
-\begin{definition}[$\LamM$-terms]
-  The $\LamM$-terms are defined by the following grammar:  
+\begin{definition}[Syntax of $\LamM$]
+  The $\LamM$-terms and $\LamM$-lists are simultaneously defined by the following grammar:  
   \begin{align*} 
     t, u \ &::= \ x \ | \ \lambda x . t \ | \ t(u, l) \ \\
     l      &::= \ []\  | \ u :: l.
@@ -32,6 +37,7 @@
 \end{definition}
 
 \begin{definition}[Compatible Relation]
+  \label{compatible_relation}
   Let $R$ and $R'$ be two binary relations on $\LamM$-terms and $\LamM$-lists respectively.
   We say they are compatible when they satisfy:
   \[
@@ -155,6 +161,64 @@
   \]
 \end{definition}
 
+% --- 
+% 123
+% ---
+% \section{Subject reduction for $\LamM$}
+
+\begin{lemma}[Substitution Admissibility]
+  \label{type_substitution}
+  The following rules are admissible:
+  \[
+    \begin{prooftree}
+      \hypo{ \Gamma , x:B \vdash t:A }
+      \hypo{ \Gamma \vdash u:B }
+      \infer2{ \Gamma \vdash  t[x := u] : A }      
+    \end{prooftree}
+    \qquad \qquad
+    \begin{prooftree}
+      \hypo{ \Gamma , x:B \ ; C \vdash l:A }
+      \hypo{ \Gamma \vdash u:B }
+      \infer2{ \Gamma ; C \vdash  l[x := u] : A }
+    \end{prooftree}
+  \]
+\end{lemma}
+\begin{proof}
+  The proof proceeds by simultaneous induction on the structure of the typing rules.
+\end{proof}
+
+
+\begin{lemma}[Append Admissibility]
+  \label{append_is_admissible}
+  The following rules is admissible:
+  \[
+    \begin{prooftree}
+      \hypo{ \Gamma ; C \vdash l:B }
+      \hypo{ \Gamma ; B \vdash l':A }
+      \infer2{ \Gamma ; C \vdash  l+l' : A }
+    \end{prooftree}
+  \]
+\end{lemma}
+\begin{proof}
+  The proof proceeds by induction on the structure of $l$.
+\end{proof}
+
+
+\begin{theorem}[Subject Reduction]
+  \label{type_preservation}
+  Given $\LamM$-terms $t$ and $t'$, the follwing holds:
+  \[
+    \Gamma \vdash t : A \ \land \ t \to_{\beta h} t' \implies \Gamma \vdash t' : A.
+  \]
+\end{theorem}
+\begin{proof}
+  The proof proceeds by simultaneous induction on the structure of the relation $\to_{\beta h}$.
+
+  \cref{type_substitution} is used to prove the case $t \to_\beta t'$.
+
+  \cref{append_is_admissible} is used to prove the case $t \to_h t'$.
+\end{proof}
+
 % ---
 % 123
 % ---
@@ -163,7 +227,8 @@
 
 As we have identified the $\beta h$-normal forms, we can also identify the set of $h$-normal forms, given by the following definition.
 
-\begin{definition}[$h$-normal forms]
+\begin{definition}[Canonical terms]
+  \label{canonical_terms}
   We inductively define the sets of $\LamM$-terms and $\LamM$-lists in $h$-normal form, respectively $Can$ and $CanList$, as follows:
   \[
     \begin{prooftree}
@@ -265,7 +330,8 @@ Then, we can define a function that collapses $\LamM$-terms to their $h$-normal 
 
 For the purpose of defining a subsystem of $\LamM$, we induce a reduction relation for these canonical terms given a reduction relation on the $\LamM$-terms and -lists.
 
-\begin{definition}[Canonical Closure]
+\begin{definition}[Canonical closure]
+  \label{canonical_closure}
   Let $R$ and $R'$ be two binary relations on $\LamM$-terms and $\LamM$-lists respectively.
   We inductively define the canonical closure of each relation as follows:
   \[
@@ -281,11 +347,13 @@ For the purpose of defining a subsystem of $\LamM$, we induce a reduction relati
   \]
 \end{definition}
 
-In the same manner, we introduce the typing judgements for canonical terms.
+This definition allows us to define a closed $\beta$ reduction for the canonical terms, derived from the relation $\to_\beta$ in $\LamM$. This would result in the canonical relation ${(\to_\beta)}_c$. 
 
-\begin{definition}[Canonical Typing System]
+In the same manner, we introduce the typing rules for canonical terms.
+
+\begin{definition}[Canonical typing rules]
   \label{canonical_typing}
-  We inductively define the canonical type-assignement, defined over every $\LamM$-term $t$ and $\LamM$-list $l$:
+  We inductively define the canonical typing rules, defined over every $\LamM$-term $t$ and $\LamM$-list $l$:
   \[
     \begin{prooftree}
       \hypo{ \Gamma \vdash t:A }
@@ -308,77 +376,29 @@ We then prove that out self-contained version of the canonical terms is isomorph
 % 123
 % ---
 
-\section{Subject reduction for $\LamM$}
-
-\begin{lemma}[Substitution Admissibility]
-  \label{type_substitution}
-  The following rules are admissible:
-  \[
-    \begin{prooftree}
-      \hypo{ \Gamma , x:B \vdash t:A }
-      \hypo{ \Gamma \vdash u:B }
-      \infer2{ \Gamma \vdash  t[x := u] : A }      
-    \end{prooftree}
-    \qquad \qquad
-    \begin{prooftree}
-      \hypo{ \Gamma , x:B \ ; C \vdash l:A }
-      \hypo{ \Gamma \vdash u:B }
-      \infer2{ \Gamma ; C \vdash  l[x := u] : A }
-    \end{prooftree}
-  \]
-\end{lemma}
-\begin{proof}
-  The proof proceeds by simultaneous induction on the structure of the typing rules.
-\end{proof}
-
-
-\begin{lemma}[Append Admissibility]
-  \label{append_is_admissible}
-  The following rules is admissible:
-  \[
-    \begin{prooftree}
-      \hypo{ \Gamma ; C \vdash l:B }
-      \hypo{ \Gamma ; B \vdash l':A }
-      \infer2{ \Gamma ; C \vdash  l+l' : A }
-    \end{prooftree}
-  \]
-\end{lemma}
-\begin{proof}
-  The proof proceeds by induction on the structure of $l$.
-\end{proof}
-
-
-\begin{theorem}[Subject Reduction]
-  \label{type_preservation}
-  Given $\LamM$-terms $t$ and $t'$, the follwing holds:
-  \[
-    \Gamma \vdash t : A \ \land \ t \to_{\beta h} t' \implies \Gamma \vdash t' : A.
-  \]
-\end{theorem}
-\begin{proof}
-  The proof proceeds by simultaneous induction on the structure of the relation $\to_{\beta h}$.
-
-  $(i)$ We easily prove the case $t \to_\beta t'$ using substitution admissability in~\cref{type_substitution}.
-
-  $(ii)$ We easily prove the case $t \to_h t'$ using append admissability in~\cref{append_admissibility}.
-\end{proof}
-
-% --- 
-% 123
-% ---
-
 \section{Mechanisation in \textit{Rocq}}
 
-\dots
+The mechanisations for the system $\LamM$ follow the same style as the ones shown for the simply typed $\Lam$-calculus in~\cref{c:background} using the \textit{Autosubst} library.
 
+\subsection{\lst$LambdaM.v$}
+
+This module that contains the necessary definitions for the formalisations dealing with the system $\LamM$.
+The inductive type for the syntax of $\LamM$-terms is as follows.
 \begin{lstlisting}[language=Coq]
-(* syntax *)
 Inductive term: Type :=
 | Var (x: var)
 | Lam (t: {bind term})
 | mApp (t: term) (u: term) (l: list term).
-...
-(* reduction relations *)
+\end{lstlisting}
+
+The definition for $\LamM$-lists is hidden under the polymorphic list type \lst$list term$.
+We give more details on this in the end of this section.
+
+Mechanising the reduction relations we first defined the notion of compatibility as in~\cref{compatible_relation} and then the base step relations $\beta_1$, $\beta_2$ and $h$ separately.
+That way we introduce the notions of compatible relation and also of compatible closure.
+This aproach is more elaborated than the one presented for the simply typed $\Lam$-calculus and we also get into more details about these decisions in the end of this section.
+
+\begin{lstlisting}[language=Coq]
 Inductive beta1: relation term :=
 | Step_Beta1 (t: {bind term}) (t' u: term) :
   t' = t.[u .: ids] -> beta1 (mApp (Lam t) u []) t'.
@@ -396,8 +416,13 @@ Definition step' := comp' (union _ (union _ beta1 beta2) H).
 
 Definition multistep := clos_refl_trans_1n _ step.
 Definition multistep' := clos_refl_trans_1n _ step'.
-...
-(* typing rules *)
+\end{lstlisting}
+
+Here, the \lst$comp$ and \lst$comp'$ are the polymorphic relations on $\LamM$-terms and -lists respectively that induce the compatibility closure.
+We also note the use of the \lst$clos_refl_trans_1n$ polymorphic relation provided by the \textit{Rocq Prover} libraries that induces the reflexive and transitive closure of a given binary relation.
+
+In this module, we have also the mechanised typing rules for $\LamM$, much in the style of what was done for the simply typed $\Lam$-calculus.
+\begin{lstlisting}[language=Coq]
 Inductive sequent (Gamma: var->type) : term -> type -> Prop := 
 | varAxiom (x: var) (A: type) :
   Gamma x = A -> sequent Gamma (Var x) A
@@ -406,7 +431,6 @@ Inductive sequent (Gamma: var->type) : term -> type -> Prop :=
 | HeadCut (t u: term) (l: list term) (A B C: type) :
   sequent Gamma t (Arr A B) -> sequent Gamma u A -> list_sequent Gamma B l C ->
   sequent Gamma (mApp t u l) C
-
 with list_sequent (Gamma:var->type) : type -> (list term) -> type -> Prop :=
 | nilAxiom (C: type) : list_sequent Gamma C [] C
 | Lft (u: term) (l: list term) (A B C:type) :
@@ -414,21 +438,102 @@ with list_sequent (Gamma:var->type) : type -> (list term) -> type -> Prop :=
   list_sequent Gamma (Arr A B) (u :: l) C.
 \end{lstlisting}
 
-\section{A closer look at the mechanisation}
+\subsection{\lst$IsCanonical.v$}
 
-In this section, we discuss several differences between the formalisations on the proof assistant and those presented on the literature.
-As we have already discussed binding and de Bruijn notation, we are not taking this into account from now on.
+This module contains the necessary definitions for the formalisations dealing with the canonical subsystem of $\LamM$.
 
-\subsection{Mutually inductive types vs Nested inductive types}
+First, we define a predicate \lst$is_canonical$ that constructively defines the canonical terms in the style of~\cref{canonical_terms}.
+\begin{lstlisting}[language=Coq]
+Inductive is_canonical: term -> Prop :=
+| cVar (x: var) :
+  is_canonical (Var x)
+| cLam (t: {bind term}) :
+  is_canonical t -> is_canonical (Lam t)
+| cVarApp (x: var) (u: term) (l: list term) :
+  is_canonical u -> is_canonical_list l ->
+  is_canonical (mApp (Var x) u l)
+| cLamApp (t: {bind term}) (u: term) (l: list term) :
+  is_canonical t -> is_canonical u -> is_canonical_list l ->
+  is_canonical (mApp (Lam t) u l)
+with is_canonical_list: list term -> Prop :=
+| cNil : is_canonical_list []
+| cCons (u: term) (l: list term) :
+  is_canonical u -> is_canonical_list l ->
+  is_canonical_list (u::l).
+\end{lstlisting}
 
-% \begin{itemize}
-% \item AUTOSUBST excavation for support
-% \item induction principle and further proofs
-% \item generalization or specification?
-% \end{itemize}
+The module then contains defintions for the $app$ operation (called \lst$capp$ because append of lists in \textit{Rocq} is already called \lst$app$) and map $h$.
+\begin{lstlisting}[language=Coq]
+Definition capp (v u: term) (l: list term) : term :=
+  match v with
+  | Var x        => mApp v u l
+  | Lam t        => mApp v u l
+  | mApp t u' l' => mApp t u' (l' ++ (u::l))
+  end.
 
-Creating a mutually inductive definition for $\LamM$ in \textit{Rocq} is a simple task:
+Fixpoint h (t: term) :=
+  match t with
+  | Var x      => Var x
+  | Lam t      => Lam (h t)
+  | mApp t u l => capp (h t) (h u) (map h l)
+  end.
+\end{lstlisting}
+In the definition of map $h$ we don't define map $h'$, as we use the \lst$map$ function from the \lst$List$ library.
+The function \lst$map h$ behaves exactly as the intended map $h'$.
+Notice that this way we also avoid a mutually dependent definition.
 
+In the \textit{Rocq Prover}, we need to formally prove that the $app$ operation and map $h$ are closed for canonical terms.
+Of course that in description we have of the subsystem we easily argue this informally. For example, in the mechanised results, we have the following lemma.
+\begin{lstlisting}[language=Coq]
+Lemma capp_is_canonical t u l :
+  is_canonical t -> is_canonical u -> is_canonical_list l ->
+  is_canonical (capp t u l).
+\end{lstlisting}
+
+Then, we prove every lemma and theorem presented in the description of the canonical subsystem.
+As an example, we show the mechanisation of~\cref{h_is_surjective}.
+\begin{lstlisting}[language=Coq]
+Theorem h_is_surjective :
+  (forall t, is_canonical t -> t = h t)
+  /\
+  (forall l, is_canonical_list l -> l = map h l).
+Proof.
+  apply mut_is_canonical_ind ;
+    intros ; asimpl ; repeat f_equal ; auto.
+Qed.
+\end{lstlisting}
+In this proof we use the \lst$auto$ tactic to facilitate our work.
+For routine proofs, we often found success when using these automated tactics.
+
+The module ends with definitions for the reduction relation (recall~\cref{canonical_closure}) and typing rules (recall~\cref{canonical_typing}) for the canonical subsystem.
+\begin{lstlisting}[language=Coq]
+Inductive canonical_relation
+  (R: relation term) : relation term :=
+| Step_CanTerm t t' : R t t' -> canonical_relation R (h t) (h t').
+Inductive canonical_list_relation
+  (R: relation (list term)) : relation (list term) :=
+| Step_CanList l l' : R l l' -> canonical_list_relation R (map h l) (map h l').
+
+Definition step_can := canonical_relation step_beta.
+Definition step_can' := canonical_list_relation step_beta'.
+...
+Inductive canonical_sequent (Gamma: var->type) :
+  term -> type -> Prop :=
+| Seq_CanTerm t A : sequent Gamma t A -> canonical_sequent Gamma (h t) A.
+Inductive canonical_list_sequent (Gamma: var->type) :
+  type -> list term -> type -> Prop :=
+| Seq_CanList l A B : list_sequent Gamma A l B ->
+                      canonical_list_sequent Gamma A (map h l) B.
+\end{lstlisting}
+
+\subsection{A closer look at the mechanisation}
+
+In this part we take a closer look at some particular aspects of the mechanisation that deserve more attention.
+The purpose is to show how some other options could arise and justify unusual approaches.
+
+\subsubsection{Mutually inductive types vs nested inductive types}
+
+Creating a mutually inductive type for the syntax of $\LamM$ in \textit{Rocq} would be a simple task:
 \begin{lstlisting}[language=Coq]
   Inductive term: Type :=
   | Var (x: var)
@@ -439,14 +544,13 @@ Creating a mutually inductive definition for $\LamM$ in \textit{Rocq} is a simpl
   | Cons (u: term) (l: list). 
 \end{lstlisting}
 
-However, as reported in the final section of \cite{AutosubstSchafer}, \textsc{Autosubst} offers no support for mutually inductive definitions.
-The \lst$derive$ tactic would not generate the desired instances for the \lst$Rename$ and \lst$Subst$ classes, failing to iterate through the custom list type.
+However, as reported in the final section of~\cite{AutosubstSchafer}, \textit{Autosubst} offers no support for mutually inductive definitions.
+The \lst$derive$ tactic would not generate the desired instances for the \lst$Rename$ and \lst$Subst$ classes, failing to iterate through the customized list type.
 
-As we tried to keep the decision of using \textsc{Autosubst}, there were two possible directions:
-
+As we tried to keep the decision of using \textit{Autosubst}, there were two possible directions:
 \begin{enumerate}
-\item Manually define every instance required and prove substitution lemmas;
-\item Remove the mutual dependency in the term definition.
+\item manually define every instance required and prove substitution lemmas;
+\item remove the mutual dependency in the term definition.
 \end{enumerate}
 
 The first formalisation attempts followed the first option.
@@ -464,7 +568,7 @@ This way, there was no need of having a mutual inductive type for our terms.
 % \dots falar da funcao mmap? \dots
 
 The downside of using nested inductive types in the \textit{Rocq Prover} is the generated induction principles.
-This issue is already well documented in \cite{CoqArt}.
+This issue is already well documented in \cite[Chapter~14.3]{CoqArt}.
 With this approach, we need to provide the dedicated induction principles to the proof assistant.
 
 \begin{lstlisting}[language=Coq]
@@ -505,9 +609,7 @@ Section dedicated_induction_principle.
 End dedicated_induction_principle.
 \end{lstlisting}
 
-\dots
-
-\subsection{Formalising a subsystem}
+\subsubsection{Formalising a subsystem}
 
 % \begin{itemize}
 % \item Carrgying a predicate
@@ -515,28 +617,25 @@ End dedicated_induction_principle.
 % \item A self contained representation
 % \end{itemize}
 
-A relevant part of the mechanisation, was to represent subsystems in the proof assistant in a simple way.
-We isolate a subsyntax of $\LamM$ by defining a predicate over its terms:
+A relevant part of the mechanisations done was to find simple representations for subsystems in the proof assitant.
 
+As we pointed out, the formalisation we have done for the canonical subsystem of $\LamM$ is non standard.
+These ideas were motivated by the task of mechanising such subsystem.
+
+Formalising the subset of terms using a predicate is the obvious way to do it.
+But we would also like to have a dedicated type for the extension of that predicate rather than just the predicate itself.
+The \textit{Rocq Prover} provides such types, known as subset types (we refer to~\cite[Chapter~9.1]{CoqArt}).
+Although these subset types are exactly what we wanted, they do not give us a great advantage on mechanisations.
+Using subset types rapidly becomes exhausting because of the need to always provide proofs for every definition.
+
+As an example, trying to define the substitution operation as in~\cite[Chapter~3.1]{JCES2002} for the canonical terms mechanised using subset types, we would get:
 \begin{lstlisting}[language=Coq]
-Inductive is_canonical: term -> Prop :=
-| cVar (x: var) : is_canonical (Var x)
-| cLam (t: {bind term}) : is_canonical t -> is_canonical (Lam t)                                                      
-| cVarApp (x: var) (u: term) (l: list term) :
-  is_canonical u -> is_canonical_list l -> is_canonical (mApp (Var x) u l)
-| cLamApp (t: {bind term}) (u: term) (l: list term) :
-  is_canonical t -> is_canonical u -> is_canonical_list l ->
-  is_canonical (mApp (Lam t) u l)
-  
-with is_canonical_list: list term -> Prop :=
-| cNil : is_canonical_list []
-| cCons (u: term) (l: list term) :
-  is_canonical u -> is_canonical_list l -> is_canonical_list (u::l).
+  (i hope i have this somewhere)
 \end{lstlisting}
 
-This is the same idea that we introduced when inductively defining the sets of $\LamM$-terms $Can$ and of $\LamM$-lists $CanList$.
-
-\subsubsection{Digression over subset types}
+Our aproach for the formalisation of such subsystem was to think of the canonical subsystem using the map $h$ that $h$-normalises $\LamM$-terms (defining reduction and typification using map $h$).
+After that, we could define a self-contained canonical system with its own syntax and definitions (in the spirit of~\cite[Chapter~3.1]{JCES2002}) and prove both representations are isomorphic.
+That is the goal for the next chapter.
 
 %%% Local Variables:
 %%% mode: LaTeX
