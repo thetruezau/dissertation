@@ -1,5 +1,14 @@
-\chapter{An isomorphism with the simply typed $\Lam$-calculus}
+\chapter{The isomorphism $\Lam \cong \LamV$}
 \label{c:isomorphism}
+In our background chapter, the simply typed $\Lam$-calculus was introduced.
+
+Now, we show an isomorphism between the system $\LamV$ introduced in the previous chapter and the simply typed $\Lam$-calculus.
+This isomorphism will come at the level of syntax, reduction and typing rules.
+
+This is of great interest as $\LamV$ typing rules resemble a sequent calculus style.
+Thus, we have a correspondence between natural deduction (typing rules of $\Lam$-calculus) and a fragment of sequent calculus.
+% referencias
+
 % https://q.uiver.app/#q=WzAsNCxbMiwwLCJcXGJveGVke1xcdmVjIFxcbGFtYmRhfSJdLFsyLDIsIlxcYm94ZWR7XFxzbWFsbHtcXHZlYyBcXGJldGEtbmZzfX0iXSxbMCwwLCJcXGJveGVkXFxsYW1iZGEiXSxbMCwyLCJcXGJveGVke1xcc21hbGx7XFxiZXRhLW5mc319Il0sWzAsMSwiXFxkb3duYXJyb3dfe1xcdmVjIFxcYmV0YX0iLDFdLFsyLDMsIlxcZG93bmFycm93X1xcYmV0YSIsMV0sWzIsMCwiXFxjb25nIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn19fV0sWzMsMSwiXFxjb25nIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn19fV1d
 \[
   \begin{tikzcd}
@@ -12,13 +21,6 @@
     \arrow["\cong"{description}, <->, from=3-1, to=3-3]
   \end{tikzcd}
 \]
-
-In our background chapter, the simply typed $\Lam$-calculus was introduced.
-
-Now, we show an isomorphism between the system $\LamV$ introduced in the previous chapter and the simply typed $\Lam$-calculus.
-This isomorphism will come at the level of syntax, reduction and typing rules.
-
-This is of great interest as $\LamV$ typing rules resemble a sequent calculus style. Thus, we have a correspondence of natural deduction (typing rules of $\Lam$-calculus) and a fragment of sequent calculus.
 
 \section{Mappings $\theta$ and $\psi$}
 
@@ -90,7 +92,7 @@ This is of great interest as $\LamV$ typing rules resemble a sequent calculus st
 \subsection{Isomorphism at the level of reduction}
 
 First, we need to introduce some lemmata that establish the preservation of substitution operations by the mappings $\theta, \theta'$ and $\psi'$.
-Proofs of lemmas will now be omitted as they are all formalized in the proof assistant and usually proceed routinely.
+% Proofs of lemmas will now be omitted as they are all formalized in the proof assistant and usually proceed routinely.
 
 \begin{lemma}
   \label{theta_app_lemma}
@@ -191,6 +193,14 @@ Now, we can state the isomorphism at the level of reduction.
 \begin{proof}
   The proof proceeds easily by induction on the structure of the typing rules of $\Lam$-terms.
 \end{proof}
+
+\subsection{Isomorphism at the level of normal forms}
+
+\section{Mechanisation in \textit{Rocq}}
+
+\subsection{\lst$LambdaIsomorphism.v$}
+\subsection{\lst$NormalIsomorphism.v$}
+
 
 %%% Local Variables:
 %%% mode: LaTeX

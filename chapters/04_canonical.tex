@@ -203,7 +203,7 @@ In this section we prove an isomorphism between $\LamV$ and the canonical terms 
   $p'([]) \mapsto []$ and $p'(u::l) = p(u)::p'(l)$.
 \end{definition}
 
-The following diagram summarizes the maps defined.
+The following diagram summarizes the defined maps.
 
 % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQAdDtAWwCNgXRvX5R6AAh4BfEFNLpMufIRRli1Ok1bsuvAQGF6YGXIXY8BIuVLqaDFm0Sdu-QR1owAxuKEi+Ykw0YKABzeCJQADMAJwgeJGsQHAgkMhBhPhhGAAVFCxV0mEicEDstRxAAC1l5EBi4pAAmGmTUsod2LFL0+kycvOV2aKwQypLTOtj4xETWxGbNDqc0boys3PNBp2HR8copIA
 \[
@@ -563,7 +563,7 @@ The result of conservativeness establishes the connection between reduction in $
 	\arrow["p"{description}, maps to, from=2-1, to=2-2]
 	\arrow["{_h}", from=2-1, to=3-1]
 	\arrow[equals, from=2-2, to=3-2]
-	\arrow["{\text{\cref{unknown_lemma}}}"{description}, draw=none, from=2-3, to=3-3]
+	\arrow["{\text{Simple induction on~$p(t)$}}"{description}, draw=none, from=2-3, to=3-3]
 	\arrow["p"{description}, maps to, from=3-1, to=3-2]
       \end{tikzcd}\]
 
@@ -584,6 +584,8 @@ As a corollary of conservativeness, we can derive subject reduction for $\LamV$ 
   \]
 \end{corollary}
 \begin{proof}
+  The proof is shown in a derivation-like style.
+  We use dashed lines for derivations that do not follow from typing rules or rules proven admissible.
   \[ \begin{prooftree}      
       \hypo{ \Gamma \vdash t:A }
       \infer[left label=\text{\cref{i_admissibility}}]1{ \Gamma \vdash_c i(t):A }
@@ -602,8 +604,11 @@ As a corollary of conservativeness, we can derive subject reduction for $\LamV$ 
 
 \section{Mechanisation in \textit{Rocq}}
 
-\dots
+The mechanisations for the system $\LamV$ follow the same style as the ones shown for the system $\LamM$ using the \textit{Autosubst} library, except for the non standard substitution operation.
 
+\subsection{\lst$Canonical.v$}
+
+Most definitions for the canonical self-contained subsystem follow exactly from the definitions for the system $\LamM$ with the corresponding adaptations.
 \begin{lstlisting}[language=Coq]
 (* syntax *)
 Inductive term: Type :=
@@ -651,9 +656,40 @@ with list_sequent (Gamma:var->type) : type -> (list term) -> type -> Prop :=
   list_sequent Gamma (Arr A B) (u :: l) C.
 \end{lstlisting}
 
-\section{A closer look at the mechanisation}
+The mechanised step relations work as shown for the system $\LamM$ using a \lst$comp$ meta-relation for compatibility closure.
+We will describe in more detail the aproach to define the substitution operation for this system.
 
-\dots
+This module also contains proofs for every compatibility lemma (recall~\cref{compatibility_lemmas}).
+\begin{lstlisting}[language=Coq]
+Section CompatibilityLemmas.
+  Lemma step_comp_append1 :
+    forall l1 l1', step' l1 l1' -> forall l2, step' (l1 ++ l2) (l1' ++ l2).
+  Proof.
+    intros l1 l1' H.
+    induction H ; intros.
+    - repeat rewrite<- app_comm_cons. 
+      now constructor. 
+    - repeat rewrite<- app_comm_cons.
+      constructor. now apply IHcomp'.
+  Qed.    
+  ...
+  Lemma step_comp_app2 :
+    forall v u u' l, step u u' -> step v@(u,l) v@(u',l).
+  ...
+End CompatibilityLemmas.  
+\end{lstlisting}
+
+\subsection{\lst$CanonicalIsomorphism.v$}
+
+This module contains proofs for every result dealing with the isomorphism of the canonical subsystem in $\LamM$ and the system $\LamV$.
+
+\subsection{\lst$Conservativeness.v$}
+
+This module is only about the proof for the theorem of conservativeness.
+
+\subsection{A closer look at the mechanisation}
+
+\subsubsection{\textit{Autosubst} and a non standard substitution operation}
 
 %%% Local Variables:
 %%% mode: LaTeX

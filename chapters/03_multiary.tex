@@ -378,7 +378,7 @@ We then prove that out self-contained version of the canonical terms is isomorph
 
 \section{Mechanisation in \textit{Rocq}}
 
-The mechanisations for the system $\LamM$ follow the same style as the ones shown for the simply typed $\Lam$-calculus in~\cref{c:background} using the \textit{Autosubst} library.
+The mechanisations for the system $\LamM$ follow almost the same style as the ones shown for the simply typed $\Lam$-calculus in~\cref{c:background} using the \textit{Autosubst} library.
 
 \subsection{\lst$LambdaM.v$}
 
@@ -437,6 +437,38 @@ with list_sequent (Gamma:var->type) : type -> (list term) -> type -> Prop :=
   sequent Gamma u A -> list_sequent Gamma B l C ->
   list_sequent Gamma (Arr A B) (u :: l) C.
 \end{lstlisting}
+
+\subsection{\lst$TypePreservation.v$}
+
+This module contains proof for the subject reduction theorem (\cref{type_preservation}) and necessary lemmas to prove it.
+
+Using \textit{Autosubst}, we have to prove not only admissibility for the substitution operation but also for renamings.
+We prove these results using the techniques in the tutorial of~\cite{AutosubstManual}.
+\begin{lstlisting}[language=Coq]
+Lemma type_renaming :
+  forall Γ,
+    (forall t A, sequent Γ t A ->
+            forall Δ ξ, Γ = (ξ >>> Δ) -> sequent Δ t.[ren ξ] A)
+    /\
+    (forall A l B, list_sequent Γ A l B ->
+              forall Δ ξ, Γ = (ξ >>> Δ) -> list_sequent Δ A l..[ren ξ] B).
+...
+Lemma type_substitution :
+  forall Γ, 
+    (forall t A, sequent Γ t A ->
+            forall σ Δ, (forall x, sequent Δ (σ x) (Γ x)) -> sequent Δ t.[σ] A)
+    /\
+    (forall A l B, list_sequent Γ A l B ->
+               forall σ Δ, (forall x, sequent Δ (σ x) (Γ x)) -> list_sequent Δ A l..[σ] B).
+...
+Theorem type_preservation :
+  (forall t t', step t t' -> forall Γ A, sequent Γ t A -> sequent Γ t' A)
+  /\
+  (forall l l', step' l l' -> forall Γ A B, list_sequent Γ A l B -> list_sequent Γ A l' B).
+\end{lstlisting}
+
+These results are proved using the induction principles from system $\LamM$.
+Therefore, we use the combined induction principles for the proofs and need to declare the propositions using a conjunction on terms and lists.
 
 \subsection{\lst$IsCanonical.v$}
 
@@ -630,7 +662,7 @@ Using subset types rapidly becomes exhausting because of the need to always prov
 
 As an example, trying to define the substitution operation as in~\cite[Chapter~3.1]{JCES2002} for the canonical terms mechanised using subset types, we would get:
 \begin{lstlisting}[language=Coq]
-  (i hope i have this somewhere)
+  (inserir exemplo de operacao de substituicao com subset types)
 \end{lstlisting}
 
 Our aproach for the formalisation of such subsystem was to think of the canonical subsystem using the map $h$ that $h$-normalises $\LamM$-terms (defining reduction and typification using map $h$).

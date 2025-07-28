@@ -169,11 +169,12 @@ For what types and the simply typed lambda calculus is about we refer to \cite{B
   \]
 \end{definition}
 
-
 \begin{claim}
   \label{beta_nfs_claim}
   Every $\Lam$-term $t \in \text{NF}$ is irreducible by $\to_\beta$.
 \end{claim}
+
+We leave this claim here, as its proof will be mechanised in the last section of this chapter.
 
 % --- 
 
@@ -205,7 +206,7 @@ For what types and the simply typed lambda calculus is about we refer to \cite{B
 
 \begin{definition}[Type-assignment]
   A type-assignment~$M : A$ is a pair of a $\Lam$-term and a simple type.
-  We call subject to the $\Lam$-term $M$ and predicate to the type-assignement $A$.
+  We call subject to the $\Lam$-term $M$ and predicate to the simple type $A$.
 \end{definition}
 
 \begin{definition}[Context]
@@ -285,7 +286,7 @@ Now, we will present a different formulation for the concept of substitution, ad
 Here are some examples of useful substitutions.
 \begin{align*}
   id(k) &= k \\
-  \uparrow(k) &= (k+1) \\
+  \uparrow(k) &= k+1 \\
   (M \cdot \sigma)(k) &=
                         \begin{cases}
                           M & \ \text{if $k = 0$} \\
@@ -336,6 +337,7 @@ We reformulate the definition of context and derivable sequents as follows.
 \end{definition}
 
 \begin{remark}
+  \label{nameless_typing_remark}
   For such strict definitions of contexts and typing rules we would require admissibility for structural rules (like the weakening rule shown below).
   \[
     \begin{prooftree}
@@ -418,7 +420,7 @@ The list \lst$[0,2,1]$ is then represented as \lst$cons 0 (cons 2 (cons 1 nil))$
 
 Here's a lemma on lists provided by the \textit{Rocq} library:
 \begin{lstlisting}[language=Coq]
-Lemma map_app : forall l l', map (l++l') = (map l)++(map l').
+Lemma map_app f : forall l l', map f (l++l') = (map f l)++(map f l').
 \end{lstlisting}
 
 This lemma relates two operations on lists:
@@ -499,7 +501,7 @@ Here, we see the power of this library, as the proofs for these lemmas are obtai
 
 \subsection{Mechanising the simply typed $\Lam$-calculus}
 
-For this dissertation, we provide our own mechanisation of the simply typed $\Lam$-calculus, as we will need it for the~\cref{c:isomorphism}.
+For this dissertation, we provide our own mechanisation of the simply typed $\Lam$-calculus, as we will need it in~\cref{c:isomorphism}.
 The mechanisation is very straightforward and follows closely the examples given in~\cite{AutosubstManual,AutosubstSchafer}.
 
 \subsubsection{\lst$SimpleTypes.v$}
@@ -531,7 +533,8 @@ step (App s t) (App s' t)
 step (App s t) (App s t').
 \end{lstlisting}
 
-The type is \lst$relation term$ (an alias for \lst$term->term->Prop$), as we are using the \lst$Relations$ library found in the \textit{Rocq} standard library containing definitions and lemmas for binary relations. 
+In this definition we already give use to the substitution operation defined using \textit{Autosubst}.
+The type is \lst$relation term$ (an alias for \lst$term->term->Prop$), as we are using the \lst$Relations$ library found in the \textit{Rocq} standard library containing definitions and lemmas for binary relations.
 
 We also have a definition for the mutually inductive predicate defining $\beta$-normal forms (recall~\cref{beta-nfs}).
 \begin{lstlisting}[language=Coq]
@@ -610,11 +613,11 @@ Furthermore, using the approach in \cite{AutosubstManual}, we use infinite conte
 That way we can mechanise contexts as functions \lst$var->type$ (the type of a parallel substitution over \lst$type$) and take more advantage of the \textit{Autosubst} definitions and tactics.
 Of course, in any derivation, only a finite part of the (infinite) context is used.
 
-As a small display of the versatility of this options, in the \lst$Intro$ rule, one can find context \lst$(A.:Gamma)$.
+A small display of the versatility of this option is in the \lst$Intro$ rule, where one can find the context \lst$(A.:Gamma)$.
 This is the same function we encountered when defining the substitution operation for the $\beta$-contractum \lst$s.[t .: ids]$.
 
 As remarked upon the definition of the typing rules for the nameless terms, we still want to show admissibility for structural rules.
-We do this by proving the preservation of renamings (also an idea from~\cite{AutosubstManual}), as every structural rule involves a renaming of the nameless $\Lam$-term.
+We do this by proving the preservation of renamings (also an idea from~\cite{AutosubstManual}), as every structural rule involves a renaming of the nameless $\Lam$-term (recall~\cref{nameless_typing_remark}).
 
 \begin{lstlisting}[language=Coq]
 Lemma type_renaming : forall Gamma t A, sequent Γ t A ->
