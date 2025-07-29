@@ -135,6 +135,37 @@
 \end{definition}
 
 
+\begin{definition}[$\beta$-normal forms]
+  We inductively define the sets of $\LamV$-terms and $\LamV$-lists in $\beta$-normal form, respectively NT and NL, as follows:
+  \[
+    \begin{prooftree}
+      \infer0{ var(x) \in \text{NT} }
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ t \in \text{NT} }
+      \infer1{ \lambda x . t \in \text{NT} } 
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ u \in \text{NT} } 
+      \hypo{ l \in \text{NL} }
+      \infer2{ app_v (x, u, l) \in \text{NT} }
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \infer0{ [] \in \text{NL} }
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \hypo{ u \in \text{NT} }
+      \hypo{ l \in \text{NL} }
+      \infer2{ u::l \in \text{NL} }
+    \end{prooftree}.
+  \]
+\end{definition}
+
+
 \begin{definition}[Typing Rules for $\LamV$-terms]
   \[
     \begin{prooftree}
@@ -636,28 +667,23 @@ Definition multistep' := clos_refl_trans_1n _ step'.
 Inductive sequent (Gamma: var->type) : term -> type -> Prop := 
 | varAxiom (x: var) (A: type) :
   Gamma x = A -> sequent Gamma (Vari x) A
-
 | Right (t: term) (A B: type) :
   sequent (A .: Gamma) t B -> sequent Gamma (Lamb t) (Arr A B)
-                                 
 | Left (x: var) (u: term) (l: list term) (A B C: type) :
   Gamma x = (Arr A B) -> sequent Gamma u A -> list_sequent Gamma B l C ->
   sequent Gamma (VariApp x u l) C
-
 | KeyCut (t: {bind term}) (u: term) (l: list term) (A B C: type) :
   sequent (A .: Gamma) t B -> sequent Gamma u A -> list_sequent Gamma B l C ->
   sequent Gamma (LambApp t u l) C
-
 with list_sequent (Gamma:var->type) : type -> (list term) -> type -> Prop :=
 | nilAxiom (C: type) : list_sequent Gamma C [] C
-
 | Lft (u: term) (l: list term) (A B C:type) :
   sequent Gamma u A -> list_sequent Gamma B l C ->
   list_sequent Gamma (Arr A B) (u :: l) C.
 \end{lstlisting}
 
 The mechanised step relations work as shown for the system $\LamM$ using a \lst$comp$ meta-relation for compatibility closure.
-We will describe in more detail the aproach to define the substitution operation for this system.
+In the next subsection we describe in more detail the aproach used to define the substitution operation for this system.
 
 This module also contains proofs for every compatibility lemma (recall~\cref{compatibility_lemmas}).
 \begin{lstlisting}[language=Coq]

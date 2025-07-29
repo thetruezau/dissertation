@@ -97,6 +97,7 @@ In the end of this chapter one can find a detailed overview of the mechanisation
 
 % ---
 
+\begin{comment}
 \begin{definition}[$\beta h$-normal forms]
   We inductively define the sets of $\LamM$-terms and $\LamM$-lists in $\beta h$-normal form, respectively NF and NL, as follows:
   \[
@@ -126,6 +127,7 @@ In the end of this chapter one can find a detailed overview of the mechanisation
     \end{prooftree}
   \]
 \end{definition}
+\end{comment}
 
 % ---
 
@@ -392,11 +394,11 @@ Inductive term: Type :=
 \end{lstlisting}
 
 The definition for $\LamM$-lists is hidden under the polymorphic list type \lst$list term$.
-We give more details on this in the end of this section.
+We give more details for this option at the end of this section.
 
-Mechanising the reduction relations we first defined the notion of compatibility as in~\cref{compatible_relation} and then the base step relations $\beta_1$, $\beta_2$ and $h$ separately.
+To mechanise the reduction relations, we first defined the notion of compatibility as in~\cref{compatible_relation} and then the base step relations $\beta_1$, $\beta_2$ and $h$ separately.
 That way we introduce the notions of compatible relation and also of compatible closure.
-This aproach is more elaborated than the one presented for the simply typed $\Lam$-calculus and we also get into more details about these decisions in the end of this section.
+This aproach is more elaborated than the one presented for the simply typed $\Lam$-calculus and we also get into more details about these decisions at the end of this section.
 
 \begin{lstlisting}[language=Coq]
 Inductive beta1: relation term :=
@@ -447,24 +449,25 @@ We prove these results using the techniques in the tutorial of~\cite{AutosubstMa
 \begin{lstlisting}[language=Coq]
 Lemma type_renaming :
   forall Γ,
-    (forall t A, sequent Γ t A ->
-            forall Δ ξ, Γ = (ξ >>> Δ) -> sequent Δ t.[ren ξ] A)
+    (forall t A, sequent Gamma t A ->
+       forall Delta xi, Gamma = (xi >>> Delta) -> sequent Delta t.[ren xi] A)
     /\
     (forall A l B, list_sequent Γ A l B ->
-              forall Δ ξ, Γ = (ξ >>> Δ) -> list_sequent Δ A l..[ren ξ] B).
+       forall Delta xi, Gamma = (xi >>> Delta) -> list_sequent Delta A l..[ren xi] B).
 ...
 Lemma type_substitution :
-  forall Γ, 
-    (forall t A, sequent Γ t A ->
-            forall σ Δ, (forall x, sequent Δ (σ x) (Γ x)) -> sequent Δ t.[σ] A)
+  forall Gamma, 
+    (forall t A, sequent Gamma t A ->
+       forall sigma Delta, (forall x, sequent Delta (sigma x) (Gamma x)) -> sequent Delta t.[sigma] A)
     /\
     (forall A l B, list_sequent Γ A l B ->
-               forall σ Δ, (forall x, sequent Δ (σ x) (Γ x)) -> list_sequent Δ A l..[σ] B).
+       forall sigma Delta, (forall x, sequent Delta (sigma x) (Gamma x)) -> list_sequent Delta A l..[sigma] B).
 ...
 Theorem type_preservation :
-  (forall t t', step t t' -> forall Γ A, sequent Γ t A -> sequent Γ t' A)
+  (forall t t', step t t' -> forall Gamma A, sequent Gamma t A -> sequent Gamma t' A)
   /\
-  (forall l l', step' l l' -> forall Γ A B, list_sequent Γ A l B -> list_sequent Γ A l' B).
+  (forall l l', step' l l' -> forall Gamma A B, list_sequent Gamma A l B ->
+                                 list_sequent Gamma A l' B).
 \end{lstlisting}
 
 These results are proved using the induction principles from system $\LamM$.
@@ -641,13 +644,69 @@ Section dedicated_induction_principle.
 End dedicated_induction_principle.
 \end{lstlisting}
 
-\subsubsection{Formalising a subsystem}
+\subsubsection{Formalising a compatible closure}
 
-% \begin{itemize}
-% \item Carrgying a predicate
-% \item Subset types in Coq
-% \item A self contained representation
-% \end{itemize}
+Defining reductions in $\Lam$-calculus like systems always involve the notion of compatiblity closure, as we want to define reductions also in the subterms of a term.
+
+We took inspiration from the definitions in the \lst$Relations$ libraries of the \textit{Rocq Prover}.
+This library provides many definitions on binary relations.
+For example, there is a predicate that transitive relations satisfy (in \lst$Relation_Definitions$) and there is also a higher order relation that constructs the transitive closure of a given relation (in \lst$Relation_Operations$).
+
+\begin{lstlisting}[language=Coq]
+Definition transitive : Prop := forall x y z:A, R x y -> R y z -> R x z.
+...
+Inductive clos_trans (x: A) : A -> Prop :=
+| t_step (y:A) : R x y -> clos_trans x y
+| t_trans (y z:A) : clos_trans x y -> clos_trans y z -> clos_trans x z.
+\end{lstlisting}
+
+We followed these definitions to define compatibility notions for the system $\LamM$ in a modular way.
+We define the compatible closure from a given base relation on $\LamM$-terms as follows:
+
+\begin{lstlisting}[language=Coq]
+Section Compatibilty.
+  Variable base : relation term.
+  
+  Inductive comp : relation term :=
+  | Comp_Lam (t t': {bind term}) : comp t t' ->
+                                   comp (Lam t) (Lam t')
+  | Comp_mApp1 t t' u l : comp t t' ->
+                          comp (mApp t u l) (mApp t' u l)
+  | Comp_mApp2 t u u' l : comp u u' ->
+                          comp (mApp t u l) (mApp t u' l)
+  | Comp_mApp3 t u l l' : comp' l l' ->
+                          comp (mApp t u l) (mApp t u l')
+  | Step_Base t t' : base t t' -> comp t t'
+  with comp' : relation (list term) :=
+  | Comp_Head u u' l : comp u u' -> comp' (u::l) (u'::l)
+  | Comp_Tail u l l' : comp' l l' -> comp' (u::l) (u::l').
+
+  Scheme sim_comp_ind := Induction for comp Sort Prop
+    with sim_comp_ind' := Induction for comp' Sort Prop.
+
+  Combined Scheme mut_comp_ind from sim_comp_ind, sim_comp_ind'.
+End Compatibilty.
+\end{lstlisting}
+
+Then, we also define a record type that contains the necessary predicates to be satisfied by a compatible relation.
+
+\begin{lstlisting}[language=Coq]
+Section IsCompatible.
+  Variable R : relation term.
+  Variable R' : relation (list term).
+
+  Record is_compatible := {
+      comp_lam : forall t t': {bind term}, R t t' -> R (Lam t) (Lam t') ;
+      comp_mApp1 : forall t t' u l, R t t' -> R (mApp t u l) (mApp t' u l) ;
+      comp_mApp2 : forall t u u' l, R u u' -> R (mApp t u l) (mApp t u' l) ;
+      comp_mApp3 : forall t u l l', R' l l' -> R (mApp t u l) (mApp t u l') ;
+      comp_head : forall u u' l, R u u' -> R' (u :: l) (u' :: l) ;
+      comp_tail : forall u l l', R' l l' -> R' (u :: l) (u :: l')
+    }.
+End IsCompatible.
+\end{lstlisting}
+
+\subsubsection{Formalising a subsystem}
 
 A relevant part of the mechanisations done was to find simple representations for subsystems in the proof assitant.
 

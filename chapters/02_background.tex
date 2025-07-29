@@ -463,7 +463,7 @@ It provides the \textit{Rocq Prover} with two kinds of tactics:
 
 The library makes use of some ideas we have already covered up: de~Bruijn syntax and parallel substitutions.
 There's also a more subtle third ingredient: the theory of explicit substitution \cite{Abadi}.
-This theory comes into play for the implementation of the tactics \lst$asimpl$ and \lst$autosubst$ and we won't digress much on it.
+This theory is particularly relevant to the implementation of the \lst$asimpl$ and \lst$autosubst$ tactics and we won't digress much on it.
 Essentially, our calculus with parallel substitutions forms a model of the $\sigma$-calculus and we may simplify our terms with substitutions using the convergent rewriting equations described by this theory.
 
 Taking the naive example of an inductive definition of the $\Lam$-terms in \textit{Rocq}, we now display a definition using \textit{Autosubst}.

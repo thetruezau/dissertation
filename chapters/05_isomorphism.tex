@@ -1,13 +1,14 @@
 \chapter{The isomorphism $\Lam \cong \LamV$}
 \label{c:isomorphism}
-In our background chapter, the simply typed $\Lam$-calculus was introduced.
+In~\cref{c:background}, the simply typed $\Lam$-calculus was introduced.
 
 Now, we show an isomorphism between the system $\LamV$ introduced in the previous chapter and the simply typed $\Lam$-calculus.
-This isomorphism will come at the level of syntax, reduction and typing rules.
+This isomorphism will come at the level of syntax, reduction, typing rules and $\beta$-normal forms.
 
 This is of great interest as $\LamV$ typing rules resemble a sequent calculus style.
 Thus, we have a correspondence between natural deduction (typing rules of $\Lam$-calculus) and a fragment of sequent calculus.
-% referencias
+The chapter is inspired in the works~\cite{LuisDychkoff} and~\cite[Chapter~4]{JCES2002}.
+The following diagram summarizes what we will achieve in this chapter.
 
 % https://q.uiver.app/#q=WzAsNCxbMiwwLCJcXGJveGVke1xcdmVjIFxcbGFtYmRhfSJdLFsyLDIsIlxcYm94ZWR7XFxzbWFsbHtcXHZlYyBcXGJldGEtbmZzfX0iXSxbMCwwLCJcXGJveGVkXFxsYW1iZGEiXSxbMCwyLCJcXGJveGVke1xcc21hbGx7XFxiZXRhLW5mc319Il0sWzAsMSwiXFxkb3duYXJyb3dfe1xcdmVjIFxcYmV0YX0iLDFdLFsyLDMsIlxcZG93bmFycm93X1xcYmV0YSIsMV0sWzIsMCwiXFxjb25nIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn19fV0sWzMsMSwiXFxjb25nIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn19fV1d
 \[
@@ -56,7 +57,7 @@ Thus, we have a correspondence between natural deduction (typing rules of $\Lam$
 \subsection{Isomorphism at the level of terms}
 
 \begin{lemma}
-  \label{inversion_lemma}
+  \label{theta_inversion_lemma}
   \begin{align*}
     \theta \circ \psi' &= \theta'    
   \end{align*}
@@ -67,7 +68,7 @@ Thus, we have a correspondence between natural deduction (typing rules of $\Lam$
 
 
 \begin{theorem}
-  \label{theorem7}
+  \label{theta_psi_inversion}
   \begin{align*}
     \theta \circ \psi &= id_{\Lam \text{-terms}}
   \end{align*}
@@ -78,7 +79,7 @@ Thus, we have a correspondence between natural deduction (typing rules of $\Lam$
 
 
 \begin{theorem}
-  \label{theorem8}
+  \label{psi_theta_inversion}
   \begin{align*}
     \psi \circ \theta &= id_{\LamV \text{-terms}} \\
     \psi \circ \theta' &= \psi'    
@@ -101,17 +102,18 @@ First, we need to introduce some lemmata that establish the preservation of subs
   and also, for every $\Lam$-term $M$, $\LamV$-term $u'$ and $\LamV$-lists $l, l'$,
   \[ \theta'(M, l+(u'::l')) = \theta'(\theta'(M, l) \ \theta(u'), l'). \]
 \end{lemma}
+\begin{proof}
+  The proof proceeds easily by simultaneous induction on the structure of the $\LamV$-term $t$ on the first proposition and on the structure of the $\LamV$-list $l$ on the second proposition.
+\end{proof}
 
-The following lemma is obtained as a corollary.
-
-\begin{lemma}
+\begin{corollary}
   \label{psi_app_lemma}
   For every $\Lam$-term $M$, $\LamV$-term $u$ and $\LamV$-list $l$,
   \[ \psi'(M, u :: l) = \psi(M)@(u, l). \]
-\end{lemma}
-
-~\cref{theta_subst_lemma} states that $\theta$ preserves the substitution operation.
-We use~\cref{theta_app_lemma} to prove this result.
+\end{corollary}
+\begin{proof}
+  The result follows as a corollary of~\cref{theta_app_lemma}, using~\cref{psi_theta_inversion} and~\cref{theta_inversion_lemma} to rewrite the left-hand side of the equality.
+\end{proof}
 
 \begin{lemma}
   \label{theta_subst_lemma}
@@ -120,15 +122,18 @@ We use~\cref{theta_app_lemma} to prove this result.
   and also, for every $\Lam$-term $M$,  $\LamV$-term $u$ and $\LamV$-list $l$,
   \[ \theta'(M[x := \theta(u)], l[x := u]) = \theta'(M, l)[x := u]. \]
 \end{lemma}
-
-~\cref{psi_subst_lemma} states that $\psi$ preserves the substitution operation (taking $l = []$).
-We use~\cref{psi_app_lemma} to prove this result.
-
+\begin{proof}
+  The proof follows by simultaneous induction on the structure of $\LamV$-terms and -lists, using~\cref{theta_app_lemma}.
+\end{proof}
+  
 \begin{lemma}
   \label{psi_subst_lemma}
   For every $\Lam$-terms $M, N$ and $\LamV$-list $l$,
   \[ \psi'(M[x := N], l[x := \psi(N)]) = \psi'(M, l)[x := \psi(N)]. \]
 \end{lemma}
+\begin{proof}
+  The proof follows by simultaneous induction on the structure of $\LamV$-terms and -lists, using~\cref{psi_app_lemma}.
+\end{proof}
 
 Now, we can state the isomorphism at the level of reduction.
 
@@ -137,6 +142,9 @@ Now, we can state the isomorphism at the level of reduction.
   For every $\Lam$-terms $M, N$ and $\LamV$-list $l$,
   \[ M \to_{\beta} N \implies \theta'(M, l) \to_{\beta} \theta'(N, l). \]
 \end{lemma}
+\begin{proof}
+  The proof follows easily by induction on the structure of the $\LamV$-list $l$.
+\end{proof}
 
 \begin{theorem}
   \label{theorem9}
@@ -146,8 +154,11 @@ Now, we can state the isomorphism at the level of reduction.
   \[ l \to_{\beta} l' \implies \theta'(M, l) \to_{\beta} \theta(M, l'). \]
 \end{theorem}
 \begin{proof}
-  The proof proceeds by simultaneous induction on the structure if the step relation on $\LamV$-terms.
-  ~\cref{theta_app_lemma} is useful for the cases of compatibility steps and~\cref{theta_subst_lemma} is crucial for cases dealing with $\beta$ steps.
+  The proof proceeds by simultaneous induction on the structure of the step relation on $\LamV$-terms.
+
+  \cref{theta_app_lemma} is useful for the cases of compatibility steps.
+
+  \cref{theta_subst_lemma} is crucial for cases dealing with $\beta$ steps.
 \end{proof}
 
 
@@ -158,7 +169,8 @@ Now, we can state the isomorphism at the level of reduction.
 \end{theorem}
 \begin{proof}
   The proof proceeds by simultaneous induction on the structure if the step relation on $\Lam$-terms.
-  ~\cref{psi_subst_lemma} is crucial for cases dealing with $\beta$ steps.
+
+  \cref{psi_subst_lemma} is crucial for cases dealing with $\beta$ steps.
 \end{proof}
 
 \subsection{Isomorphism at the level of typed terms}
@@ -195,6 +207,8 @@ Now, we can state the isomorphism at the level of reduction.
 \end{proof}
 
 \subsection{Isomorphism at the level of normal forms}
+
+
 
 \section{Mechanisation in \textit{Rocq}}
 
