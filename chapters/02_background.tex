@@ -295,7 +295,7 @@ Here are some examples of useful substitutions.
 \end{align*}
 
 \begin{definition}[Instantiation and composition]
-  The operation of instantiating a substitution $\sigma$ over a nameless $\Lam$-term $M$, $M[\sigma]$, is recursively by the following equations:
+  The operation of instantiating a substitution $\sigma$ over a nameless $\Lam$-term $M$, $M[\sigma]$, is recursively defined by the following equations:
   \begin{align*}
     & i[\sigma] = \sigma(i); \\
     & (\lambda . M)[\sigma] = \lambda . (M[0 \cdot (\uparrow \circ \ \sigma)]); \\
@@ -305,7 +305,7 @@ Here are some examples of useful substitutions.
   where the composition of two substitutions is mutually defined as $(\tau \circ \ \sigma)(k) = \sigma(k)[\tau]$.
 \end{definition}
 
-This definition for substitution instantiation is based on the ideas introduced in~\cite{AutosubstSchafer} and are very close to the actual mechanisation done using the \textit{Autosubst} library.  
+This definition for substitution instantiation is based on the ideas introduced in~\cite{AutosubstSchafer} and is very close to the actual mechanisation done using the \textit{Autosubst} library.  
 
 Another variation we may encounter when formalising $\Lam$-terms using a nameless syntax is the typing system.
 A similar aproach to our modification of the typing system can be found in~\cite[Chapter~7]{AndrewAdams}.
@@ -314,6 +314,13 @@ We reformulate the definition of context and derivable sequents as follows.
 \begin{definition}[Nameless context]
   A nameless context~$\Gamma, \Delta, \dots$ is a finite (possibly empty) sequence of simple types.
 \end{definition}
+
+\begin{notation} \hfill
+  
+  $| \Gamma |$ is used to denote the size of context $\Gamma$;
+
+  $\Gamma_i$ is used to denote the $i$th element of a context $\Gamma$, given $i < | \Gamma |$.
+\end{notation}
 
 \begin{definition}[Typing rules for nameless $\Lam$-terms]
   \label{nameless_typing_rules}

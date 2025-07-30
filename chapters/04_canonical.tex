@@ -244,7 +244,7 @@ The following diagram summarizes the defined maps.
   \end{tikzcd}
 \]
 
-We show some useful lemmas for the following results.
+% We show some useful lemmas for the following results.
 
 \begin{lemma}
   \label{i_app_comm}
@@ -278,7 +278,7 @@ We show some useful lemmas for the following results.
   \end{align*}
 \end{corollary}
 \begin{proof}
-  Each inversion is obtained via rewriting with~\cref{h_is_surjective} and then using~\cref{comm_i_p_h}.
+  Each inversion is obtained via rewriting with~\cref{h_fixpoints} and then using~\cref{comm_i_p_h}.
 \end{proof}
 
 \begin{theorem}
@@ -465,7 +465,7 @@ The following technical lemma says that we can derive the compatibilty rules fro
     \end{prooftree}. \]
 \end{theorem}
 \begin{proof}
-  From~\cref{h_is_surjective} we have that $t = h(t)$ and $l = h'(l)$.
+  From~\cref{h_fixpoints} we have that $h(t) = t$ and $h'(l) = l$.
 
   Then, inverting~\cref{canonical_typing}, we have (in $\LamM$):
   \[ \Gamma \vdash t : A
@@ -627,7 +627,7 @@ As a corollary of conservativeness, we can derive subject reduction for $\LamV$ 
       \infer[dashed]1[\text{\cref{conservativeness}}]{ i(t) \twoheadrightarrow_{\beta h} i(t') }
       \infer[dashed]2[\text{\cref{type_preservation} with $\twoheadrightarrow$}]{ \Gamma \vdash i(t'):A }
       \infer1[\text{\cref{canonical_typing}}]{ \Gamma \vdash_c h(i(t')):A }
-      \infer[dashed]1[\text{\cref{h_is_surjective}}]{ \Gamma \vdash_c i(t'):A }
+      \infer[dashed]1[\text{\cref{h_fixpoints}}]{ \Gamma \vdash_c i(t'):A }
       \infer1[\text{\cref{p_admissibility}}]{ \Gamma \vdash p(i(t')):A }
       \infer[dashed]1[\text{\cref{inversion_pi}}]{ \Gamma \vdash t':A }
     \end{prooftree} \]
