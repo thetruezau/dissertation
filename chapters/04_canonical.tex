@@ -1,15 +1,37 @@
-\chapter{Self-contained canonical system}
+\chapter{Canonical $\Lam$-calculus}
 \label{c:canonical}
+
+% ideias:
+% este canonical lambda calculus e uma versao autocontida do canonical subsistema (sem referencias ao lambda m)
+% no capitulo 5 vamos demonstrar que este sistema 'e isomorfo ao lambda calculus
+% este canonical lambda calculus corresponde a um lambda calculus vectorial (dai a sua notacao!)
+% estas duas ideais justificam a terminologia
+
+In this chapter we present a system that we give the name of canonical $\Lam$-calculus ($\LamV$).
+
+We call it canonical because it is in fact isomorphic to the canonical subsystem of $\LamM$ introduced in the previous chapter.
+Moreover, it is a self-contained representation of the canonical subsystem (one can notice the similarities in the definitions when comparing to system $\LamM$).
+We will show this isomorphism in the second section.
+In the third section we give proof for the theorem of conservativeness, stating that $\LamM$ is a conservative extension of $\LamV$. 
+
+Furthermore, we call it a canonical $\Lam$-calculus because this system is also isomorphic to the simply typed $\Lam$-calculus.
+This is formally argued in \cref{c:isomorphism}.
 
 \section{The system $\LamV$}
 
 \begin{definition}[Syntax of $\LamV$]
   The $\LamV$-terms and $\LamV$-lists are simultaneously defined by the following grammar:
   \begin{align*} 
-    t, u \ &::= \ var(x) \ | \ \lambda x . t \ | \ app_{v}(x, u, l) \ | \ app_\lambda (x. t, u, l) \\
+    t, u \ &::= \ var(x) \ | \ \lambda x.t \ | \ app_{v}(x, u, l) \ | \ app_{\lambda} (x.t, u, l) \\
     l      &::= \ []\  | \ u :: l
   \end{align*}
 \end{definition}
+
+\begin{remark}
+  In the $\LamV$-terms there exist two different binding constructors: $\lambda x.t$ and $app_{\lambda} (x.t, u, l)$.
+  In both constructors, every occurrence of $var(x)$ in the term $t$ is bound and not free.
+  This is, system $\LamV$ has a dedicated constructor for the multiary application $(\lambda x.t)(u, l)$ in system $\LamM$.  
+\end{remark}
 
 \begin{definition}
   Given $\LamV$-terms $t, u$ and $\LamV$-list $l$, the operation $t@(u, l)$ is defined by the following equations:
@@ -165,6 +187,11 @@
   \]
 \end{definition}
 
+\begin{remark}
+  One could simply describe the $\beta$-normal forms of $\LamV$ as the terms and lists with no occurrences of the constructor $app_{\lambda}$.
+  This corresponds to idea of cut-elimination from sequent calculus and is one of the motivations for working with such systems. % proof search
+  This system also offers an advantage in comparison to the $\Lam$-calculus, where a description of $\beta$-normal forms is more elaborated.
+\end{remark}
 
 \begin{definition}[Typing Rules for $\LamV$-terms]
   \[
@@ -209,9 +236,9 @@
 % 123
 % ---
 
-\section{$\LamV$ as a subsystem of $\LamM$}
+\section{$\LamV$ vs the canonical subsystem of $\LamM$}
 
-In this section we prove an isomorphism between $\LamV$ and the canonical terms in $\LamM$. 
+In this section we prove an isomorphism between $\LamV$ and the canonical subsystem in $\LamM$. 
 
 \begin{definition}
   Consider the following maps $i$ and $p$:
@@ -245,6 +272,7 @@ The following diagram summarizes the defined maps.
 \]
 
 % We show some useful lemmas for the following results.
+We begin by proving that the diagram shown is commutative.
 
 \begin{lemma}
   \label{i_app_comm}
@@ -254,10 +282,6 @@ The following diagram summarizes the defined maps.
 \begin{proof}
   The proof proceeds easily by inspection of the $\LamV$-term $t$. 
 \end{proof}
-
-% We now see that the defined maps establish a bijection between the $\LamV$-terms and the subsyntax of $\LamM$-terms in the set $Can$.
-
-\subsection{Isomorphism at the level of terms}
 
 \begin{theorem}
   \label{comm_i_p_h}
@@ -269,6 +293,10 @@ The following diagram summarizes the defined maps.
 \begin{proof}
   The proof proceeds easily by simultaneous induction on the structure of the $\LamM$-term, using~\cref{i_app_comm} in the application case.
 \end{proof}
+
+% We now see that the defined maps establish a bijection between the $\LamV$-terms and the subsyntax of $\LamM$-terms in the set $Can$.
+
+\subsection{Bijection at the level of terms}
 
 \begin{corollary}
   \label{inversion_ip}
@@ -707,15 +735,90 @@ End CompatibilityLemmas.
 
 \subsection{\lst$CanonicalIsomorphism.v$}
 
-This module contains proofs for every result dealing with the isomorphism of the canonical subsystem in $\LamM$ and the system $\LamV$.
+This module contains every proof related to the isomorphism of the canonical subsystem in $\LamM$ and the system $\LamV$.
+
+Let us see the statement of~\cref{step_can_is_compatible}:
+\begin{lstlisting}[language=Coq]
+Lemma step_can_is_compatible :
+  Canonical.is_compatible
+    (fun t t' => step_can (i t) (i t'))
+    (fun l l' => step_can' (map i l) (map i l')).
+Proof.
+  split ; intros ; asimpl ; inversion H.
+  ...
+\end{lstlisting}
+
+We prove every compatibility step by inverting first the definition of \lst$step_can$.
+Despite being a bureocratic result, it helps simplifying further proofs and reveals some benefits of the aproach taken, by formalising the concept of \lst$is_compatible$, for example.
+
+\begin{lstlisting}[language=Coq]
+Theorem i_step_pres :
+  (forall (t t': Canonical.term),
+      Canonical.step t t' -> step_can (i t) (i t'))
+  /\
+  (forall (l l': list Canonical.term),
+      Canonical.step' l l' ->
+      step_can' (map i l) (map i l')).
+Proof.
+  pose step_can_is_compatible as Hic.
+  destruct Hic.
+  apply Canonical.mut_comp_ind ; intros ; auto.
+  ...
+\end{lstlisting}
+
+As already mentioned in the last chapter, the mechanised version of~\cref{i_step_pres} makes use of the automation provided by the \lst$auto$ tactic by strategically adding relevant lemmas to the proof context.
 
 \subsection{\lst$Conservativeness.v$}
 
-This module is only about the proof for the theorem of conservativeness.
+This module is only about the proof for the conservativeness theorem.
+The mechanised theorem follows exactly the proof given diagramatically in~\cref{conservativeness}, divided into two parts, \lst$conservativeness1$ and \lst$conservativeness2$, for each implication side.
 
+\begin{lstlisting}[language=Coq]
+Theorem conservativeness :
+  forall t t', Canonical.multistep t t' <-> LambdaM.multistep (i t) (i t').
+Proof.
+  split.
+  - intro H.
+    induction H as [| t1 t2 t3].
+    + constructor.
+    + apply multistep_trans with (i t2) ; try easy.
+      * now apply conservativeness1. 
+  - intro H.
+    rewrite<- (proj1 inversion2) with t.
+    rewrite<- (proj1 inversion2) with t'.
+    induction H as [| t1 t2 t3].
+    + constructor.
+    + apply multistep_trans with (p t2) ; try easy.
+      * now apply conservativeness2. 
+Qed.
+\end{lstlisting}
+  
 \subsection{A closer look at the mechanisation}
 
 \subsubsection{\textit{Autosubst} and a non standard substitution operation}
+
+\begin{lstlisting}[language=Coq]
+Definition app (t u: term) (l: list term): term :=
+  match t with
+  | Vari x => VariApp x u l
+  | Lamb t' => LambApp t' u l
+  | VariApp x u' l' => VariApp x u' (l' ++ u::l)
+  | LambApp t' u' l' => LambApp t' u' (l' ++ u::l)
+  end.
+Notation "t '@(' u ',' l ')'" := (app t u l) (at level 9).
+...
+Instance Ids_term : Ids term. derive. Defined.
+Instance Rename_term : Rename term. derive. Defined.
+Instance Subst_term : Subst term. 
+Proof.
+  unfold Subst. fix inst 2. change _ with (Subst term) in inst.
+  intros sigma s. change (annot term s). destruct s.
+  - exact (sigma x).
+  - exact (Lamb (subst (up sigma) t)).
+  - exact ((sigma x)@(subst σ s, mmap (subst sigma) l)).
+  - exact (LambApp (subst (up sigma) t) (subst sigma s) (mmap (subst sigma) l)).
+Defined.
+\end{lstlisting}
 
 %%% Local Variables:
 %%% mode: LaTeX
