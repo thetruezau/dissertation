@@ -139,12 +139,13 @@ For what types and the simply typed lambda calculus is about we refer to \cite{B
 
 
 \begin{definition}  
-  We say that a $\Lam$-term $t$ is irreducible by $\to_\beta$ when there exists no $\Lam$-term $t'$ such that $t \to_\beta t'$.
+  We say that a $\Lam$-term $t$ is irreducible by $\to_\beta$ when there exists no $\Lam$-term $t'$ such that
+  \[ t \to_\beta t' . \]
 \end{definition}
 
 
 \begin{definition}[$\beta$-normal forms]
-  \label{beta-nfs}
+  \label{beta_nfs}
   We inductively define the set of $\Lam$-terms in $\beta$-normal form, NF, and normal applications, NA, as follows:
   \[
     \begin{prooftree}
@@ -171,10 +172,14 @@ For what types and the simply typed lambda calculus is about we refer to \cite{B
 
 \begin{claim}
   \label{beta_nfs_claim}
-  Every $\Lam$-term $t \in \text{NF}$ is irreducible by $\to_\beta$.
+  Given a $\Lam$-term $M$, the following are equivalent:
+
+  (i) $M \in \text{NF}$;
+
+  (ii) $M$ is irreducible by $\to_\beta$.
 \end{claim}
 
-We leave this claim here, as its proof will be mechanised in the last section of this chapter.
+We leave this claim here, but we will show the mechanised proof for $\boxed{\text{(i)} \Rightarrow \text{(ii)}}$ in the last section of this chapter.
 
 % --- 
 
@@ -543,7 +548,7 @@ step (App s t) (App s t').
 In this definition we already give use to the substitution operation defined using \textit{Autosubst}.
 The type is \lst$relation term$ (an alias for \lst$term->term->Prop$), as we are using the \lst$Relations$ library found in the \textit{Rocq} standard library containing definitions and lemmas for binary relations.
 
-We also have a definition for the mutually inductive predicate defining $\beta$-normal forms (recall~\cref{beta-nfs}).
+We also have a definition for the mutually inductive predicate defining $\beta$-normal forms (recall~\cref{beta_nfs}).
 \begin{lstlisting}[language=Coq]
 Inductive normal: term -> Prop :=
 | nLam s : normal s -> normal (Lam s)

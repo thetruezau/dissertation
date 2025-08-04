@@ -8,20 +8,21 @@ This isomorphism will come at the level of syntax, reduction, typing rules and $
 This is of great interest as $\LamV$ typing rules resemble a sequent calculus style.
 Thus, we have a correspondence between natural deduction (typing rules of $\Lam$-calculus) and a fragment of sequent calculus.
 The chapter is inspired in the works~\cite{LuisDychkoff} and~\cite[Chapter~4]{JCES2002}.
-The following diagram summarizes what we will achieve in this chapter.
+The following diagram summarizes what we will be achieved in this chapter.
 
-% https://q.uiver.app/#q=WzAsNCxbMiwwLCJcXGJveGVke1xcdmVjIFxcbGFtYmRhfSJdLFsyLDIsIlxcYm94ZWR7XFxzbWFsbHtcXHZlYyBcXGJldGEtbmZzfX0iXSxbMCwwLCJcXGJveGVkXFxsYW1iZGEiXSxbMCwyLCJcXGJveGVke1xcc21hbGx7XFxiZXRhLW5mc319Il0sWzAsMSwiXFxkb3duYXJyb3dfe1xcdmVjIFxcYmV0YX0iLDFdLFsyLDMsIlxcZG93bmFycm93X1xcYmV0YSIsMV0sWzIsMCwiXFxjb25nIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn19fV0sWzMsMSwiXFxjb25nIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn19fV1d
-\[
-  \begin{tikzcd}
-    {\boxed \Lam} && {\boxed \LamV} \\
+% https://q.uiver.app/#q=WzAsNCxbMiwwLCJcXGJveGVke1xcdmVjIFxcbGFtYmRhfSJdLFsyLDIsIlxcYm94ZWR7XFxzbWFsbHtcXHZlYyBcXGJldGEtbmZzfX0iXSxbMCwwLCJcXGJveGVkXFxsYW1iZGEiXSxbMCwyLCJcXGJveGVke1xcc21hbGx7XFxiZXRhLW5mc319Il0sWzAsMSwiXFxkb3duYXJyb3dfe1xcdmVjIFxcYmV0YX0iLDFdLFsyLDMsIlxcZG93bmFycm93X1xcYmV0YSIsMV0sWzMsMSwiXFxjb25nIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn19fV0sWzIsMCwiXFxwc2kiLDEseyJvZmZzZXQiOi0yfV0sWzAsMiwiXFx0aGV0YSIsMSx7Im9mZnNldCI6LTJ9XV0=
+\[\begin{tikzcd}
+    {\boxed\lambda} && {\boxed{\vec \lambda}} \\
     \\
     {\boxed{\small{\beta-nfs}}} && {\boxed{\small{\vec \beta-nfs}}}
-    \arrow["\cong"{description}, <->, from=1-1, to=1-3]
+    \arrow["\psi"{description}, shift left=2, from=1-1, to=1-3]
     \arrow["{\downarrow_\beta}"{description}, from=1-1, to=3-1]
+    \arrow["\theta"{description}, shift left=2, from=1-3, to=1-1]
     \arrow["{\downarrow_{\vec \beta}}"{description}, from=1-3, to=3-3]
     \arrow["\cong"{description}, <->, from=3-1, to=3-3]
-  \end{tikzcd}
-\]
+  \end{tikzcd}\]
+
+The $\vec \beta$ refers to the $\beta$-reduction steps in system $\LamV$ and is used in the diagram to create a clear distinction.
 
 \section{Mappings $\theta$ and $\psi$}
 
@@ -206,14 +207,74 @@ Now, we can state the isomorphism at the level of reduction.
   The proof proceeds easily by induction on the structure of the typing rules of $\Lam$-terms.
 \end{proof}
 
-\subsection{Isomorphism at the level of normal forms}
+\subsection{Bijection at the level of normal forms}
 
+For the following results recall both~\cref{beta_nfs} and~\cref{beta_nfs_can}.
+We prove both bijections directly and give a hint on how they could be proved using the claims that we have provided.
+One can find similar results to this in~\cite{LuisDychkoff}.
 
+\begin{theorem}
+  \begin{align*}
+    \psi \circ \theta |_{\text{NT}} &= id_{\text{NT}} \\
+    \psi \circ \theta'|_{\text{NA} \times \text{NL}} &= \psi' |_{\text{NA} \times \text{NL}}
+  \end{align*}
+\end{theorem}
+\begin{proof}
+  The proof proceeds easily by simultaneous induction on the structure of $\LamV$-terms in $\text{NT}$ and $\LamV$-lists in $\text{NL}$.
+\end{proof}
+
+\begin{theorem}
+  \begin{align*}
+    \theta \circ \psi |_{\text{NF}} &= id_{\text{NF}} \\
+    \theta \circ \psi'|_{\text{NA} \times \text{NL}} &= \theta' |_{\text{NA} \times \text{NL}}
+  \end{align*}
+\end{theorem}
+\begin{proof}
+  The proof proceeds easily by simultaneous induction on the structure of $\Lam$-terms in $\text{NF}$ and $\text{NA}$.
+\end{proof}
+
+Alternatively, we could prove that $M \in \text{NF} \implies \psi(M) \in \text{NT}$ and $t \in \text{NT} \implies \theta(t) \in \text{NF}$. Then, the shown theorems would automatically follow.
+
+For example, from the assumption that $M \in \text{NF}$, using~\cref{beta_nfs_claim}, one gets that $M$ is irreducible by $\to_\beta$.
+Then, from~\cref{theorem10}, $\psi(M)$ is also irreducible by $\to_\beta$ (in $\LamV$), which in turn means that $\psi(M) \in \text{NT}$ (by~\cref{beta_nfs_can_claim}).
 
 \section{Mechanisation in \textit{Rocq}}
 
-\subsection{\lst$LambdaIsomorphism.v$}
-\subsection{\lst$NormalIsomorphism.v$}
+In this section we provide a brief description of the mechanisations, as they follow from many previous definitions.
+Essentially, we just defined maps $\theta$ and $\psi$ and mechanised every result.
+
+One detail that may be highlighted is the definition for maps $\theta$ and $\theta'$.
+\begin{lstlisting}[language=Coq]
+Fixpoint theta (t: Canonical.term) : Lambda.term :=
+  match t with
+  | Vari x => Var x
+  | Lamb t => Lam (theta t)
+  | VariApp x u l => fold_left (fun s v => App s (theta v)) (u::l) (Var x)
+  | LambApp t u l => fold_left (fun s v => App s (theta v)) (u::l) (Lam (theta t))
+  end.
+
+Definition theta' (s: Lambda.term) (l: list Canonical.term) :
+  Lambda.term := fold_left (fun s v => App s (theta v)) l s.
+\end{lstlisting}
+
+The mechanised objects that represents map $\theta'$ uses a higher order function on lists called \lst$fold_left$ that behaves exactly as $\theta'$, given the function \lst$(fun s v => App s (theta v))$ which folds the $\LamV$-list into a $\Lam$-term.
+
+This was an undesired consequence of the use of polymorphic lists in the definition for $\LamV$-terms.
+We could not define mutually recursive functions on the structure of the term and list because the proof assistant fails to recognise their termination.
+Instead, we have to define these maps using higher order functtions.
+In this specific case, we could even enjoy the generality of the \lst$fold_map$ function.
+
+As the mechanised $\theta'$ is defined after $\theta$, we have to consistently fold the definition for $\theta'$ in proofs to make them goal more readable.
+\begin{lstlisting}[language=Coq]
+Lemma theta'_step_pres l :
+  forall s s', Lambda.step s s' -> Lambda.step (theta' s l) (theta' s' l).
+Proof.
+  induction l as [| u l]; intros ; asimpl ; try easy.
+  - fold (theta' (App s (theta u)) l).
+    fold (theta' (App s' (theta u)) l).
+    apply IHl. now constructor.
+Qed.
+\end{lstlisting}
 
 
 %%% Local Variables:

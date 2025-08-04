@@ -131,6 +131,14 @@ In the end of this chapter one can find a detailed overview of the mechanisation
 
 % ---
 
+The typing system of system $\LamM$ provides rules to derive two different kinds of sequents.
+
+\begin{definition}[Sequent]
+  A sequent on terms~$\Gamma \vdash t:A$ is a triple of a context, a $\LamM$-term and a simple type.
+  A sequent on lists~$\Gamma;A \vdash l:B$ is a quadruple of a context, a simple type, a $\LamM$-list and another simple type.
+\end{definition}
+
+
 \begin{definition}[Typing Rules for $\LamM$-terms]
   \[
     \begin{prooftree}
@@ -528,8 +536,17 @@ Lemma type_substitution :
        forall sigma Delta, (forall x, sequent Delta (sigma x) (Gamma x)) -> list_sequent Delta A l..[sigma] B).
 \end{lstlisting}
 
-These results are proved using the induction principles from system $\LamM$.
-Therefore, as noted before, we use the combined induction principles for the proofs and need to declare the propositions using a conjunction on terms and lists.
+For what is worth, we could prove a simpler statement (similar to~\cref{type_substitution}) to use as lemma for the subject reduction theorem.
+Such lemma would look like (without the proposition for lists):
+\begin{lstlisting}[language=Coq]
+Lemma weak_type_substitution Gamma t A :
+  sequent (B.:Gamma) t A -> sequent Gamma u B ->
+  sequent Gamma t.[u.:sigma] A).
+\end{lstlisting}
+
+The used \textit{Autosubst} aproach takes this notion of well-typed substitutions or context morphisms (see~\cite[Chapter~4]{AutosubstSchafer}) to generalise these lemmas.
+
+As already mentioned, we use the combined induction principles for the proofs and need to declare the propositions using a conjunction on terms and lists.
 
 \subsection{\lst$IsCanonical.v$}
 

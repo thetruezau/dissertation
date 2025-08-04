@@ -44,7 +44,10 @@ This is formally argued in \cref{c:isomorphism}.
   where the list append, $l + l'$, is defined simlarly as in $\LamM$.  
 \end{definition}
 
+Now follows a strange definition for the substitution operation, as we have to be careful when dealing with a substitution over a constructor $app_v$.
+
 \begin{definition}[Substitution for $\LamV$-terms]
+  \label{canonical_substitution}
   The substitution over a $\LamV$-term is mutually defined with the substitution over a $\LamV$-list as follows:
   \begin{align*}
   & var(x)[x := v] = v ; \\
@@ -158,6 +161,7 @@ This is formally argued in \cref{c:isomorphism}.
 
 
 \begin{definition}[$\beta$-normal forms]
+  \label{beta_nfs_can}
   We inductively define the sets of $\LamV$-terms and $\LamV$-lists in $\beta$-normal form, respectively NT and NL, as follows:
   \[
     \begin{prooftree}
@@ -192,6 +196,22 @@ This is formally argued in \cref{c:isomorphism}.
   This corresponds to idea of cut-elimination from sequent calculus and is one of the motivations for working with such systems. % proof search
   This system also offers an advantage in comparison to the $\Lam$-calculus, where a description of $\beta$-normal forms is more elaborated.
 \end{remark}
+
+\begin{claim}
+  \label{beta_nfs_can_claim}  
+  Given a $\LamV$-term $t$, the following are equivalent:
+
+  (i) $t \in \text{NT}$;
+
+  (ii) $t$ is irreducible by $\to_\beta$.
+\end{claim}
+
+We leave a similar claim to~\cref{beta_nfs_claim} that will not be proved here.
+However, it will be used in the next chapter to provide an alternative argument for the bijection between $\beta$-normal forms of $\Lam$-terms and $\LamV$-terms.
+
+Sequents in system $\LamV$ may be defined similarly as in system $\LamM$.
+Then, we directly introduce the typing rules of this system.
+
 
 \begin{definition}[Typing Rules for $\LamV$-terms]
   \[
@@ -663,7 +683,7 @@ As a corollary of conservativeness, we can derive subject reduction for $\LamV$ 
 
 \section{Mechanisation in \textit{Rocq}}
 
-The mechanisations for the system $\LamV$ follow the same style as the ones shown for the system $\LamM$ using the \textit{Autosubst} library, except for the non standard substitution operation.
+The mechanisations for the system $\LamV$ follow the same style as the ones shown for the system $\LamM$ using the \textit{Autosubst} library, except for the nonstandard substitution operation (that we cover in more detail by the end of the chapter).
 
 \subsection{\lst$Canonical.v$}
 
@@ -795,8 +815,28 @@ Qed.
   
 \subsection{A closer look at the mechanisation}
 
-\subsubsection{\textit{Autosubst} and a non standard substitution operation}
+\subsubsection{\textit{Autosubst} and a nonstandard substitution operation}
 
+One of the most peculiar definitions in system $\LamV$ is the substitution operation.
+As referred upon~\cref{canonical_substitution}, we have a strange behaved substitution for the constructor $app_v$.
+In practice, on a substitution $app_v (x, u, l)[x:=v]$, there occurs an inspection of the term $v$ that dictates the result of the substitution operation.
+
+As we were working with a library that tries to automate definitions for substitution operations, we tested it in this case.
+But as expected, the \lst$derive$ tactic failed to give us the desired operation.
+\begin{lstlisting}[language=Coq]
+Subst_term =
+(fix dummy (sigma : var -> term) (s : term) {struct s} : term :=
+match s as t return (annot term t) with
+   | Vari x => (fun x0: var => sigma x0) x
+   | Lamb t => (fun t0: {bind term} => Lamb t0.[up sigma]) t
+   | VariApp x u l => (fun (x0: var) (_: term) (_: list term) => sigma x0) x u l
+   | LambApp t u l =>
+       (fun (t0: {bind term}) (s0: term) (l0: list term) =>
+        LambApp t0.[up sigma] s0.[sigma] l0..[sigma]) t u l
+   end)
+\end{lstlisting}
+
+Therefore, we gave the proof assistant our dedicated definition (directly as a proof object, as seen below).
 \begin{lstlisting}[language=Coq]
 Definition app (t u: term) (l: list term): term :=
   match t with
@@ -819,6 +859,9 @@ Proof.
   - exact (LambApp (subst (up sigma) t) (subst sigma s) (mmap (subst sigma) l)).
 Defined.
 \end{lstlisting}
+
+The downside to this was the need to manually prove every substitution lemma required by the \textit{Autosubst} instance \lst$SubstLemmas$.
+This was crucial to enjoy the automation provided from the library for the mechanised inductive type of the $\LamV$-terms.
 
 %%% Local Variables:
 %%% mode: LaTeX
