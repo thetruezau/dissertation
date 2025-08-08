@@ -257,14 +257,15 @@ Definition theta' (s: Lambda.term) (l: list Canonical.term) :
   Lambda.term := fold_left (fun s v => App s (theta v)) l s.
 \end{lstlisting}
 
-The mechanised objects that represents map $\theta'$ uses a higher order function on lists called \lst$fold_left$ that behaves exactly as $\theta'$, given the function \lst$(fun s v => App s (theta v))$ which folds the $\LamV$-list into a $\Lam$-term.
+The mechanised object that represents map $\theta'$ uses a higher order function on lists called \lst$fold_left$ that behaves exactly as $\theta'$, given the function \lst$(fun s v => App s (theta v))$ which folds the $\LamV$-list into a $\Lam$-term.
 
 This was an undesired consequence of the use of polymorphic lists in the definition for $\LamV$-terms.
 We could not define mutually recursive functions on the structure of the term and list because the proof assistant fails to recognise their termination.
-Instead, we have to define these maps using higher order functtions.
-In this specific case, we could even enjoy the generality of the \lst$fold_map$ function.
+Instead, we have to define these maps using higher order functions.
+In this specific case, we could even enjoy the generality of the \lst$fold_left$ function.
 
 As the mechanised $\theta'$ is defined after $\theta$, we have to consistently fold the definition for $\theta'$ in proofs to make them goal more readable.
+This can be seen in the mechanisation of~\cref{theta_step_lemma}:
 \begin{lstlisting}[language=Coq]
 Lemma theta'_step_pres l :
   forall s s', Lambda.step s s' -> Lambda.step (theta' s l) (theta' s' l).

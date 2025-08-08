@@ -1,29 +1,28 @@
 \chapter{Discussion}
 \label{c:discussion}
 
+Mechanisations in relation with the formalisations on the paper.
 \begin{itemize}
-
-% estes items comecaram a ser referidos no capitulo 3? e agora?
+\item Some ideas for the metatheory formalised come from attemps of mechanisations.
   
-\item distancia das provas em Rocq ao papel
-  \subitem $\lambda m$ com substituicoes explicitas
-% \item tirar partido do AUTOSUBST com o Coq (poliformismo etc...)
-  
-\item AUTOSUBST e overkill neste caso?
-\item variacoes na defn de substituicao?
-\item avoiding AUTOSUBST 2
-
-\item possiveis extensoes para tipos dependentes e polimorfismo usando AUTOSUBST? (mmap)
-
-\item theres a Coq world out there...
-  \subitem SSreflect style? Bookeping e vários resultados sao estipulados nao exactamente como no papel
-  \subitem automaçao
-  \subitem andar para a frente e para trás com o código 
-
-\item e preciso dar muitos nomes, chatice
-\item tentativa de ser consistente no estilo de definicoes e nomes, mas dificuldade
-  
+\item The metatheory mechanised does not correspond exactly to the formalised in the literature.
+  \subitem An example: the polymorphic definition for system  $\LamM$.
 \end{itemize}
+
+On the world of mechanising metatheory.
+\begin{itemize}
+\item Why use a outdated library for mechanising binders? What about \textit{Autosubst 2}?
+\item Obstacles on the mechanisation of a non standard substitution operation.
+\item SSreflect style proofs for \textit{Rocq Prover}.
+\item Could there be more automation?  
+\end{itemize}
+
+Further work?
+\begin{itemize}
+\item Because of the modularity and of the \textit{Autosubst} library we have the facility to enrich our typing systems (ex: SystemF?).
+% \item 
+\end{itemize}
+
 
 %%% Local Variables:
 %%% mode: LaTeX
