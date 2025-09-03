@@ -380,8 +380,8 @@ The following technical lemma says that we can derive the compatibilty rules fro
 
   The following binary relations are compatible in $\LamV$:
   \begin{align*}
-    I &= \{ (t, t') \ | \ i(t) \ {\to_R}_c \ i(t'), \text{for every $\LamV$-terms $t, t'$} \} \\
-    I' &= \{ (l, l') \ | \ i'(l) \ {\to_{R'}}_c \ i'(l'), \text{for every $\LamV$-lists $l, l'$} \}
+    I &= \{ (t, t') \ | \ i(t) \ ({\to_R})_c \ i(t'), \text{for every $\LamV$-terms $t, t'$} \} \\
+    I' &= \{ (l, l') \ | \ i'(l) \ ({\to_{R'}})_c \ i'(l'), \text{for every $\LamV$-lists $l, l'$} \}
   \end{align*}
 \end{lemma}
 \begin{proof}
@@ -391,7 +391,7 @@ The following technical lemma says that we can derive the compatibilty rules fro
       \infer1{ (app_\lambda (x.t, u, l), app_\lambda (x.t', u, l)) \in I }
     \end{prooftree} . \]
 
-  From the definition of $I$, $(t, t') \in I \implies i(t) \ {\to_R}_c \ i(t')$.
+  From the definition of $I$, $(t, t') \in I \implies i(t) \ ({\to_R})_c \ i(t')$.
 
   Then, from the definition of the canonical closure relation, we have that there exist $\LamM$-terms $t_1$ and $t_2$ such that $h(t_1) = i(t)$ and $h(t_2) = i(t')$ and $t_1 \to_R t_2$.
 
@@ -401,16 +401,16 @@ The following technical lemma says that we can derive the compatibilty rules fro
       \infer1[\text{(compatibility of $\to_R$)}]{ \lambda x.t_1 \to_R \lambda x.t_2 }
       \infer1[\text{(compatibility of $\to_R$)}]{ (\lambda x.t_1)(i(u), i'(l)) \to_R (\lambda x.t_2)(i(u), i'(l)) }
       \infer1[\text{(compatibility of $\to_R$)}]{ (\lambda x.t_1)(i(u), i'(l)) \to_R (\lambda x.t_2)(i(u), i'(l)) }
-      \infer1[\text{(canonical closure definition)}]{ h((\lambda x.t_1)(i(u), i'(l))) \ {\to_R}_c \ h((\lambda x.t_2)(i(u), i'(l))) }.
+      \infer1[\text{(canonical closure definition)}]{ h((\lambda x.t_1)(i(u), i'(l))) \ ({\to_R})_c \ h((\lambda x.t_2)(i(u), i'(l))) }.
     \end{prooftree} \]
 
-  Computing $h$, we get $(\lambda x.h(t_1))(h(i(u)), h'(i'(l))) \ {\to_R}_c \ (\lambda x.h(t_2))(h(i(u)), h'(i'(l)))$.
+  Computing $h$, we get $(\lambda x.h(t_1))(h(i(u)), h'(i'(l))) \ ({\to_R})_c \ (\lambda x.h(t_2))(h(i(u)), h'(i'(l)))$.
 
   As $i(u) \in Can$, $h(i(u)) = i(u)$.
   And also, because $i'(l) \in CanList$, we get that $h'(i'(l)) = i'(l)$.
   \begin{align*}
     &(\lambda x.h(t_1))(i(u), i'(l)) = (\lambda x.i(t))(i(u), i'(l)) = i(app_\lambda (x.t, u, l)) \\
-    {\to_R}_c \ &(\lambda x.h(t_2))(i(u), i'(l)) = (\lambda x.i(t'))(i(u), i'(l)) = i(app_\lambda (x.t', u, l))
+    ({\to_R})_c \ &(\lambda x.h(t_2))(i(u), i'(l)) = (\lambda x.i(t'))(i(u), i'(l)) = i(app_\lambda (x.t', u, l))
   \end{align*}
 
   Therefore, by definition of $I$, we get that $(app_\lambda (x.t, u, l), app_\lambda (x.t', u, l)) \in I$.
@@ -419,14 +419,14 @@ The following technical lemma says that we can derive the compatibilty rules fro
 \begin{theorem}
   \label{i_step_pres}
   For every $\LamV$-terms $t, t'$,
-  \[ t \to_{\beta} t' \implies i(t) {\to_{\beta}}_c i(t') \]
+  \[ t \to_{\beta} t' \implies i(t) \ ({\to_{\beta}})_c \ i(t') \]
   and also, for every $\LamV$-lists $l, l'$,
-  \[ l \to_{\beta} l' \implies i'(l) {\to_{\beta}}_c i(l'). \]
+  \[ l \to_{\beta} l' \implies i'(l) \ ({\to_{\beta}})_c \ i(l'). \]
 \end{theorem}
 \begin{proof}
   The proof proceeds by simultaneous induction on the step relation of $\LamV$-terms.
 
-  \cref{i_subst_pres} deals with substitution preservation in the $\beta$ reduction cases.
+  \cref{i_subst_pres} deals with substitution preservation in the $\beta$-reduction cases.
 
   \cref{step_can_is_compatible} deals with all the compatibility cases.
 \end{proof}
@@ -434,16 +434,16 @@ The following technical lemma says that we can derive the compatibilty rules fro
 \begin{theorem}
   \label{p_step_pres}
   For every $t, t' \in Can$,
-  \[ t {\to_{\beta}}_c t' \implies p(t) \to_{\beta} p(t') \]
+  \[ t \ ({\to_{\beta}})_c \ t' \implies p(t) \to_{\beta} p(t') \]
   and also, for every $l, l' \in CanList$,
-  \[ l {\to_{\beta}}_c l' \implies p'(l) \to_{\beta} p(l'). \]
+  \[ l \ ({\to_{\beta}})_c \ l' \implies p'(l) \to_{\beta} p(l'). \]
 \end{theorem}
 \begin{proof}
   The proof proceeds by simultaneous induction on the step relation of canonical terms.
   
   \cref{compatibility_lemmas} may be useful for compatibility steps.
 
-  \cref{p_subst_pres} deals with substitution preservation in the $\beta$ reduction cases.  
+  \cref{p_subst_pres} deals with substitution preservation in the $\beta$-reduction cases.  
 \end{proof}
 
 % ---

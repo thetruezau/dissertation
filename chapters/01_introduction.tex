@@ -1,17 +1,50 @@
 \chapter{Introduction}
 \label{c:intro}
 
-
 \section{Motivation}
-\label{s:motivation}
-There is no motivation, yet we need to write one.
+\subsection{Why mechanise?}
+The mechanisation of metatheory has been taken seriously for at least 20 years~\cite{POPLmark}.
+By mechanisation we mean a well-founded description of a mathematical object using a proof assistant.
+Such proof assistants have attracted the attention of mathematicians because of the reliability they provide for writing computer verified proofs~\cite{FourColourThm}.
+There has also been an increasing interest by engineers in the use of such tools for the security guarantees achieved when formally proving properties about computer programmes~\cite{CompCert}.
+
+One could even argue that any work of mechanisation is useful, because it will:
+\begin{enumerate}
+\item result in a computer verified work,
+\item expose the difficulties behind any mathematical formalisation,
+\item provide automation for routine and tedious parts,
+\item potentially allow some theory to be extended with less cost.
+\end{enumerate}
+
+All of the latter are perfectly good motivations for the work done in this dissertation.
+
+Then, the question of \textit{Why metatheory?} arises.
+From the reasons above, some are highlighted by the task of mechanising metatheory.
+For example, it is often argued that metatheoretical proofs \textit{``are long, contain few essential insights, and have a lot of tedious but error-prone cases''}~\cite{AutosubstSchafer}.
+
+In our case, mechanising theoretical results related to a really specific variation of the $\Lam$-calculus could enable new ways of continuing the work being done in this topic.
+
+\subsection{Why the multiary $\Lam$-calculus?}
+In the begining of~\cite[Chapter~7.3]{CurryHoward}, one can read \textit{``Natural deduction proofs correspond to $\Lam$-terms with types, and Hilbert style proofs correspond to combinators with types. What do sequent calculus proofs correspond to?''}.
+Many alternatives are given in this chapter, but none that can match the process of cut-elimination with normalisation.
+
+In the novel paper of Herbelin~\cite{Herbelin1994}, a multiary $\Lam$-calculus (with explicit substitutions) is introduced, whose typing rules resemble a sequent calculus style of inference.
+Furthermore, the introduced reductions for this system correspond exactly with the process of cut elimination for a fragment of the sequent calculus.
+
+Considering just the multiary version of the $\Lam$-calculus (excluding explicit substitutions), one gets a system that was studied in detail in CMAT~\cite{JCESLuis}, often called $\LamM$.
+The study of the computational meaning behind the sequent calculus is one of the main motivations for considering systems such as $\LamM$, as they provide meaningful extensions for the ordinary $\Lam$-calculus.
 
 
 \section{Objectives}
-\label{s:objectives}
-Formalise results about $\lambda$-calculus variants in \textit{Coq}.
+The initial objectives of this dissertation were clear: to mechanise using the \textit{Rocq Prover} a multiary version of the $\Lam$-calculus and its canonical subsystem.
 
+% (working with inductive structures and so on)
+% concrete formalisations
+% set theory vs type theory
 
 \section{Document Structure}
-\label{s:doc_structure}
-List your chapters here, with a very brief description of each one.
+
+%%% Local Variables:
+%%% mode: LaTeX
+%%% TeX-master: "../dissertation"
+%%% End:
