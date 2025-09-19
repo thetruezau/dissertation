@@ -1,37 +1,41 @@
 \chapter{Multiary $\Lam$-calculus and its canonical subsystem}
 \label{c:multiary}
 
-This chapter introduces the main system that was studied in this thesis: the multiary $\Lam$-calculus ($\LamM$).
-We introduce this system as the system $\pmb{\lambda \mathcal{P}h}$ found in~\cite[Chapter~3]{JCES2002} and $\pmb{\lambda^m}$ found in~\cite{JCESLuis}.
-We also give an alternative description for a subsystem of $h$-normal forms in $\LamM$ (corresponding to the system $\pmb{\lambda \mathcal{P}}$ found in~\cite[Chapter~3]{JCES2002}).
-In the end of this chapter one can find a detailed overview of the mechanisations done.
+This chapter introduces the main system that was studied in this dissertation: the multiary $\Lam$-calculus ($\LamM$).
+We introduce this system as the system $\pmb{\lambda \mathcal{P}h}$ studied in~\cite[Chapter~3]{JCES2002}.
+This system can also be found as $\pmb{\lambda^m}$ in~\cite[Section~3]{JCESLuis}, as a subsystem of $\pmb{\lambda J^m}$.
+
+We provide an alternative description for a subsystem of $h$-normal forms of $\LamM$ (corresponding to the system $\pmb{\lambda \mathcal{P}}$ found in~\cite[Chapter~3]{JCES2002}).
+At the end of this chapter one can find a detailed overview of the mechanisation done in this dissertation of the multiary $\Lam$-calculus and subsystems.
 
 \section{The system $\LamM$}
 
-\begin{definition}[Syntax of $\LamM$]
-  The $\LamM$-terms and $\LamM$-lists are simultaneously defined by the following grammar:  
+First, we introduce some standard definitions for our system, like the grammar for $\LamM$-terms, a typical append operation on lists and substitution operation.
+
+\begin{definition}[$\LamM$-terms]
+  The $\LamM$-terms are simultaneously defined with $\LamM$-lists by the following grammar:  
   \begin{align*} 
-    t, u \ &::= \ x \ | \ \lambda x . t \ | \ t(u, l) \ \\
-    l      &::= \ []\  | \ u :: l.
+    (\LamM \text{-terms}) && t, u, v &::= \ x \ | \ \lambda x . t \ | \ t(u, l) \ \\
+    (\LamM \text{-lists}) && l       &::= \ []\  | \ u :: l.
   \end{align*}
 \end{definition}
 
 \begin{definition}[Append]
-  The append of two $\LamM$-lists, $l + l'$, is recursively defined as follows:
+  The append of two $\LamM$-lists, $l + l'$, is defined recursively on $l$ as follows:
   \begin{align*}
-  & [] + l' = l', \\
-  & (u::l) + l' = u::(l + l').
+    [] + l'     &= l', \\
+    (u::l) + l' &= u::(l + l').
   \end{align*}
 \end{definition}
 
 \begin{definition}[Substitution for $\LamM$-terms]
-  The substitution over a $\LamM$-term is mutually defined with the substitution over a $\LamM$-list as follows:  
+  The substitution of a variable $x$ by a $\LamM$-term $v$ is mutually defined by recursion with the substitution over a $\LamM$-list as follows:  
   \begin{align*}
   & x[x := v] = v ; \\
   & y[x := v] = y \text{, with } x \neq y ; \\
   & (\lambda y . t)[x := v] = \lambda y . (t[x := v]) ; \\
   & t(u, l)[x := v] = t[x := v](u[x := v], l[x := v]) ; \\    
-  & ([])[x := v] = [] ; \\ 
+  & [][x := v] = [] ; \\
   & (u::l)[x := v] = u[x := v] :: l[x := v] .
   \end{align*}
 \end{definition}

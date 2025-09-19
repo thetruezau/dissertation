@@ -7,7 +7,7 @@ This chapter introduces essential background for the reading of this dissertatio
 % It will take the scheme used in the subsequent chapters:
 % a first part of theoretical presentation and a second part of mechanisation.
 First, we introduce the well-known simply typed $\Lam$-calculus.
-Then, we delve into a known variation of the introduced $\Lam$-calculus theory using de~Bruijn indices, that has known facilities when it comes to mechanisations.
+Then, we delve into a known variation of the introduced $\Lam$-calculus theory using de~Bruijn indices, that has known facilities when it comes to mechanisation.
 Lastly, we present and explain a mechanisation of the simply typed $\Lam$-calculus in the \textit{Rocq Prover}.
 % These concepts are introduced and motivated by the task of formalising the $\Lam$-calculus system introduced.
 
@@ -33,7 +33,7 @@ For what types and the simply typed lambda calculus is about we refer to \cite{B
 \end{remark}
 
 \begin{notation}
-  We shall assume the usual notation conventions on $\Lam$-terms:
+  We shall assume the usual notational conventions on $\Lam$-terms:
 
   \begin{enumerate}
   \item Outermost parentheses are omitted.
@@ -42,6 +42,7 @@ For what types and the simply typed lambda calculus is about we refer to \cite{B
   \end{enumerate}
 \end{notation}
 
+\begin{comment}
 \begin{definition}[Free variables]
   For every $\Lam$-term $M$, we recursively define the set of free variables in $M$, $FV(M)$, as follows:  
   \begin{align*}
@@ -49,12 +50,18 @@ For what types and the simply typed lambda calculus is about we refer to \cite{B
     & FV( \lambda x . M ) = FV(M) - \{ x \}, \\
     & FV( M N ) = FV(M) \cup FV(N).
   \end{align*}
+\end{definition}
+\end{comment}
 
-  When a variable occurring in a term is not free it is said to be bound.
+\begin{definition}[Free/bound occurrence]
+  We say that the variable $x$ occurs bound when it occurs in the scope of an abstraction $\lambda x$ and say that it occurs free otherwise.
 \end{definition}
 
+As an illustration of the previous concepts take the term $M = x (\lambda x . x)$.
+The variable $x$ occurs both free and bound in this term.
+
 \begin{definition}[$\alpha$-equality]
-  We say that two $\Lam$-terms are $\alpha$-equal when they only differ in the name of their bound variables.
+  We say that two $\Lam$-terms are $\alpha$-equal when they only differ by the name of their variable that occur bound.
 \end{definition}
 
 \begin{remark}
@@ -65,11 +72,11 @@ For what types and the simply typed lambda calculus is about we refer to \cite{B
 
 \begin{convention} 
   We will use the \textit{variable convention} introduced in \cite{Barendregt1987}.
-  Every $\Lam$-term that we refer from now on is chosen (via $\alpha$-equality) to have bound variables with different names from free variables.
+  Without loss of generality, every $\Lam$-term that we refer from now on is chosen (via $\alpha$-equality) to have different names for bound and free occurrences of variables.
 \end{convention}
 
 \begin{definition}[Substitution]
-  For every $\Lam$-term $M$, we recursively define the substitution of the free variable $x$ by $N$ in $M$, $M[x := N]$, as follows:
+  For every $\Lam$-term $M$, we recursively define the substitution of $N$ for the free occurrences of $x$ in $M$, $M[x := N]$, as follows:
   \begin{align*}
     & x[x := N] = N; \\
     & y[x := N] = y, \ \text{with $x \neq y$}; \\
@@ -80,8 +87,7 @@ For what types and the simply typed lambda calculus is about we refer to \cite{B
 
 
 \begin{remark}
-  Is is important to notice that by variable convention, the substitution operation described is capture-avoiding
-  - bound variables will not be substituted ($x \in FV(M)$) and the free variables in $N$ will not be affected by the binders in $M$, as they are chosen to have different names. 
+  Is is important to notice that by variable convention, the substitution operation described is capture-avoiding: the free variables in $N$ will not be affected by the binders in $M$, as they are chosen to have different names. 
 \end{remark}
 
 
@@ -132,13 +138,13 @@ For what types and the simply typed lambda calculus is about we refer to \cite{B
   Consider the following binary relation on $\Lam$-terms:  
   \[
     \beta = \{ ((\lambda x . M) N, M[x := N]) \
-                | \ \text{for every variable $x$ and every $\Lam$-terms $M, N$} \}.
+                | \ \text{for every variable $x$ and $\Lam$-terms $M, N$} \}.
   \]  
   We call one step $\beta$-reduction to the relation $\to_\beta$ and multistep $\beta$-reduction to the relation $\twoheadrightarrow_\beta$.
 \end{definition}
 
 
-\begin{definition}  
+\begin{definition}[($\beta$-)irreducible]
   We say that a $\Lam$-term $t$ is irreducible by $\to_\beta$ when there exists no $\Lam$-term $t'$ such that
   \[ t \to_\beta t' . \]
 \end{definition}
@@ -146,7 +152,7 @@ For what types and the simply typed lambda calculus is about we refer to \cite{B
 
 \begin{definition}[$\beta$-normal forms]
   \label{beta_nfs}
-  We inductively define the set of $\Lam$-terms in $\beta$-normal form, NF, and normal applications, NA, as follows:
+  We inductively define the sets of $\Lam$-terms in $\beta$-normal form, NF, and of normal applications, NA, as follows:
   \[
     \begin{prooftree}
       \infer0{ x \in \text{NA} } 
@@ -180,6 +186,7 @@ For what types and the simply typed lambda calculus is about we refer to \cite{B
 \end{claim}
 
 We leave this claim here, but we will show the mechanised proof for $\boxed{\text{(i)} \Rightarrow \text{(ii)}}$ in the last section of this chapter.
+The proof for $\boxed{\text{(ii)} \Rightarrow \text{(i)}}$ is also mechanised in the script repository of our development.
 
 % --- 
 
@@ -190,21 +197,21 @@ We leave this claim here, but we will show the mechanised proof for $\boxed{\tex
   \[
     A, B, C ::= p \ | \ (A \supset B),
   \]
-  where $p$ denotes an atomic variable.
+  where $p$ denotes a type variable.
 \end{definition}
 
 \begin{remark} \hfill
   \begin{enumerate}
   \item A denumerable set of atomic variables is assumed and letters $p, q, r$ range over this set.
-  \item It is important to notice that the symbol used for implication, $\supset$, is non standard in type theory.
-    Rather it is used because of the literature in logic that we based our work on.
+  \item Notice that we use the symbol $\supset$, coming from logic, to denote implication.
+    This is motivated by the well-known correspondence between function types and implicational proposition, through the Curry-Howard isomrphism.
   \end{enumerate}
 \end{remark}
 
 \begin{notation}
-  We will assume the usual notation conventions on simple types. 
+  We will assume the usual notational conventions on simple types. 
   \begin{enumerate}
-  \item Outermost parenthesis are omitted.
+  \item Outermost parentheses are omitted.
   \item Types associate to the right. Therefore, the type $A \supset (B \supset C)$ may often be written simply as $A \supset B \supset C$.
   \end{enumerate}
 \end{notation}
@@ -231,7 +238,7 @@ We leave this claim here, but we will show the mechanised proof for $\boxed{\tex
 
 \begin{definition}[Typing rules for $\Lam$-terms]
   \label{typing_rules}
-  The following typing rules inductively define the notion of derivable sequents.
+  The following typing rules inductively define the notion of derivable sequent.
   \[
     \begin{prooftree}
       \infer0[Var]{ x:A, \Gamma \vdash x:A } 
@@ -248,7 +255,7 @@ We leave this claim here, but we will show the mechanised proof for $\boxed{\tex
       \infer2[App]{ \Gamma \vdash M N : B } 
     \end{prooftree}
   \]
-  A sequent is derivable when it can be constructed by a successive application of the typing rules.  
+  A sequent is derivable when it it at the root of a tree constructed by the successive application of the typing rules and whose leaves are instances of the Var-rule.  
 \end{definition}
 
 % ---
@@ -260,10 +267,10 @@ We leave this claim here, but we will show the mechanised proof for $\boxed{\tex
 In the 1970s, de Bruijn started working on the \textit{Automath} proof assistant and proposed a simplified syntax to deal with generic binders \cite{deBruijn}.
 This approach is claimed by the author to be good for meta-lingual discussion and for implementation in computer programmes.
 In contrast, this syntax is further away from the human reader.
-This chapter will serve as a step closer to the mechanised version of the simply typed $\Lam$-calculus
+This section will serve as an intermediate step to the mechanised version of the simply typed $\Lam$-calculus described in the next section.
 
 The main idea behind de~Bruijn syntax (or sometimes called de~Bruijn indices) is to treat variables as natural numbers (or indices) and to interpret these numbers as the distance to the respective binder.
-Therefore, we will call these terms nameless. 
+Therefore, we will call these terms \textit{nameless}. 
 
 \begin{definition}[Nameless $\Lam$-terms]
   The nameless $\Lam$-terms are defined by the following grammar:
@@ -275,7 +282,7 @@ Therefore, we will call these terms nameless.
   Nameless $\Lam$-terms have no $\alpha$-conversion since there is no freedom to choose the names of bound variables.
 \end{remark}
 
-We may see some examples that illustrate the connection of ordinary and nameless syntax for $\Lam$-terms.
+We show below some examples that illustrate the connection of ordinary and nameless syntax for $\Lam$-terms.
 \begin{align*}
   \lambda x . x &\rightsquigarrow \lambda . 0 \\
 % (\lambda x . xx)(\lambda x . xx) &\rightsquigarrow (\lambda . 00)(\lambda .00) \\
@@ -285,7 +292,7 @@ We may see some examples that illustrate the connection of ordinary and nameless
 
 Now, we will present a different formulation for the concept of substitution, adequate to deal with nameless $\Lam$-terms.
 \begin{definition}[Substitution]
-  A substitution over nameless $\Lam$-terms is a function mapping natural numbers (indices) to nameless $\Lam$-terms.
+  A substitution $\sigma, \tau, \dots$ over nameless $\Lam$-terms is a function mapping natural numbers (indices) to nameless $\Lam$-terms.
 \end{definition}
 
 Here are some examples of useful substitutions.
@@ -300,7 +307,7 @@ Here are some examples of useful substitutions.
 \end{align*}
 
 \begin{definition}[Instantiation and composition]
-  The operation of instantiating a substitution $\sigma$ over a nameless $\Lam$-term $M$, $M[\sigma]$, is recursively defined by the following equations:
+  The operation of instantiating a nameless $\Lam$-term $M$ under a substitution $\sigma$, $M[\sigma]$, is recursively defined by the following equations:
   \begin{align*}
     & i[\sigma] = \sigma(i); \\
     & (\lambda . M)[\sigma] = \lambda . (M[0 \cdot (\uparrow \circ \ \sigma)]); \\
@@ -310,11 +317,13 @@ Here are some examples of useful substitutions.
   where the composition of two substitutions is mutually defined as $(\tau \circ \ \sigma)(k) = \sigma(k)[\tau]$.
 \end{definition}
 
-This definition for substitution instantiation is based on the ideas introduced in~\cite{AutosubstSchafer} and is very close to the actual mechanisation done using the \textit{Autosubst} library.  
+This definition for instantiation describes a capture-avoiding substitution operation that replaces all free variables simultaneously.
+Thus, we may also refer to these substitutions as parallel substitutions.
+It is based on the ideas introduced in~\cite{AutosubstSchafer} and is very close to the actual mechanisation done using the \textit{Autosubst} library.
 
 Another variation we may encounter when formalising $\Lam$-terms using a nameless syntax is the typing system.
 A similar aproach to our modification of the typing system can be found in~\cite[Chapter~7]{AndrewAdams}.
-We reformulate the definition of context and derivable sequents as follows.
+We formulate the definition of context and derivable sequents in the nameless setting as follows.
 
 \begin{definition}[Nameless context]
   A nameless context~$\Gamma, \Delta, \dots$ is a finite (possibly empty) sequence of simple types.
@@ -322,7 +331,7 @@ We reformulate the definition of context and derivable sequents as follows.
 
 \begin{notation} \hfill
   
-  $| \Gamma |$ is used to denote the size of context $\Gamma$;
+  $| \Gamma |$ is used to denote the length of context $\Gamma$;
 
   $\Gamma_i$ is used to denote the $i$th element of a context $\Gamma$, given $i < | \Gamma |$.
 \end{notation}
@@ -348,6 +357,7 @@ We reformulate the definition of context and derivable sequents as follows.
   \]
 \end{definition}
 
+\begin{comment}
 \begin{remark}
   \label{nameless_typing_remark}
   For such strict definitions of contexts and typing rules we would require admissibility for structural rules (like the weakening rule shown below).
@@ -359,6 +369,20 @@ We reformulate the definition of context and derivable sequents as follows.
   \]
   That way, we show that our contexts as sequences may behave as multisets (as expected).
 \end{remark}
+\end{comment}
+
+\begin{claim}
+  \label{nameless_typing_claim}  
+  Structural rules of weakening, contraction and exchange are admissible in this setting.
+\end{claim}
+
+We look at the particular case of the weakening rule that corresponds to the incrementation of every index of the nameless $\Lam$-term.
+\[
+  \begin{prooftree}
+    \hypo{ \Gamma \vdash M:A }
+    \infer1[Weakening]{ B, \Gamma \vdash M[\uparrow]:A } 
+  \end{prooftree}
+\]
 
 % ---
 % 123
@@ -368,14 +392,14 @@ We reformulate the definition of context and derivable sequents as follows.
 
 In this section we discuss basic questions arising in the formalisation of syntax with binders, and introduce a \textit{Rocq} library that helps with such task.
 Additionally, we illustrate how to formalise basic concepts of the simply typed lambda calculus.
-This will help to understand our main decisions on mechanisation of meta-theory.
-The multiary variations of the $\Lam$-calculus that we are going to introduce will follow closely the basic approach described here with the corresponding adaptions.
+This will help to understand our main decisions on the mechanisation of meta-theory developed in this dissertation.
+The multiary versions of the $\Lam$-calculus that we are going to introduce will follow closely the basic approach described here with the corresponding adaptations.
 
 \subsection{The \textit{Rocq Prover}}
 
 The \textit{Rocq Prover} (former \textit{Coq Proof Assistant}) \cite{RocqManual} is an interactive theorem prover based on the expressive formal language called the Polymorphic, Cumulative Calculus of Inductive Constructions.
 This is a tool that helps in the formalisation of mathematical results and that can interact with a human to generate machine-verified proofs.
-We encode propositions as types and proofs for these propositions as programs in $\Lam$-calculus, in line with the Curry-Howard isomorphism.
+\textit{Rocq} encode propositions as types and proofs for these propositions as programs in $\Lam$-calculus, in line with the Curry-Howard isomorphism.
 
 It is arguably a great tool for mechanising meta-theory as it was widely used in the \textit{POPLmark} challenge \cite{POPLmark}.
 Also, this proof assistant provides many libraries to deal with the issue of variable binding, like \textit{Autosubst}, as we will see in the next sections.
@@ -391,7 +415,7 @@ Inductive nat : Type :=
 \end{lstlisting}
 
 For example, the number $0$ is represented by the constructor \lst$O$ and number $2$ is represented as \lst$S (S O)$.
-Of course this serves as an internal representation and we won't refer to natural numbers using these constructors.
+Of course this serves as an internal representation and we will not refer to natural numbers using these constructors.
 We can also check the induction principle that \textit{Rocq} generates for the natural numbers.
 \begin{lstlisting}[language=Coq]
   nat_ind
@@ -399,7 +423,7 @@ We can also check the induction principle that \textit{Rocq} generates for the n
        P 0 -> (forall n : nat, P n -> P (S n)) -> forall n : nat, P n
 \end{lstlisting}
 
-Therefore, if we want to prove that the sum of natural numbers is associative, we can do it using this induction principle.
+Therefore, if we want to prove that the sum of natural numbers is associative, we can do it using this induction principle as follows.
 \begin{lstlisting}[language=Coq]
 Theorem sum_associativity :
   forall a b c, a+(b+c) = (a+b)+c.
@@ -430,7 +454,7 @@ Inductive list (A: Type) : Type :=
 For example, if we wanted to have a type for lists of natural numbers, we could just invoke the type \lst$list nat$.
 The list \lst$[0,2,1]$ is then represented as \lst$cons 0 (cons 2 (cons 1 nil))$.
 
-Here's a lemma on lists provided by the \textit{Rocq} library:
+Here is an useful lemma on lists provided by the \textit{Rocq} library:
 \begin{lstlisting}[language=Coq]
 Lemma map_app f : forall l l', map f (l++l') = (map f l)++(map f l').
 \end{lstlisting}
@@ -440,12 +464,12 @@ This lemma relates two operations on lists:
 \item \lst$app$ (abreviated as \lst$++$): appends two lists (ex: \lst$[1,2,3]++[4,5] = [1,2,3,4,5]$);
 \item \lst$map$: applies a function to every element on the list (ex: \lst$map f [x,y] = [f x, f y]$).
 \end{enumerate}
-Given their widespread utility, these operations will be often used in our mechanisations using lists.
+Given their widespread utility, these operations will be often used in parts of our mechanisation.
 
 \subsection{Syntax with binders}
 
 % If we were to formalise such a system like the $\Lam$-calculus introduced above, we would probably create an inductive type like the following, in \textit{Coq}.
-A direct formalization of the grammar of $\Lam$-terms in \textit{Rocq} results in an inductive definition like:
+A direct formalisation of the grammar of $\Lam$-terms in \textit{Rocq} results in an inductive definition like:
 \begin{lstlisting}[language=Coq]
 Inductive term : Type :=
 | Var (x: var)
@@ -474,8 +498,8 @@ It provides the \textit{Rocq Prover} with two kinds of tactics:
 \end{enumerate}
 
 The library makes use of some ideas we have already covered up: de~Bruijn syntax and parallel substitutions.
-There's also a more subtle third ingredient: the theory of explicit substitution \cite{Abadi}.
-This theory is particularly relevant to the implementation of the \lst$asimpl$ and \lst$autosubst$ tactics and we won't digress much on it.
+There is also a more subtle third ingredient: the theory of explicit substitution \cite{Abadi}.
+This theory is particularly relevant to the implementation of the \lst$asimpl$ and \lst$autosubst$ tactics and we will not digress much on it.
 Essentially, our calculus with parallel substitutions forms a model of the $\sigma$-calculus and we may simplify our terms with substitutions using the convergent rewriting equations described by this theory.
 
 Taking the naive example of an inductive definition of the $\Lam$-terms in \textit{Rocq}, we now display a definition using \textit{Autosubst}.
@@ -487,10 +511,11 @@ Inductive term: Type :=
 | App (s: term) (t: term) .
 \end{lstlisting}
 
-Here, the annotation \lst ${bind term}$ is an alias of the type \lst$term$.
-We write this annotation to mark our constructors with binders in the syntax we want to mechanise.  
+In the above definition, there are two different annotations: the \lst$var$ and \lst${bind term}$ types.
+We write these annotations to mark our constructors with variables and binders, respectively, in the syntax we want to mechanise.
+They play an important role in the internal development of the automated \lst$derive$ tactics.
 
-This way, we may invoke the \textit{Autosubst} classes, automatically deriving the desired instances.
+We invoke the \textit{Autosubst} classes, automatically deriving the desired instances as follows.
 
 \begin{lstlisting}[language=Coq]
 Instance Ids_term : Ids term. derive. Defined.
@@ -501,13 +526,13 @@ Instance SubstLemmas_term : SubstLemmas term. derive. Defined.
 
 The first three lines derive the operations necessary to define the (parallel) substitution over a term.
 \begin{enumerate}
-\item Defining the function that maps every index into the corresponding variable term ($i \mapsto $ \lst$(Var i)$).
-\item Defining the recursive function that instantiates a variable renaming over a term.
-\item Defining the recursive function that instantiates a parallel substitution over a term (using the already defined renamings).
+\item Defining the \lst$ids$ function that maps every index into the corresponding variable term ($i \mapsto $ \lst$(Var i)$).
+\item Defining the \lst$rename$ function that instantiates a term under a variable renaming.
+\item Defining the \lst$subst$ function that instantiates a term under a parallel substitution over (making use of the already \lst$rename$ and $ids$).
 \end{enumerate}
 
 Finally, there is also the proof for the substitution lemmas.
-Here, we see the power of this library, as the proofs for these lemmas are obtained automatically through the \lst$derive$ tactic. 
+Here, we see the power of this library, as the proofs for these lemmas (for fairly simple syntaxes) can be generated automatically through the \lst$derive$ tactic. 
 
 % exemplos de provas que usem asimpl ou autosubst?
 
@@ -532,10 +557,10 @@ This module contains the definitions we need for the formalisations dealing with
 The syntax for terms and \textit{Autosubst} definitions were already presented and explained in the prior subsection.
 
 The module then includes the definition for the one step $\beta$-relation (recall~\cref{beta-reduction}).
-This inductive definition presents the $\beta$ relation altogether with the compatibility closure.
+This inductive definition mechanises the $\beta$ relation altogether with the compatibility closure ($\to_\beta$).
 \begin{lstlisting}[language=Coq]
 Inductive step : relation term :=
-| Step_Beta s s' t : s' = s.[t .: ids] ->
+| Step_Beta s s' u : s' = s.[u.:ids] ->
 step (App (Lam s) t) s'
 | Step_Abs s s' : step s s' ->
 step (Lam s) (Lam s')
@@ -545,10 +570,13 @@ step (App s t) (App s' t)
 step (App s t) (App s t').
 \end{lstlisting}
 
-In this definition we already give use to the substitution operation defined using \textit{Autosubst}.
-The type is \lst$relation term$ (an alias for \lst$term->term->Prop$), as we are using the \lst$Relations$ library found in the \textit{Rocq} standard library containing definitions and lemmas for binary relations.
+In this definition we already give use to the substitution operation defined using \textit{Autosubst} (found in the \lst$Step_Beta$ constructor).
+The syntax \lst$s.[u.:ids]$ is just notation for the defined instantiation of term $s$ under a parallel substitution \lst$u.:ids$.
+This substitution corresponds to the example of substitution shown in the previous section $(u \cdot id)$.
 
-We also have a definition for the mutually inductive predicate defining $\beta$-normal forms (recall~\cref{beta_nfs}).
+The type for \lst$step$ is \lst$relation term$ (an alias for \lst$term->term->Prop$), as we are using the \lst$Relations$ library found in the \textit{Rocq} standard library containing definitions and lemmas for binary relations.
+
+We also have a definition for the mutually inductive predicate mechanising $\beta$-normal forms (recall~\cref{beta_nfs}).
 \begin{lstlisting}[language=Coq]
 Inductive normal: term -> Prop :=
 | nLam s : normal s -> normal (Lam s)
@@ -558,8 +586,8 @@ with apps: term -> Prop :=
 | nApp s t : apps s -> normal t -> apps (App s t).
 \end{lstlisting}
 
-As before, we don't define directly a set NF of $\Lam$-terms, but rather an inductive predicate that $\Lam$-terms $t \in \text{NF}$ satisfy.
-This will be our standard aproach when mechanising subsets, because the subset itself is the extension of the defined predicate.
+As before, we do not define directly a set NF of $\Lam$-terms, but rather an inductive predicate that $\Lam$-terms $t \in \text{NF}$ satisfy.
+This will be our standard aproach when mechanising subsets, as the subset itself is the extension of the defined predicate.
 
 However, we have to be careful using mutually inductive predicates (we refer to~\cite[Chapter~14.1]{CoqArt} for a detailed overview on mutually inductive types and their induction principles).
 If we want to prove certain propositions that proceed by indcution on the structure of a normal term, we need to have a simultaneous induction principle and prove two propositions simultaneously.
@@ -574,7 +602,7 @@ Then, we can combine both induction principles using the \lst$Combined Scheme$ c
 We will often use the combined induction principles in our proofs, as mutually inductive types will appear often. 
 
 Here follows an example of the proof for~\cref{beta_nfs_claim} using the combined induction principle.
-We will prove not only the desired claim but simultaneously a proposition over the set of normal applications, NA.
+We will prove not only the desired claim but also a proposition over the set of normal applications, NA.
 
 \begin{lstlisting}[language=Coq]
 Theorem nfs_are_irreducible :
@@ -604,7 +632,7 @@ Proof.
 Qed.
 \end{lstlisting}
 
-The proofs uses a couple of tactics that we won't cover in detail.
+The proof uses a couple of tactics that we will not cover in detail.
 It serves more of an example of how we easily prove a result using the mechanised concepts of one step $\beta$-reduction and normal forms.
 
 The last thing our module contains is the typing rules for the $\Lam$-terms (recall~\cref{typing_rules} and \cref{nameless_typing_rules}).
@@ -619,17 +647,17 @@ Inductive sequent (Gamma: var->type) : term -> type -> Prop :=
   sequent Gamma s (Arr A B) -> sequent Gamma t A -> sequent Gamma (App s t) B.
 \end{lstlisting}
 
-We directly mechanise the derivable sequent using an inductive definition (instead of defining sequents \textit{a priori}).
+We directly mechanise the derivability of a sequents using an inductively defined predicate (instead of defining sequents \textit{a priori}).
 
-Furthermore, using the approach in \cite{AutosubstManual}, we use infinite contexts (contexts as infinite sequences).
-That way we can mechanise contexts as functions \lst$var->type$ (the type of a parallel substitution over \lst$type$) and take more advantage of the \textit{Autosubst} definitions and tactics.
-Of course, in any derivation, only a finite part of the (infinite) context is used.
+Furthermore, following the approach in \cite{AutosubstManual}, we use infinite contexts (contexts as infinite sequences).
+That way we can mechanise contexts as functions \lst$var->type$ (the type of a parallel substitution object over \lst$type$) and take more advantage of the \textit{Autosubst} definitions and tactics.
+Of course, in any typing derivation, only a finite part of the (infinite) context is used.
 
-A small display of the versatility of this option is in the \lst$Intro$ rule, where one can find the context \lst$(A.:Gamma)$.
-This is the same function we encountered when defining the substitution operation for the $\beta$-contractum \lst$s.[t .: ids]$.
+A small illustration of the versatility of this option is in the \lst$Intro$ rule, where one can find the context \lst$(A.:Gamma)$.
+This is the same function we encountered when defining the substitution operation for the $\beta$-contractum \lst$s.[u.:ids]$.
 
-As remarked upon the definition of the typing rules for the nameless terms, we still want to show admissibility for structural rules.
-We do this by proving the preservation of renamings (also an idea from~\cite{AutosubstManual}), as every structural rule involves a renaming of the nameless $\Lam$-term (recall~\cref{nameless_typing_remark}).
+As claimed (\cref{nameless_typing_claim}) upon the definition of the typing rules for the nameless terms, we can show admissibility for the structural rules of weakening, contraction and exchange.
+We do this by proving the preservation of renamings (also an idea from~\cite{AutosubstManual}), as the mentioned structural rules can be seen as a particular case of index renaming (as we have illustrated with the weakening case).
 
 \begin{lstlisting}[language=Coq]
 Lemma type_renaming : forall Gamma t A, sequent Γ t A ->
