@@ -2,12 +2,17 @@
 \label{c:intro}
 
 \section{Motivation}
+Taking the title for this dissertation, we can explain what motivated the following dissertation by asking ourselves: ``Why mechanise metatheory?'' and ``Why the multiary $\Lam$-calculus?''.
 
+Before addressing these questions formally, we could just say that mechanising mathematics is an enjoyable task.
+And for what matters, this could be all we say about our motivation.
+All I intend to say is that even if our work in mathematics had no application or direct consequences, the fun of doing it would be a good enough motivation.
+Mechanising mathematics is like a computer game for a mathematician.
 
-\subsection{Why mechanise?}
+\subsection{Why mechanise metatheory?}
 The mechanisation of metatheory has been taken seriously for at least 20 years~\cite{POPLmark}.
 By mechanisation we mean a well-founded description of a mathematical object using a proof assistant.
-Such proof assistants have attracted the attention of mathematicians because of the reliability they provide for writing computer verified proofs~\cite{FourColourThm}.
+Such proof assistants have attracted the attention of mathematicians because of the reliability and automation they provide for writing computer verified proofs~\cite{FourColourThm}.
 There has also been an increasing interest by engineers in the use of such tools for the security guarantees achieved when formally proving properties about computer programmes~\cite{CompCert}.
 
 One could even argue that any work of mechanisation is useful, because it will:
@@ -24,27 +29,54 @@ Then, the question of \textit{Why metatheory?} arises.
 From the reasons above, some are highlighted by the task of mechanising metatheory.
 For example, it is often argued that metatheoretical proofs \textit{``are long, contain few essential insights, and have a lot of tedious but error-prone cases''}~\cite{AutosubstSchafer}.
 
-In our case, mechanising theoretical results related to a really specific variation of the $\Lam$-calculus could enable new ways of continuing the work being done in this topic.
+In our case, mechanising theoretical results related to the multiary $\Lam$-calculus could enable new ways of continuing the work being done in this topic.
+Curiously, our work with an unusual version of the $\Lam$-calculus could even suggest some improvements in already mature tools for mechanising metatheory (as is the case with the used \textit{Autosusbt} library for the \textit{Rocq Prover}).
 
 \subsection{Why the multiary $\Lam$-calculus?}
-In the begining of~\cite[Chapter~7.3]{CurryHoward}, one can read \textit{``Natural deduction proofs correspond to $\Lam$-terms with types, and Hilbert style proofs correspond to combinators with types. What do sequent calculus proofs correspond to?''}.
-Many alternatives are given in this chapter, but none that can match the process of cut-elimination with normalisation.
+In the begining of~\cite[Chapter~7.3]{CurryHoward}, one is confronted with a natural question: \textit{``Natural deduction proofs correspond to $\Lam$-terms with types, and Hilbert style proofs correspond to combinators with types. What do sequent calculus proofs correspond to?''}.
+This question has its starting point in the well-known Curry-Howard isomorphism, that relates natural deduction proofs with $\Lam$-terms with types, as said above.
 
-In the novel paper of Herbelin~\cite{Herbelin1994}, a multiary $\Lam$-calculus (with explicit substitutions) is introduced, whose typing rules resemble a sequent calculus style of inference.
-Furthermore, the introduced reductions for this system correspond exactly with the process of cut elimination for a fragment of the sequent calculus.
+Many (naive) alternatives are given in the aforementioned book, but none that can match the process of cut-elimination with normalisation.
+In the novel paper of Herbelin~\cite{Herbelin1994}, a multiary version of the $\Lam$-calculus (with explicit substitutions) is introduced, whose typing rules correspond to a fragment of the sequent calculus.
+Furthermore, the corrsponding reduction rules for this system behave as cut elimination.
 
-Considering just the multiary version of the $\Lam$-calculus (excluding explicit substitutions), one gets a system that was studied in detail in CMAT~\cite{JCESLuis}, named $\LamM$.
-The study of the computational meaning behind the sequent calculus is one of the main motivations for considering systems such as $\LamM$, as they provide meaningful extensions for the ordinary $\Lam$-calculus.
-
+Considering a slightly different multiary version of the $\Lam$-calculus (and excluding explicit substitutions), one gets a system that was studied in detail in CMAT~\cite{JCES2002, JCESLuis}, here named $\LamM$.
+The study of the computational meaning behind the sequent calculus is one of the main motivations for considering such systems, as they provide meaningful extensions for the ordinary $\Lam$-calculus.
 
 \section{Objectives}
-The initial objectives of this dissertation were clear: to mechanise using the \textit{Rocq Prover} a multiary version of the $\Lam$-calculus and its canonical subsystem.
+The theoretical objectives for this dissertation are the study of:
+\begin{enumerate}
+\item system $\LamM$, reduction rules, typing rules and standard results like subject reduction;
+\item system $\LamV$ as subsystem of $\LamM$;
+\item the conservativeness of $\LamV$ over $\LamM$;
+\item the isomorphism between $\LamV$ and $\Lam$.
+\end{enumerate}
 
-% (working with inductive structures and so on)
-% concrete formalisations
-% set theory vs type theory
+We say theoretical objectives because the complete objective is to mechanise in the \textit{Rocq Prover} each of the mentioned items.
+The practical (in the sense of the mechanisation task) objectives of this dissertation are first to understand the proof assistant in order to fully develop a mechanisation of the definitions and proofs that were studied using pen-and-paper.
+More concretely, we have the objective of understanding how one can use the \textit{Rocq Prover} to define systems that deal with variable binding, to define subsystems, to define typing rules, to prove isomorphisms and so on.
 
-\section{Document Structure}
+A last objective related to the mechanisation is to implement every definition and proof as close as possible to the pen-and-paper versions, but also to present clean and simple implementations.
+Of course this may be challenging and conflictuous, but it is in general the objective behind any mechanisation of mathematics. 
+
+\section{Document structure}
+
+This dissertain is structured in six chapters.
+
+The second chapter serves as an introduction to the ordinary $\Lam$-calculus, also containing a second style of $\Lam$-calculus presentation, without variable names (also called de~Bruijn representation).
+This chapter also includes a mechanisation of this system as a way to introduce many proof-assistant concepts used in further chapters.
+
+The third chapter introduces the system $\LamM$ and its canonical subsystem, along with some simple results.
+It also includes a last chapter that provides a walkthrough of the mechanised definitions and proofs.
+
+The fourth chapter independenlty introduces a new system called $\LamV$, that is isomorphic to the introduced canonical subsystem of $\LamM$.
+This system will help clarify the mechanisation of the result of conservativeness that can be found in this chapter.
+The last section also provides a mechanisation overview, similar to the previous chapter.
+
+The fifth chapter is only about the isomorphism between the ordinary $\Lam$-calculus and system $\LamV$.
+
+A last (sixth) chapter with the title of ``Discussion'' contains many directions that were not explored in the development of our work along with some further justification of the choices taken and some possible further work.
+
 
 %%% Local Variables:
 %%% mode: LaTeX
