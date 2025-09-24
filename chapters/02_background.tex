@@ -61,7 +61,7 @@ As an illustration of the previous concepts take the term $M = x (\lambda x . x)
 The variable $x$ occurs both free and bound in this term.
 
 \begin{definition}[$\alpha$-equality]
-  We say that two $\Lam$-terms are $\alpha$-equal when they only differ by the name of their variable that occur bound.
+  We say that two $\Lam$-terms are $\alpha$-equal when they are equal up to the names of variables in binders.
 \end{definition}
 
 \begin{remark}
@@ -143,16 +143,17 @@ The variable $x$ occurs both free and bound in this term.
   We call one step $\beta$-reduction to the relation $\to_\beta$ and multistep $\beta$-reduction to the relation $\twoheadrightarrow_\beta$.
 \end{definition}
 
+% ---
 
-\begin{definition}[($\beta$-)irreducible]
-  We say that a $\Lam$-term $t$ is irreducible by $\to_\beta$ when there exists no $\Lam$-term $t'$ such that
+\begin{definition}[$\beta$-normal form]
+  We say that a $\Lam$-term $t$ is in $\beta$-normal form (or irreducible by $\to_\beta$) when there exists no $\Lam$-term $t'$ such that
   \[ t \to_\beta t' . \]
 \end{definition}
 
 
-\begin{definition}[$\beta$-normal forms]
+\begin{definition}% [$\beta$-normal forms]
   \label{beta_nfs}
-  We inductively define the sets of $\Lam$-terms in $\beta$-normal form, NF, and of normal applications, NA, as follows:
+  We inductively define the sets of $\Lam$-terms NF and NA as follows:
   \[
     \begin{prooftree}
       \infer0{ x \in \text{NA} } 
@@ -176,13 +177,14 @@ The variable $x$ occurs both free and bound in this term.
   \]
 \end{definition}
 
+
 \begin{claim}
   \label{beta_nfs_claim}
   Given a $\Lam$-term $M$, the following are equivalent:
 
-  (i) $M \in \text{NF}$;
+  (i) $M \in \text{NF}$.
 
-  (ii) $M$ is irreducible by $\to_\beta$.
+  (ii) $M$ is in $\beta$-normal form.
 \end{claim}
 
 We leave this claim here, but we will show the mechanised proof for $\boxed{\text{(i)} \Rightarrow \text{(ii)}}$ in the last section of this chapter.
@@ -255,7 +257,7 @@ The proof for $\boxed{\text{(ii)} \Rightarrow \text{(i)}}$ is also mechanised in
       \infer2[App]{ \Gamma \vdash M N : B } 
     \end{prooftree}
   \]
-  A sequent is derivable when it it at the root of a tree constructed by the successive application of the typing rules and whose leaves are instances of the Var-rule.  
+  A sequent is derivable when it is at the root of a tree constructed by the successive application of the typing rules and whose leaves are instances of the Var-rule.  
 \end{definition}
 
 % ---

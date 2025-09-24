@@ -18,6 +18,8 @@ First, we introduce some standard definitions for our system, like the grammar f
     (\LamM \text{-terms}) && t, u, v &::= \ x \ | \ \lambda x . t \ | \ t(u, l) \ \\
     (\LamM \text{-lists}) && l       &::= \ []\  | \ u :: l.
   \end{align*}
+
+  We will refer to the union of $\LamM$-terms and $\LamM$-lists as $\LamM$-expressions.
 \end{definition}
 
 \begin{definition}[Append]
@@ -29,7 +31,7 @@ First, we introduce some standard definitions for our system, like the grammar f
 \end{definition}
 
 \begin{definition}[Substitution for $\LamM$-terms]
-  The substitution of a variable $x$ by a $\LamM$-term $v$ is mutually defined by recursion with the substitution over a $\LamM$-list as follows:  
+  The substitution of a variable $x$ by a $\LamM$-term $v$ is mutually defined by recursion over $\LamM$-expressions as follows:  
   \begin{align*}
   & x[x := v] = v ; \\
   & y[x := v] = y \text{, with } x \neq y ; \\
@@ -79,25 +81,32 @@ First, we introduce some standard definitions for our system, like the grammar f
 \end{definition}
 
 \begin{definition}[Reduction rules for $\LamM$-terms]  
-  \begin{align*}
-    & (\lambda x . t)(u, []) \to_{\beta_1} t[x := u]
-    \\
-    & (\lambda x . t)(u, v::l) \to_{\beta_2} t[x := u](v, l)
-    \\
-    & t(u, l)(u', l') \to_{h} t(u, l + (u'::l'))
-  \end{align*}
-  By abuse of notation, we introduced the reduction rules with the notation of their compatible closure ($\to_R$).
+    \[
+    \begin{prooftree}
+      \infer0{ ((\lambda x . t)(u, []), \ t[x := u]) \in \beta_1 } 
+    \end{prooftree}
+    \qquad
+    \begin{prooftree}
+      \infer0{ ((\lambda x . t)(u, v::l), \ t[x := u](v, l)) \in \beta_2 } 
+    \end{prooftree}
+  \]
+  \[
+    \begin{prooftree}
+      \infer0{ (t(u, l)(u', l'), \ t(u, l + (u'::l'))) \in h } 
+    \end{prooftree}
+  \]
+  % By abuse of notation, we introduced the reduction rules with the notation of their compatible closure ($\to_R$).
 \end{definition}
 
 \begin{remark}
   As the compatible closure induces two relations, one on terms and the other on lists, we will use the notation $\to_R$ for both these relations as we can get out of the context which one is being referenced.
 \end{remark}
 
-\begin{notation}
+\begin{definition}
   The relation $\beta$ will denote the relation $\beta_1 \cup \beta_2$.
-  The same for the relation $\beta h$ that will denote the relation $\beta \cup h$.
+  The same applies for the relation $\beta h$ that will denote the relation $\beta \cup h$.
   Therefore, we will have the induced relations $\to_\beta$ and $\to_{\beta h}$ (and analogous multistep relations $\twoheadrightarrow_\beta$ and $\twoheadrightarrow_{\beta h}$).
-\end{notation}
+\end{definition}
 
 % ---
 
@@ -135,7 +144,8 @@ First, we introduce some standard definitions for our system, like the grammar f
 
 % ---
 
-The typing system of system $\LamM$ provides rules to derive two different kinds of sequents.
+We turn now our attention to the typing system of system $\LamM$.
+Given that $\LamM$ has two syntactic categories of expressions, its typing system will deal with two different kinds of sequents.
 
 \begin{definition}[Sequent]
   A sequent on terms~$\Gamma \vdash t:A$ is a triple of a context, a $\LamM$-term and a simple type.
@@ -175,14 +185,16 @@ The typing system of system $\LamM$ provides rules to derive two different kinds
   \]
 \end{definition}
 
+As usual a sequent derivation is a tree-like structure, with root being the derived sequent and leaves being instances of the axioms (Var-rule or Nil-rule).
+
 % --- 
 % 123
 % ---
 % \section{Subject reduction for $\LamM$}
 
-Now we present classical results about the system $\LamM$, which culminate in the theorem of subject reduction.
+Now follow two necessary lemmas for the result of subject reduction that state the admissibility of substitution and append operations.
 
-\begin{lemma}%[Substitution Admissibility]
+\begin{lemma}[Substitution is admissible]
   \label{type_substitution}
   The following rules are admissible:
   \[
@@ -200,10 +212,10 @@ Now we present classical results about the system $\LamM$, which culminate in th
   \]
 \end{lemma}
 \begin{proof}
-  The proof proceeds by simultaneous induction on the structure of the typing rules.
+  The proof proceeds by simultaneous induction on the structure of term $t$ and list $l$.
 \end{proof}
 
-\begin{lemma}%[Append Admissibility]
+\begin{lemma}[Append is admissible]
   \label{append_is_admissible}
   The following rule is admissible:
   \[
@@ -218,6 +230,9 @@ Now we present classical results about the system $\LamM$, which culminate in th
   The proof proceeds by induction on the structure of $l$.
 \end{proof}
 
+% ---
+
+Subject reduction then states that any given term preserves its type upon $\beta h$ reduction.
 
 \begin{theorem}[Subject Reduction]
   \label{type_preservation}
@@ -227,12 +242,14 @@ Now we present classical results about the system $\LamM$, which culminate in th
   \]
 \end{theorem}
 \begin{proof}
-  The proof proceeds by simultaneous induction on the structure of the relation $\to_{\beta h}$.
+  The proof proceeds by induction on the structure of the relation $\to_{\beta h}$.
 
-  \cref{type_substitution} is used to prove the case $t \to_\beta t'$.
+  \cref{type_substitution} is used to prove the case where $(t, t') \in \beta$.
 
-  \cref{append_is_admissible} is used to prove the case $t \to_h t'$.
+  \cref{append_is_admissible} is used to prove the case $(t, t') \in h$.
 \end{proof}
+
+Other classical results from $\Lam$-calculus like confluency and strong normalisation could also be proved for system $\LamM$, but are not covered in this dissertation.
 
 % ---
 % 123
@@ -240,11 +257,16 @@ Now we present classical results about the system $\LamM$, which culminate in th
 
 \section{The canonical subsystem}
 
-We identify the set of $\LamM$-terms in $h$-normal form through the following inductive definition.
+The canonical subsystem is a system within $\LamM$ containing only terms in $h$-normal form.
+In this section we see how to equip canonical terms with an appropriate notion of $\beta$-reduction and appropriate typing rules.
+
+\begin{definition}[$h$-normal form]
+  We say that a $\LamM$-term $t$ is in $h$-normal form when there exists no $\LamM$-term $t'$ such that \[ t \to_h t' . \]
+\end{definition}
 
 \begin{definition}[Canonical terms]
   \label{canonical_terms}
-  We inductively define the sets of $\LamM$-terms and $\LamM$-lists in $h$-normal form, respectively $Can$ and $CanList$, as follows:
+  We inductively define the subsets of $\LamM$-terms and $\LamM$-lists, respectively $Can$ and $CanList$, as follows:
   \[
     \begin{prooftree}
       \infer0{ x \in Can } 
@@ -281,19 +303,31 @@ We identify the set of $\LamM$-terms in $h$-normal form through the following in
   \]
 
   $\LamM$-terms $t \in Can$ are also called canonical terms.
+  Analogously, $\LamM$-lists $l \in CanList$ are called canonical lists.
+  Canonical expressions will refer to the set $Can \cup CanList$.
 \end{definition}
 
-Now, we will describe how this subset of terms in $\LamM$ generates a subsystem.
+Similarly to what was done in \cref{c:background}, we leave a claim stating that the canonical terms are exactly the $\LamM$-terms in $h$-normal form.
 
-First, we define the function $app : Can \times Can \times Can \to Can$ that will behave as a multiary application constructor closed for the canonical terms.
+\begin{claim}
+  Given a $\LamM$-term $t$, the following are equivalent:
+
+  (i) $t \in Can$.
+
+  (ii) $t$ is in $h$-normal form.
+\end{claim}
+
+Now, we will describe how the canonical terms generate a subsystem.
+
+First, we define the function $app : Can \times Can \times CanList \to Can$ that will behave as a multiary application constructor closed for the canonical terms.
 
 \begin{definition}
   Given $t, u \in Can$ and $l \in CanList$, the operation $app(t, u, l)$ is defined by the following equations:
   \begin{align*}
-    & app(x, u, l) = x(u, l), \\
-    & app(\lambda x. t, u, l) = (\lambda x. t)(u, l), \\ 
-    & app(x(u', l'), u, l) = x(u', l' + (u::l)) \\
-    & app((\lambda x. t)(u', l'), u, l) = (\lambda x. t)(u', l'+(u::l)).
+    app(x, u, l)                      &= x(u, l), \\
+    app(\lambda x. t, u, l)           &= (\lambda x. t)(u, l), \\ 
+    app(x(u', l'), u, l)              &= x(u', l' + (u::l)) \\
+    app((\lambda x. t)(u', l'), u, l) &= (\lambda x. t)(u', l'+(u::l)).
   \end{align*}  
 \end{definition}
 
@@ -311,47 +345,45 @@ First, we define the function $app : Can \times Can \times Can \to Can$ that wil
 Then, we can define a function that collapses $\LamM$-terms to their $h$-normal form.
 
 \begin{definition}
-  Consider the following map $h$:
+  Consider the following map $h : \LamM \text{-terms} \to Can$, recursively defined as follows:
   \begin{align*}
-    h : \LamM \text{-terms} &\to Can \\
-    x &\mapsto x \\
-    \lambda x . t &\mapsto \lambda x . h(t) \\
-    t(u,l) &\mapsto app(h(t), h(u), h'(l)),
+    h(x)            &= x \\
+    h(\lambda x. t) &= \lambda x . h(t) \\
+    h(t(u,l))       &= app(h(t), h(u), h(l)) \\
+    h([])           &= [] \\
+    h(u::l)         &= h(u)::h(l).
   \end{align*}
-  where $h'$ is simply defined as
-  $h'([]) \mapsto []$ and $h'(u::l) = h(u)::h'(l)$.
 \end{definition}
 
-\begin{theorem}
+\begin{proposition}[Map $h$ performs $\twoheadrightarrow_h$]
   \label{h_is_multistep}
-  For every $\LamM$-term $t$,
-  \[ t \twoheadrightarrow_h h(t), \]
-  and also, for every $\LamM$-list $l$,
-  \[ l \twoheadrightarrow_h h'(l). \]
-\end{theorem}
+  For every $\LamM$-term $t$, \[ t \twoheadrightarrow_h h(t), \]
+  and also, for every $\LamM$-list $l$, \[ l \twoheadrightarrow_h h(l). \]
+\end{proposition}
 \begin{proof}
-  The proof proceeds easily by simultaneous induction on the structure of term $t$ and list $l$.
+  The proof proceeds easily by simultaneous induction on the structure of $\LamM$-expressions.
 
   As $h$ is defined using $app$, \cref{app_is_multistep} is crucial for the case where $t$ is an application. 
 \end{proof}
 
-The following theorem states that the canonical terms are fixpoints for map $h$.
+The following theorem states that the canonical terms are invariant or fixpoints for map $h$.
 Another way to look at this result is by saying that $h$ is surjective.
 
-\begin{theorem}[$h$ fixpoints]
+\begin{proposition}[Invariance of canonical terms by $h$]
   \label{h_fixpoints}
-  For every $t \in Can$, \[ h(t) = t. \]
-\end{theorem}
+  For every $t \in Can$, \[ h(t) = t, \]
+  and also, for every $l \in CanList$, \[ h(l) = l. \]
+\end{proposition}
 \begin{proof}
-  The proof proceeds easily by simultaneous induction on the structure of the canonical term $t$.
+  The proof proceeds easily by simultaneous induction on the structure of canonical expressions.
 \end{proof}
 
-For the purpose of defining a subsystem of $\LamM$, we induce a reduction relation for these canonical terms given a reduction relation on the $\LamM$-terms and -lists.
+For the purpose of defining a subsystem of $\LamM$, we will see how to induce a reduction relation for these canonical expressions given a reduction relation on $\LamM$-expressions.
 
-\begin{definition}%[Canonical relation closure]
+\begin{definition}[Canonical relation closure]
   \label{canonical_closure}
   Let $R$ and $R'$ be two binary relations on $\LamM$-terms and $\LamM$-lists respectively.
-  We inductively define the relations $R_c$ and $R'_c$ as follows:
+  We inductively define the relations $R_c$ and $R'_c$, on canonical terms and lists respectively, as follows:
   \[
     \begin{prooftree}
       \hypo{ (t, t') \in R }
@@ -364,43 +396,43 @@ For the purpose of defining a subsystem of $\LamM$, we induce a reduction relati
     \end{prooftree}.
   \]
 
-  We call canonical relation closure to the induced relations $R_c$ and $R'_c$.
+  We call canonical relation closure of $R$ and $R'$ to the induced relations $R_c$ and $R'_c$.
 \end{definition}
 
-This definition allows us to define a $\beta$-reduction closed for the canonical terms, ${(\to_\beta)}_c$, derived from the relation $\to_\beta$ in $\LamM$.
-But this definition tells us nothing about the relation itself \dots an interesting question is: how does this $\beta$-reduction behaves on canonical terms?
+This definition allows us to define a concept of $\beta$-reduction for the canonical terms, namely~${(\to_\beta)}_c$, derived from the relation $\to_\beta$ in $\LamM$.
+But this definition tells us little about the relation itself \dots an interesting question is: how does a $\beta$-reduction (as in the previous definition) behave on the canonical terms?
 
-Given $t, u \in Can$, how do we reduce the canonical term $(\lambda x . t)(u, [])$ according to $(\to_\beta)_c$~?
+Given $t, u \in Can$, lets see how to reduce $(\lambda x . t)(u, [])$.
+The definition of $(\to_\beta)_c$ stipulates: 
 \[ \begin{prooftree}
     \hypo{ (\lambda x.t)(u, []) \to_\beta t[x := u] }
     \infer1[]{ h((\lambda x.t)(u, [])) \ (\to_\beta)_c \ h(t[x := u]) }
   \end{prooftree} \]
-
 Given that $t, u \in Can$, we get that $(\lambda x.t)(u, []) \in Can$.
-Therefore, from~\cref{h_fixpoints}, we get that $(\lambda x.t)(u, []) \ (\to_\beta)_c \ h(t[x := u])$.
+Therefore, from~\cref{h_fixpoints}, we get $(\lambda x.t)(u, []) \ (\to_\beta)_c \ h(t[x := u])$.
 
-Furthermore, from this definition, we could even prove certain properties of $(\to_\beta)_c$.
-
-For example:
+Furthermore, from this definition, we could even prove certain properties of $(\to_\beta)_c$, such as:
 \[ \begin{prooftree}
     \hypo{ t \ (\to_\beta)_c \ t' }
     \infer1{ \lambda x.t \ (\to_\beta)_c \ \lambda x.t' }.
   \end{prooftree} \]
 
-This follows from inverting $t \ (\to_\beta)_c \ t'$.
-This is, there exist $\LamM$-terms $u, u'$ such that $h(u) = t$ and $h(u') = t'$ and $u \to_\beta u'$.
+This follows from ``inverting'' $t \ (\to_\beta)_c \ t'$.
+Firstly, one observes that there exist $\LamM$-terms $u, u'$ such that $h(u) = t$ and $h(u') = t'$ and $u \to_\beta u'$.
+Then, 
 \[ \begin{prooftree}
     \hypo{ u \to_\beta u' }
     \infer1[\text{(compatibility of $\to_\beta$)}]{ \lambda x.u \to_\beta \lambda x.u' }
     \infer1[\text{(\cref{canonical_closure})}]{ h(\lambda x.u) \ (\to_\beta)_c \ h(\lambda x.u') }
   \end{prooftree} \]
-Simplifying $h$ and rewriting $h(u)$ and $h(u')$ we conclude that $\lambda x.t \ (\to_\beta)_c \ \lambda x.t'$.
 
-In the same spirit of~\cref{canonical_closure}, we introduce the canonical typing closure.
+Lastly, simplifying $h$ and rewriting $h(u)$ and $h(u')$, we conclude that $\lambda x.t \ (\to_\beta)_c \ \lambda x.t'$.
 
-\begin{definition}%[Canonical typing closure]
+We now conclude the presentation of the canonical subsystem in $\LamM$, by equiping canonical expressions with a typing relation, in the same spirit of~\cref{canonical_closure}.
+
+\begin{definition}[Canonical typing closure]
   \label{canonical_typing}
-  We inductively define the derivable sequents for canonical terms as follows:
+  We define the derivable sequents for canonical expressions as follows:
   \[
     \begin{prooftree}
       \hypo{ \Gamma \vdash t:A }
@@ -414,7 +446,7 @@ In the same spirit of~\cref{canonical_closure}, we introduce the canonical typin
   \]
 \end{definition}
 
-Also, from the previous definition, we may ask the same questions.
+Also, from the previous definition, we may ask similar questions to those asked above about $\beta$-reduction for canonical expressions.
 For example, given $t \in Can$, is the following rule admissible?
 \[
   \begin{prooftree}
@@ -423,9 +455,7 @@ For example, given $t \in Can$, is the following rule admissible?
   \end{prooftree}
 \]
 
-By inverting our assumption of $x:A, \Gamma \vdash_c t:B$, we get that there exists $t'$, such that $h(t') = t$ and $x:A, \Gamma \vdash t':B$ is derivable in $\LamM$.
-
-Then,
+By inverting our assumption of $x:A, \Gamma \vdash_c t:B$, we get that there exists $t'$, such that $h(t') = t$ and $x:A, \Gamma \vdash t':B$ is derivable in $\LamM$. Then,
 \[
   \begin{prooftree}
     \hypo{ x:A, \Gamma \vdash t':B }
@@ -436,10 +466,12 @@ Then,
 
 And again, simplifying and rewriting $h$, we have derived the sequent $\Gamma \vdash_c \lambda x.t : A \supset B$.
 
-We conclude our presentation of the canonical subsystem of $\LamM$.
-This presentation does not exaclty coincide with system $\pmb{\lambda \mathcal{P}}$ from~\cite[Chapter~3.1]{JCES2002}.
+Our presentation of the canonical subsystem of $\LamM$ does not exaclty coincide with system $\pmb{\lambda \mathcal{P}}$ from~\cite[Chapter~3.1]{JCES2002}.
+We define a subsystem of $\LamM$ by restricting our syntax of expressions via a map $h$.
+Then, we introduce reduction and a typing relation by exclusively using map $h$.
+Trivially, we get a subsystem with appropriate notions of reduction and typing but still preserving their expected behaviour (as seen above).
 
-In our work, motivated by the task of mechanising these systems, we distinguish between a subsystem of $\LamM$ in the sense we have described here and an isomorphic system with its own syntax, substitution, reduction and typing rules (this is the system~$\LamV$ that will be covered in~\cref{c:canonical}).
+In our work, motivated by the task of mechanisation, we distinguish between a subsystem of $\LamM$ in the sense we have described before and an isomorphic system with its own syntax, substitution, reduction and typing rules (this is the system~$\LamV$ that will be covered in~\cref{c:canonical}).
 We explain some details and motivations for this at the end of the next section.
 % In the next chapter we will present a self-contained version of this subsystem and prove both representations are isomorphic.
 
@@ -449,11 +481,11 @@ We explain some details and motivations for this at the end of the next section.
 
 \section{Mechanisation in \textit{Rocq}}
 
-The mechanisations for the system $\LamM$ follow almost the same style as the ones shown for the simply typed $\Lam$-calculus in~\cref{c:background} using the \textit{Autosubst} library.
+The mechanisation of the system $\LamM$ also crucially relies on the \textit{Autosubst} library, and essentially follows the style adopted for the mechanisation of the simply typed $\Lam$-calculus we have seen in~\cref{c:background}.
 
 \subsection{\lst$LambdaM.v$}
 
-This module that contains the necessary definitions for the formalisations dealing with the system $\LamM$.
+This module contains the necessary definitions for the various aspects of the formalisation of system $\LamM$ performed in this dissertation.
 The inductive type for the syntax of $\LamM$-terms is as follows.
 \begin{lstlisting}[language=Coq]
 Inductive term: Type :=
@@ -461,12 +493,11 @@ Inductive term: Type :=
 | Lam (t: {bind term})
 | mApp (t: term) (u: term) (l: list term).
 \end{lstlisting}
+Note that the definition for $\LamM$-lists is hidden under the polymorphic list type \lst$list term$.
+We explain the reason for more details for this option at the end of this section.
 
-The definition for $\LamM$-lists is hidden under the polymorphic list type \lst$list term$.
-We give more details for this option at the end of this section.
-
-To mechanise the reduction relations, we first defined the notion of compatibility as in~\cref{compatible_relation} and then the base step relations $\beta_1$, $\beta_2$ and $h$ separately.
-That way we introduce the notions of compatible relation and also of compatible closure.
+To mechanise the reduction relations, we first defined the notion of compatibility for binary relations on $\LamM$-expressions (as in~\cref{compatible_relation}) and then define the base step relations $\beta_1$, $\beta_2$ and $h$ separately.
+That way we can distinguish between the notions of compatible closure of a base relation and of a relation being compatible.
 This aproach is more elaborated than the one presented for the simply typed $\Lam$-calculus and we also get into more details about these decisions at the end of this section.
 
 \begin{lstlisting}[language=Coq]
@@ -489,10 +520,10 @@ Definition multistep := clos_refl_trans_1n _ step.
 Definition multistep' := clos_refl_trans_1n _ step'.
 \end{lstlisting}
 
-Here, the \lst$comp$ and \lst$comp'$ are the polymorphic relations on $\LamM$-terms and -lists respectively that induce the compatibility closure.
+Here, \lst$comp$ and \lst$comp'$ are the polymorphic relations on $\LamM$-expressions that induce the compatibility closure.
 We also note the use of the \lst$clos_refl_trans_1n$ polymorphic relation provided by the \textit{Rocq Prover} libraries that induces the reflexive and transitive closure of a given binary relation.
 
-In this module, we have also the mechanised typing rules for $\LamM$, much in the style of what was done for the simply typed $\Lam$-calculus.
+In this module, we also find the formalisation of the typing relation for $\LamM$, through an inductively defined relation, much in the style of what was done for the simply typed $\Lam$-calculus.
 \begin{lstlisting}[language=Coq]
 Inductive sequent (Gamma: var->type) : term -> type -> Prop := 
 | varAxiom (x: var) (A: type) :
@@ -511,7 +542,7 @@ with list_sequent (Gamma:var->type) : type -> (list term) -> type -> Prop :=
 
 \subsection{\lst$TypePreservation.v$}
 
-This module contains proof for~\cref{type_preservation} and necessary lemmas to prove it (recall~\cref{type_substitution}).
+This module contains the proof of the subject reduction theorem (\cref{type_preservation}) and necessary lemmas to prove it (recall~\cref{type_substitution}).
 
 \begin{lstlisting}[language=Coq]
 Theorem type_preservation :
@@ -522,7 +553,7 @@ Theorem type_preservation :
 \end{lstlisting}
 
 Using \textit{Autosubst}, we have to prove not only the preservation of types by the substitution operation but also by renamings.
-We prove these results using the techniques in the tutorial of~\cite{AutosubstManual}.
+We prove these results using the techniques in the tutorial~\cite{AutosubstManual}.
 
 \begin{lstlisting}[language=Coq]
 Lemma type_renaming :
@@ -542,7 +573,7 @@ Lemma type_substitution :
        forall sigma Delta, (forall x, sequent Delta (sigma x) (Gamma x)) -> list_sequent Delta A l..[sigma] B).
 \end{lstlisting}
 
-For what is worth, we could prove a simpler statement (similar to~\cref{type_substitution}) to use as lemma for the subject reduction theorem.
+For what is worth, we could prove a simpler statement (similar to~\cref{type_substitution}) to formalise the subject reduction theorem.
 Such lemma would look like (without the proposition for lists):
 \begin{lstlisting}[language=Coq]
 Lemma weak_type_substitution Gamma t A :
@@ -552,13 +583,13 @@ Lemma weak_type_substitution Gamma t A :
 
 The used \textit{Autosubst} aproach takes this notion of well-typed substitutions or context morphisms (see~\cite[Chapter~4]{AutosubstSchafer}) to generalise these lemmas.
 
-As already mentioned, we use the combined induction principles for the proofs and need to declare the propositions using a conjunction on terms and lists.
+As already mentioned, we use the combined induction principles (for $\LamM$-expressions) to prove the statements that are declared using a conjunction on terms and lists.
 
 \subsection{\lst$IsCanonical.v$}
 
-This module contains the necessary definitions for the formalisations dealing with the canonical subsystem of $\LamM$.
+This module contains the necessary definitions for the formalisation of the canonical subsystem of $\LamM$.
 
-First, we define a predicate \lst$is_canonical$ that constructively defines the canonical terms in the style of~\cref{canonical_terms}.
+First, we define a predicate \lst$is_canonical$ that constructively defines the canonical expressions in the style of~\cref{canonical_terms}.
 \begin{lstlisting}[language=Coq]
 Inductive is_canonical: term -> Prop :=
 | cVar (x: var) :
@@ -594,22 +625,23 @@ Fixpoint h (t: term) :=
   | mApp t u l => capp (h t) (h u) (map h l)
   end.
 \end{lstlisting}
-In the definition of map $h$ we don't define map $h'$, as we use the \lst$map$ function from the \lst$List$ library.
-The function \lst$map h$ behaves exactly as the intended map $h'$.
-Notice that this way we also avoid a mutually dependent definition.
+In our definition, \lst$map h$ (which calls the \lst$map$ function from the \lst$List$ library) behaves exactly as the intended map $h$ when applied to lists.
+% OMITING: Notice that this way we also avoid a mutually dependent definition.
 
 In the \textit{Rocq Prover}, we need to formally prove that the $app$ operation and map $h$ are closed for canonical terms.
-Of course that in description we have of the subsystem we easily argue this informally. For example, in the mechanised results, we have the following lemma.
+% Of course that in description we have of the subsystem we easily argue this informally.
+Note that in the case of our description of the subsystem in the previous section, it is easy to informally argue about this.
+For example, in our mechanisation, we have the following lemma.
 \begin{lstlisting}[language=Coq]
 Lemma capp_is_canonical t u l :
   is_canonical t -> is_canonical u -> is_canonical_list l ->
   is_canonical (capp t u l).
 \end{lstlisting}
 
-Then, we prove every lemma and theorem presented in the description of the canonical subsystem.
+Then, we prove all the lemmas, propositions and theorems presented in the description of the canonical subsystem.
 As an example, we show the mechanisation of~\cref{h_fixpoints}.
 \begin{lstlisting}[language=Coq]
-Theorem h_fixpoints :
+Proposition h_fixpoints :
   (forall t, is_canonical t -> h t = t)
   /\
   (forall l, is_canonical_list l -> map h l = l).
@@ -645,7 +677,7 @@ Inductive canonical_list_sequent (Gamma: var->type) :
 \subsection{A closer look at the mechanisation}
 
 In this part we take a closer look at some particular aspects of the mechanisation that deserve more attention.
-The purpose is to show how some other options could arise and justify unusual approaches.
+The purpose is to show how some other options could arise and justify aspects of our approach that may look unusual.
 
 \subsubsection{Mutually inductive types vs nested inductive types}
 
@@ -685,7 +717,7 @@ This way, there was no need of having a mutual inductive type for our terms.
 
 The downside of using nested inductive types in the \textit{Rocq Prover} is the generated induction principles.
 This issue is already well documented in \cite[Chapter~14.3]{CoqArt}.
-With this approach, we need to provide the dedicated induction principles to the proof assistant.
+With this approach, we need to provide the dedicated induction principles to the proof assistant, presented below.
 
 \begin{lstlisting}[language=Coq]
 Section dedicated_induction_principle.
@@ -727,7 +759,7 @@ End dedicated_induction_principle.
 
 \subsubsection{Formalising a compatible closure}
 
-Defining reductions in $\Lam$-calculus like systems always involve the notion of compatiblity closure, as we want to define reductions also in the subterms of a term.
+Defining reduction relations in $\Lam$-calculi like systems always involve the notion of compatiblity closure, as we want to allow reduction to happen at the level of subterms.
 
 We took inspiration from the definitions in the \lst$Relations$ libraries of the \textit{Rocq Prover}.
 This library provides many definitions on binary relations.
@@ -806,7 +838,7 @@ Qed.
 This theorem states that if we have a compatible relation, its reflexive and transitive closure is still compatible.
 
 An advantage of these modular definitions is that we can use them to increase automation in our proofs.
-In the main theorem that we prove in the next chapter, our proof starts by adding every compatibility step to our context.
+In the main theorem that we prove in the next chapter (bellow is part of it, named \lst$conservativeness2$), our proof starts by adding every compatibility step to our context.
 As the auto tactic tries to match hypothesis in the context with the goal, the compatibility steps are then covered automatically.
 
 \begin{lstlisting}[language=Coq]
@@ -834,10 +866,10 @@ A relevant part of our work was to find simple representations for subsystems in
 As we pointed out, the formalisation we have done for the canonical subsystem of $\LamM$ is non standard.
 These ideas were motivated by the task of mechanising such subsystem.
 
-Formalising the subset of terms using a predicate is the obvious way to do it.
+Formalising the subset of terms using a predicate is an obvious way to proceed.
 But we would also like to have a dedicated type for the extension of that predicate rather than just the predicate itself.
 The \textit{Rocq Prover} provides such types, known as subset types (we refer to~\cite[Chapter~9.1]{CoqArt}).
-Although these subset types are exactly what we wanted, they do not give us a great advantage on mechanisations.
+Although these subset types are exactly what we wanted, they do not give us a great advantage on mechanisation tasks.
 Using subset types rapidly becomes exhausting because of the need to always provide proof objects in every definition.
 
 As an example, trying to define the one step $\beta$-relation as in~\cite[Chapter~3.1]{JCES2002} for the canonical subsystem mechanised using subset types, we would get (supposing we had a mechanised substitution operation):
@@ -860,9 +892,9 @@ Inductive can_step : canonical -> canonical -> Prop :=
 ...
 \end{lstlisting}
 
-Our aproach on the formalisation of such subsystem was to think of the canonical subsystem according to map $h$ (defining reduction and typification using this map).
-After that, we may define a self-contained canonical system with its own syntax and definitions (in the spirit of~\cite[Chapter~3.1]{JCES2002}).
-We do this with no reference to any definition from system $\LamM$ and prove that both representations are in fact isomorphic.
+So far, our aproach on the formalisation of the canonical subsystem of $\LamM$ was to view it according to map $h$, that it, defining reduction and typification using this map.
+However, we may also define a self-contained version of the canonical subsystem with its own syntax and definitions (in the spirit of~\cite[Chapter~3.1]{JCES2002}). % , by having no reference to any definition from system $\LamM$ and
+Then, we may prove that both representations are in fact isomorphic.
 That is the goal for~\cref{c:canonical}.
 
 %%% Local Variables:
