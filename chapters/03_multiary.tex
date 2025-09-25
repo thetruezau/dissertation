@@ -80,22 +80,12 @@ First, we introduce some standard definitions for our system, like the grammar f
   \]
 \end{definition}
 
-\begin{definition}[Reduction rules for $\LamM$-terms]  
-    \[
-    \begin{prooftree}
-      \infer0{ ((\lambda x . t)(u, []), \ t[x := u]) \in \beta_1 } 
-    \end{prooftree}
-    \qquad
-    \begin{prooftree}
-      \infer0{ ((\lambda x . t)(u, v::l), \ t[x := u](v, l)) \in \beta_2 } 
-    \end{prooftree}
-  \]
-  \[
-    \begin{prooftree}
-      \infer0{ (t(u, l)(u', l'), \ t(u, l + (u'::l'))) \in h } 
-    \end{prooftree}
-  \]
-  % By abuse of notation, we introduced the reduction rules with the notation of their compatible closure ($\to_R$).
+\begin{definition}[Reduction rules for $\LamM$-terms]
+	\begin{align*}
+		(\beta_1) & \qquad (\lambda x . t)(u, [])   \to t[x := u] \\
+		(\beta_2) & \qquad (\lambda x . t)(u, v::l) \to t[x := u](v, l) \\
+		(h)       & \qquad t(u, l)(u', l')          \to t(u, l + (u'::l'))
+	\end{align*}
 \end{definition}
 
 \begin{remark}

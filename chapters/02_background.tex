@@ -27,7 +27,7 @@ For what types and the simply typed lambda calculus is about we refer to \cite{B
 \begin{remark} \hfill
   \begin{enumerate}
   \item A denumerable set of variables is assumed and letters $x, y, z$ range over this set.
-  \item An abstraction is a $\Lam$-term of the kind $(\lambda x. M)$, that will bind occurrences of $x$ in the term $M$, much like a function $x \mapsto M$.
+  \item An abstraction is a $\Lam$-term of the kind $(\lambda x. M)$, that will bind occurrences of $x$ in the term $M$ (also called scope of the abstraction), much like a function $x \mapsto M$.
   \item An application is a $\Lam$-term of the kind $(M_1 M_2)$, where $M_1$ has the role of function and $M_2$ has the role of argument.
   \end{enumerate}
 \end{remark}
@@ -42,7 +42,17 @@ For what types and the simply typed lambda calculus is about we refer to \cite{B
   \end{enumerate}
 \end{notation}
 
-\begin{comment}
+Now we may define some syntactic notions.
+
+\begin{definition}[Bound/free occurrence]
+	We say that the variable $x$ occurs bound when it occurs in the scope of an abstraction $\lambda x$ and say that it occurs free otherwise.
+\end{definition}
+
+As an illustration of the previous concept, consider the term $M = x (\lambda x . x)$.
+The variable $x$ occurs both free and bound in this term.
+
+We can easily calculate the set of free variables for a given term.
+
 \begin{definition}[Free variables]
   For every $\Lam$-term $M$, we recursively define the set of free variables in $M$, $FV(M)$, as follows:  
   \begin{align*}
@@ -51,28 +61,32 @@ For what types and the simply typed lambda calculus is about we refer to \cite{B
     & FV( M N ) = FV(M) \cup FV(N).
   \end{align*}
 \end{definition}
-\end{comment}
 
-\begin{definition}[Free/bound occurrence]
-  We say that the variable $x$ occurs bound when it occurs in the scope of an abstraction $\lambda x$ and say that it occurs free otherwise.
+Now, we will consider a sequence of steps taken from~\cite{Barendregt1987}, in order to define a substitution operation that avoids the capture of free variables.
+This is, a substitution operation that does not swap free variables for bound variables.
+
+\begin{definition}[Renaming of bound variables]
+ A renaming of bound variables in a $\Lam$-term $M$ is the replacement of a part $\lambda x . N$ of $M$ by $\lambda y . N \langle x:=y \rangle$, where $y$ does not occur at all in $N$ and $N \langle x:=y \rangle$ denotes the naive substitution operation.
+ 
+ Observe that $N \langle x:=y \rangle$ is capture-avoiding as $y$ is carefully chosen to not occur in $N$.
 \end{definition}
 
-As an illustration of the previous concepts take the term $M = x (\lambda x . x)$.
-The variable $x$ occurs both free and bound in this term.
-
-\begin{definition}[$\alpha$-equality]
-  We say that two $\Lam$-terms are $\alpha$-equal when they are equal up to the names of variables in binders.
+\begin{definition}[$\alpha$-congruence]
+  Given $\Lam$-terms $M, N$, we say that $M$ is $\alpha$-congruent with $N$, namely $M \equiv_\alpha N$, when they are equal up to a series of renamings of bound variables.
 \end{definition}
+As an example, we can see that 
+$\lambda x. \lambda y. x \equiv_\alpha
+ \lambda z. \lambda y. z \equiv_\alpha
+ \lambda z. \lambda x. z \equiv_\alpha
+ \lambda y. \lambda x. y$.
 
-\begin{remark}
-  The previous informal definition lets us take advantage of a variable naming convention introduced below.
-  With this notion of $\alpha$-equality, the definition of substitution over $\Lam$-terms and meta-discussion of our syntax will be simplified.
-  After defining the substitution operation we will rigorously introduce the definition for $\alpha$-equivalence.
-\end{remark}
+Given this notion, we will prefer to identify $\alpha$-congruent $\Lam$-terms.
+Moreover, we are now able to introduce the variable convention that is proposed in~\cite{Barendregt1987}.
 
 \begin{convention} 
-  We will use the \textit{variable convention} introduced in \cite{Barendregt1987}.
-  Without loss of generality, every $\Lam$-term that we refer from now on is chosen (via $\alpha$-equality) to have different names for bound and free occurrences of variables.
+  % We will use the \textit{variable convention} introduced in \cite{Barendregt1987}.
+  % Without loss of generality, every $\Lam$-term that we refer from now on is chosen (via $\alpha$-equality) to have different names for bound and free occurrences of variables.
+  If some $\Lam$-terms $M, M', \dots$ occur in a certain mathematical context (of a definition, or proof, etc...), then all bound variables in these terms are chosen to be different from the free variables. 
 \end{convention}
 
 \begin{definition}[Substitution]
@@ -83,13 +97,17 @@ The variable $x$ occurs both free and bound in this term.
     & (\lambda y . M_1)[x := N] = \lambda y . (M_1[x := N]); \\
     & (M_1 M_2)[x := N] = (M_1[x := N]) (M_2[x := N]).
   \end{align*}
+  
+  In the third equation, there is no need to say that $y \neq x$ and that $y \not \in FV(N)$ as this is the case by the variable convention.
 \end{definition}
 
-
+\begin{comment}
 \begin{remark}
   Is is important to notice that by variable convention, the substitution operation described is capture-avoiding: the free variables in $N$ will not be affected by the binders in $M$, as they are chosen to have different names. 
 \end{remark}
+\end{comment}
 
+At last, we introduce some standard notions related to the $\beta$-reduction.
 
 \begin{definition}[Compatible Relation]
   Let $R$ be a binary relation on $\Lam$-terms.
@@ -112,17 +130,16 @@ The variable $x$ occurs both free and bound in this term.
   \]
 \end{definition}
 
-
 \begin{notation}
   Given a binary relation $R$ on $\Lam$-terms, we define:
   \begin{align*}
     & \to_R \text{as the compatible closure of $R$} ; \\
-    & \twoheadrightarrow_R \text{as the reflexive and transitive closure of $\to_R$} ; \\
-    & =_R \text{as the equivalence relation generated by $\twoheadrightarrow_R$}.
+    & \twoheadrightarrow_R \text{as the reflexive and transitive closure of $\to_R$}.
+    % & =_R \text{as the equivalence relation generated by $\twoheadrightarrow_R$}.
   \end{align*}
 \end{notation}
 
-
+\begin{comment}
 \begin{definition}[$\alpha$-equivalence]
   Consider the following binary relation on $\Lam$-terms:  
   \[
@@ -131,7 +148,7 @@ The variable $x$ occurs both free and bound in this term.
   \]  
   We call $\alpha$-equivalence to the equivalence relation $=_\alpha$.
 \end{definition}
-
+\end{comment}
 
 \begin{definition}[$\beta$-reduction]
   \label{beta-reduction}
@@ -312,11 +329,11 @@ Here are some examples of useful substitutions.
   The operation of instantiating a nameless $\Lam$-term $M$ under a substitution $\sigma$, $M[\sigma]$, is recursively defined by the following equations:
   \begin{align*}
     & i[\sigma] = \sigma(i); \\
-    & (\lambda . M)[\sigma] = \lambda . (M[0 \cdot (\uparrow \circ \ \sigma)]); \\
+    & (\lambda . M_1)[\sigma] = \lambda . (M_1[0 \cdot (\uparrow \circ \ \sigma)]); \\
     & (M_1 M_2)[\sigma] = (M_1[\sigma]) (M_2[\sigma]);
   \end{align*}
 
-  where the composition of two substitutions is mutually defined as $(\tau \circ \ \sigma)(k) = \sigma(k)[\tau]$.
+  where the composition of two substitutions is mutually defined as $(\tau \circ \sigma)(k) = \sigma(k)[\tau]$.
 \end{definition}
 
 This definition for instantiation describes a capture-avoiding substitution operation that replaces all free variables simultaneously.
