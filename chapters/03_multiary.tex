@@ -12,13 +12,12 @@ At the end of this chapter one can find a detailed overview of the mechanisation
 
 First, we introduce some standard definitions for our system, like the grammar for $\LamM$-terms, a typical append operation on lists and substitution operation.
 
-\begin{definition}[$\LamM$-terms]
+\begin{definition}[$\LamM$-expressions]
   The $\LamM$-terms are simultaneously defined with $\LamM$-lists by the following grammar:  
   \begin{align*} 
     (\LamM \text{-terms}) && t, u, v &::= \ x \ | \ \lambda x . t \ | \ t(u, l) \ \\
     (\LamM \text{-lists}) && l       &::= \ []\  | \ u :: l.
   \end{align*}
-
   We will refer to the union of $\LamM$-terms and $\LamM$-lists as $\LamM$-expressions.
 \end{definition}
 
@@ -30,7 +29,7 @@ First, we introduce some standard definitions for our system, like the grammar f
   \end{align*}
 \end{definition}
 
-\begin{definition}[Substitution for $\LamM$-terms]
+\begin{definition}[Substitution for $\LamM$-expressions]
   The substitution of a variable $x$ by a $\LamM$-term $v$ is mutually defined by recursion over $\LamM$-expressions as follows:  
   \begin{align*}
   & x[x := v] = v ; \\
@@ -41,6 +40,21 @@ First, we introduce some standard definitions for our system, like the grammar f
   & (u::l)[x := v] = u[x := v] :: l[x := v] .
   \end{align*}
 \end{definition}
+
+% ---
+
+\begin{definition}[Reduction rules for $\LamM$-terms]
+  Consider the following reduction rules for $\LamM$-terms.
+  \begin{align*}
+    (\beta_1) & \qquad (\lambda x . t)(u, [])   \to t[x := u] \\
+    (\beta_2) & \qquad (\lambda x . t)(u, v::l) \to t[x := u](v, l) \\
+    (h)       & \qquad t(u, l)(u', l')          \to t(u, l + (u'::l'))
+  \end{align*}
+  Of course, one may also interpret the given rules as binary relations on $\LamM$-terms.
+  That way, we can define a relation $\beta$ as the relation $\beta_1 \cup \beta_2$ and analogously a relation $\beta h$ as the relation $\beta \cup h$.
+\end{definition}
+
+% Therefore, we can make sense of the following definitions.
 
 \begin{definition}[Compatible Relation]
   \label{compatible_relation}
@@ -80,68 +94,22 @@ First, we introduce some standard definitions for our system, like the grammar f
   \]
 \end{definition}
 
-\begin{definition}[Reduction rules for $\LamM$-terms]
-	\begin{align*}
-		(\beta_1) & \qquad (\lambda x . t)(u, [])   \to t[x := u] \\
-		(\beta_2) & \qquad (\lambda x . t)(u, v::l) \to t[x := u](v, l) \\
-		(h)       & \qquad t(u, l)(u', l')          \to t(u, l + (u'::l'))
-	\end{align*}
-\end{definition}
-
-\begin{remark}
-  As the compatible closure induces two relations, one on terms and the other on lists, we will use the notation $\to_R$ for both these relations as we can get out of the context which one is being referenced.
-\end{remark}
-
-\begin{definition}
-  The relation $\beta$ will denote the relation $\beta_1 \cup \beta_2$.
-  The same applies for the relation $\beta h$ that will denote the relation $\beta \cup h$.
-  Therefore, we will have the induced relations $\to_\beta$ and $\to_{\beta h}$ (and analogous multistep relations $\twoheadrightarrow_\beta$ and $\twoheadrightarrow_{\beta h}$).
-\end{definition}
+\begin{notation}
+  We will use the same notation for relations introduced in \cref{c:background}.
+  As the compatible closure induces two relations, one on terms and the other on lists, we will use the already familiar notation $\to_R$ for both these relations as we can get out of the context which one is being referenced.
+\end{notation}
+Then, we will have the induced relations $\to_\beta$ and $\to_{\beta h}$ on $\LamM$-expressions.
+We may also refer to the multistep analogous relations $\twoheadrightarrow_\beta$ and $\twoheadrightarrow_{\beta h}$.
 
 % ---
 
-\begin{comment}
-\begin{definition}[$\beta h$-normal forms]
-  We inductively define the sets of $\LamM$-terms and $\LamM$-lists in $\beta h$-normal form, respectively NF and NL, as follows:
-  \[
-    \begin{prooftree}
-      \infer0{ x \in \text{NF} }
-    \end{prooftree}
-    \qquad
-    \begin{prooftree}
-      \hypo{ t \in \text{NF} }
-      \infer1{ \lambda x . t \in \text{NF} } 
-    \end{prooftree}
-    \qquad
-    \begin{prooftree}
-      \hypo{ u \in \text{NF} } 
-      \hypo{ l \in \text{NL} }
-      \infer2{ x(u, l) \in \text{NF} }
-    \end{prooftree}
-    \qquad
-    \begin{prooftree}
-      \infer0{ [] \in \text{NL} } 
-    \end{prooftree}
-    \qquad
-    \begin{prooftree}
-      \hypo{ u \in \text{NF} }
-      \hypo{ l \in \text{NL} }
-      \infer2{ u::l \in \text{NL} }
-    \end{prooftree}
-  \]
-\end{definition}
-\end{comment}
-
-% ---
-
-We turn now our attention to the typing system of system $\LamM$.
+We turn now our attention to the typing system of $\LamM$.
 Given that $\LamM$ has two syntactic categories of expressions, its typing system will deal with two different kinds of sequents.
 
 \begin{definition}[Sequent]
   A sequent on terms~$\Gamma \vdash t:A$ is a triple of a context, a $\LamM$-term and a simple type.
   A sequent on lists~$\Gamma;A \vdash l:B$ is a quadruple of a context, a simple type, a $\LamM$-list and another simple type.
 \end{definition}
-
 
 \begin{definition}[Typing Rules for $\LamM$-terms]
   \[
@@ -202,7 +170,7 @@ Now follow two necessary lemmas for the result of subject reduction that state t
   \]
 \end{lemma}
 \begin{proof}
-  The proof proceeds by simultaneous induction on the structure of term $t$ and list $l$.
+  The proof proceeds by simultaneous induction on the structure of the term $t$ and list $l$.
 \end{proof}
 
 \begin{lemma}[Append is admissible]
@@ -224,7 +192,7 @@ Now follow two necessary lemmas for the result of subject reduction that state t
 
 Subject reduction then states that any given term preserves its type upon $\beta h$ reduction.
 
-\begin{theorem}[Subject Reduction]
+\begin{theorem}[Subject reduction]
   \label{type_preservation}
   Given $\LamM$-terms $t$ and $t'$, the follwing holds:
   \[
@@ -239,6 +207,17 @@ Subject reduction then states that any given term preserves its type upon $\beta
   \cref{append_is_admissible} is used to prove the case $(t, t') \in h$.
 \end{proof}
 
+\begin{corollary}[Multistep subject reduction]
+  \label{type_preservation2}
+  Given $\LamM$-terms $t$ and $t'$, the follwing holds:
+  \[
+    \Gamma \vdash t : A \ \land \ t \twoheadrightarrow_{\beta h} t' \implies \Gamma \vdash t' : A.
+  \]
+\end{corollary}
+\begin{proof}
+  Trivial.
+\end{proof}
+  
 Other classical results from $\Lam$-calculus like confluency and strong normalisation could also be proved for system $\LamM$, but are not covered in this dissertation.
 
 % ---
@@ -254,7 +233,7 @@ In this section we see how to equip canonical terms with an appropriate notion o
   We say that a $\LamM$-term $t$ is in $h$-normal form when there exists no $\LamM$-term $t'$ such that \[ t \to_h t' . \]
 \end{definition}
 
-\begin{definition}[Canonical terms]
+\begin{definition}[Canonical expressions]
   \label{canonical_terms}
   We inductively define the subsets of $\LamM$-terms and $\LamM$-lists, respectively $Can$ and $CanList$, as follows:
   \[
@@ -297,7 +276,7 @@ In this section we see how to equip canonical terms with an appropriate notion o
   Canonical expressions will refer to the set $Can \cup CanList$.
 \end{definition}
 
-Similarly to what was done in \cref{c:background}, we leave a claim stating that the canonical terms are exactly the $\LamM$-terms in $h$-normal form.
+Similar to what was done in \cref{c:background}, we leave a claim stating that the canonical terms are exactly the $\LamM$-terms in $h$-normal form.
 
 \begin{claim}
   Given a $\LamM$-term $t$, the following are equivalent:
