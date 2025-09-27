@@ -1,61 +1,68 @@
 \chapter{The isomorphism $\Lam \cong \LamV$}
 \label{c:isomorphism}
+
 In~\cref{c:background}, the simply typed $\Lam$-calculus was introduced.
-
 Now, we show an isomorphism between the system $\LamV$ introduced in the previous chapter and the simply typed $\Lam$-calculus.
-This isomorphism will come at the level of syntax, reduction, typing rules and $\beta$-normal forms.
+This isomorphism will come at the level of terms, reduction, $\beta$-normal forms and typing rules.
 
-This is of great interest as $\LamV$ typing rules resemble a sequent calculus style.
-Thus, we have a correspondence between natural deduction (typing rules of $\Lam$-calculus) and a fragment of sequent calculus.
-The chapter is inspired in the works~\cite{LuisDychkoff} and~\cite[Chapter~4]{JCES2002}.
-The following diagram summarizes what we will be achieved in this chapter.
+This isomorphism is of great interest as $\LamV$ typing rules resemble a sequent calculus style.
+In this sense, the isomorphism studided in this chapter establishes a correspondence between natural deduction system (the simply typed $\Lam$-calculus) and a fragment of sequent calculus (the system $\LamV$).
+The chapter is inspired in the works~\cite{LuisDychkoff} and~\cite[Chapter~4]{JCES2002} and is summarized by the following diagram:
 
 % https://q.uiver.app/#q=WzAsNCxbMiwwLCJcXGJveGVke1xcdmVjIFxcbGFtYmRhfSJdLFsyLDIsIlxcYm94ZWR7XFxzbWFsbHtcXHZlYyBcXGJldGEtbmZzfX0iXSxbMCwwLCJcXGJveGVkXFxsYW1iZGEiXSxbMCwyLCJcXGJveGVke1xcc21hbGx7XFxiZXRhLW5mc319Il0sWzAsMSwiXFxkb3duYXJyb3dfe1xcdmVjIFxcYmV0YX0iLDFdLFsyLDMsIlxcZG93bmFycm93X1xcYmV0YSIsMV0sWzMsMSwiXFxjb25nIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn19fV0sWzIsMCwiXFxwc2kiLDEseyJvZmZzZXQiOi0yfV0sWzAsMiwiXFx0aGV0YSIsMSx7Im9mZnNldCI6LTJ9XV0=
 \[\begin{tikzcd}
     {\boxed\lambda} && {\boxed{\vec \lambda}} \\
     \\
-    {\boxed{\small{\beta-nfs}}} && {\boxed{\small{\vec \beta-nfs}}}
+    {\boxed{\text{NF}}} && {\boxed{\text{NT}}}
     \arrow["\psi"{description}, shift left=2, from=1-1, to=1-3]
     \arrow["{\downarrow_\beta}"{description}, from=1-1, to=3-1]
     \arrow["\theta"{description}, shift left=2, from=1-3, to=1-1]
-    \arrow["{\downarrow_{\vec \beta}}"{description}, from=1-3, to=3-3]
+    \arrow["{\downarrow_{\beta}}"{description}, from=1-3, to=3-3]
     \arrow["\cong"{description}, <->, from=3-1, to=3-3]
   \end{tikzcd}\]
 
-The $\vec \beta$ refers to the $\beta$-reduction steps in system $\LamV$ and is used in the diagram to create a clear distinction.
+% The $\vec \beta$ refers to the $\beta$-reduction steps in system $\LamV$ and is used in the diagram to create a clear distinction.
+In this diagram: the horizontal arrows symbolize the inverse maps underlying the isomorphism; the down arrows symbolize (partial) maps associating expressions to the respective beta-normal form (when existing).
+Also recall the sets NF$\subset \Lam$-terms and NT$\subset \LamV$-terms of the respective $\beta$-normal forms.
 
 \section{Mappings $\theta$ and $\psi$}
 
-\begin{definition}
-  Consider the following maps $\theta$ and $\theta'$:
-  \begin{align*}
-    \theta : \LamV \text{-terms} &\to \Lam \text{-terms} \\
-    var(x) &\mapsto x \\
-    \lambda x . t &\mapsto \lambda x . \theta(t) \\
-    app_v (x, u, l) &\mapsto \theta'(x, u::l) \\
-    app_\lambda (x. t, u, l) &\mapsto \theta'(\lambda x . \theta(t), u::l)
-  \end{align*}
-  \begin{align*}
-    \theta' : (\Lam \text{-terms} \times \LamV \text{-lists}) & \to \Lam \text{-terms} \\
-    (M, []) &\mapsto M \\
-    (M, u::l) &\mapsto \theta'(M \ \theta(u), l).
-  \end{align*}
+We start by defining the maps between expressions of $\Lam$ and $\LamV$ underlying the isomorphism.
+
+\begin{definition}[Maps $\theta$ and $\theta'$]
+  The map $\theta : \LamV \text{-terms} \to \Lam \text{-terms}$ is defined simultaneously with the map $\theta' : (\Lam \text{-terms} \times \LamV \text{-lists}) \to \Lam \text{-terms}$ by recursion on $\LamV$-terms and $\LamV$-lists respectively, as follows:
+  \begin{center}
+  \begin{tabular}{cc}
+    $ \begin{aligned}[t]
+      \theta(var(x)) &= x \\
+      \theta(\lambda x . t) &= \lambda x . \theta(t) \\
+      \theta(app_v(x, u, l)) &= \theta'(x, u::l) \\
+      \theta(app_\lambda (x.t, u, l)) &= \theta'(\lambda x . \theta(t), u::l)
+    \end{aligned} $
+    & \quad
+    $ \begin{aligned}[t] \\
+      \theta'(M, [])   &= M \\
+      \theta'(M, u::l) &= \theta'(M \ \theta(u), l).
+    \end{aligned} $
+  \end{tabular}
+  \end{center}
 \end{definition}
   
-\begin{definition}
-  Consider the following map $\psi'$:
+\begin{definition}Maps $\psi$ and $\psi'$
+  The map $\psi' : (\Lam \text{-terms} \times \LamV \text{-lists}) \to \LamV \text{-terms}$ is defined by recursion on $\Lam$-terms as follows:
   \begin{align*}
-    \psi' : (\Lam \text{-terms} \times \LamV \text{-lists}) &\to \LamV \text{-terms} \\
-    (x, []) &\mapsto var(x) \\
-    (x, u::l) &\mapsto app_v (x, u, l) \\
-    (\lambda x . M, []) &\mapsto \lambda x . \psi(M) \\
-    (\lambda x . M, u::l) &\mapsto app_\lambda (x . \psi(M), u, l) \\
-    (M N, l) &\mapsto \psi'(M, \psi(N)::l),              
+    \psi(x, []) &= var(x) \\
+    \psi(x, u::l) &= app_v (x, u, l) \\
+    \psi(\lambda x . M, []) &= \lambda x . \psi(M) \\
+    \psi(\lambda x . M, u::l) &= app_\lambda (x . \psi(M), u, l) \\
+    \psi(M N, l) &= \psi'(M, \psi(N)::l),              
   \end{align*}
-  where $\psi(M)$ is defined as $\psi'(M, [])$.
+  where $\psi(M)$ is easily defined as $\psi'(M, [])$.
 \end{definition}
 
 \subsection{Bijection at the level of terms}
+
+Now, we will establish that $\theta$ and $\psi$ are indeed inverse maps, and thus, $\Lam$-terms and $\LamV$-terms are in bijection.
 
 \begin{lemma}
   \label{theta_inversion_lemma}
@@ -64,22 +71,22 @@ The $\vec \beta$ refers to the $\beta$-reduction steps in system $\LamV$ and is 
   \end{align*}
 \end{lemma}
 \begin{proof}
-  The proof proceeds by induction on the structure of $\Lam$-terms.
+  The proof proceeds by induction on the structure of $\Lam$-terms and proper inspection of the $\LamV$-list in the variable and abstraction cases.
 \end{proof}
 
 
-\begin{theorem}
+\begin{theorem}[$\theta$ is left inverse of $\psi$]
   \label{theta_psi_inversion}
   \begin{align*}
     \theta \circ \psi &= id_{\Lam \text{-terms}}
   \end{align*}
 \end{theorem}
 \begin{proof}
-  The proof proceeds by induction on the structure of $\Lam$-terms and uses as lemma for the application case the~\cref{inversion_lemma}.
+  Immediate using~\cref{theta_inversion_lemma}.
 \end{proof}
 
 
-\begin{theorem}
+\begin{theorem}[$\psi$ is left inverse of $\theta$]
   \label{psi_theta_inversion}
   \begin{align*}
     \psi \circ \theta &= id_{\LamV \text{-terms}} \\
@@ -87,14 +94,15 @@ The $\vec \beta$ refers to the $\beta$-reduction steps in system $\LamV$ and is 
   \end{align*}
 \end{theorem}
 \begin{proof}
-  The proof proceeds by simultaneous induction on the structure of $\LamV$-terms and $\LamV$-lists.
+  The proof proceeds by simultaneous induction on the structure of $\LamV$-terms and $\LamV$-lists, respectively.
 \end{proof}
 
 
 \subsection{Isomorphism at the level of reduction}
 
-First, we need to introduce some lemmata that establish the preservation of substitution operations by the mappings $\theta, \theta'$ and $\psi'$.
-% Proofs of lemmas will now be omitted as they are all formalized in the proof assistant and usually proceed routinely.
+Now we turn our attention to reduction, showing that the reduction relations $\to_\beta$ of $\Lam$-calculus and $\LamV$ are isomorphic.
+
+First, introduce some lemmata, in order to relate the mappings $\theta'$ and $\psi'$ with the @ operation and list append.
 
 \begin{lemma}
   \label{theta_app_lemma}
@@ -104,7 +112,7 @@ First, we need to introduce some lemmata that establish the preservation of subs
   \[ \theta'(M, l+(u'::l')) = \theta'(\theta'(M, l) \ \theta(u'), l'). \]
 \end{lemma}
 \begin{proof}
-  The proof proceeds easily by simultaneous induction on the structure of the $\LamV$-term $t$ on the first proposition and on the structure of the $\LamV$-list $l$ on the second proposition.
+  The proof proceeds easily by simultaneous induction on the structure of the $\LamV$-term $t$ and $\LamV$-list $l$, respectively.
 \end{proof}
 
 \begin{corollary}
@@ -116,6 +124,8 @@ First, we need to introduce some lemmata that establish the preservation of subs
   The result follows as a corollary of~\cref{theta_app_lemma}, using~\cref{psi_theta_inversion} and~\cref{theta_inversion_lemma} to rewrite the left-hand side of the equality.
 \end{proof}
 
+Using the previous lemmas, the preservation of the substitution operations by $\theta$ and $\psi$ follow.
+
 \begin{lemma}
   \label{theta_subst_lemma}
   For every $\LamV$-terms $t, u$,
@@ -124,7 +134,7 @@ First, we need to introduce some lemmata that establish the preservation of subs
   \[ \theta'(M[x := \theta(u)], l[x := u]) = \theta'(M, l)[x := u]. \]
 \end{lemma}
 \begin{proof}
-  The proof follows by simultaneous induction on the structure of $\LamV$-terms and -lists, using~\cref{theta_app_lemma}.
+  The proof follows by simultaneous induction on the structure of $t$ and $l$, using~\cref{theta_app_lemma}.
 \end{proof}
   
 \begin{lemma}
@@ -133,10 +143,10 @@ First, we need to introduce some lemmata that establish the preservation of subs
   \[ \psi'(M[x := N], l[x := \psi(N)]) = \psi'(M, l)[x := \psi(N)]. \]
 \end{lemma}
 \begin{proof}
-  The proof follows by simultaneous induction on the structure of $\LamV$-terms and -lists, using~\cref{psi_app_lemma}.
+  The proof follows by induction on the structure of $\Lam$-term $M$, using~\cref{psi_app_lemma}.
 \end{proof}
 
-Now, we can state the isomorphism at the level of reduction.
+Now, we are essentially ready to obtain the isomorphism at the level of reduction.
 
 \begin{lemma}
   \label{theta_step_lemma}
@@ -147,15 +157,15 @@ Now, we can state the isomorphism at the level of reduction.
   The proof follows easily by induction on the structure of the $\LamV$-list $l$.
 \end{proof}
 
-\begin{theorem}
-  \label{theorem9}
+\begin{theorem}[Preservation of reduction by $\theta$]
+  \label{theta_step_pres}
   For every $\LamV$-terms $t, t'$,
   \[ t \to_{\beta} t' \implies \theta(t) \to_{\beta} \theta(t') \]
   and also, for every $\Lam$-term $M$ and $\LamV$-lists $l, l'$,
   \[ l \to_{\beta} l' \implies \theta'(M, l) \to_{\beta} \theta(M, l'). \]
 \end{theorem}
 \begin{proof}
-  The proof proceeds by simultaneous induction on the structure of the step relation on $\LamV$-terms.
+  The proof proceeds by simultaneous induction on the structure of the step relation on $\LamV$-expressions.
 
   \cref{theta_app_lemma} is useful for the cases of compatibility steps.
 
@@ -163,49 +173,17 @@ Now, we can state the isomorphism at the level of reduction.
 \end{proof}
 
 
-\begin{theorem}
-  \label{theorem10}
+\begin{theorem}[Preservation of reduction by $\psi'$]
+  \label{psi_step_pres}
   For every $\Lam$-terms $M, N$ and $\LamV$-list $l$,
-  \[ M \to_{\beta} N \implies \psi'(M, l) \to_{\beta} \psi(N, l). \]
+  \[ M \to_{\beta} N \implies \psi'(M, l) \to_{\beta} \psi'(N, l). \]
 \end{theorem}
 \begin{proof}
-  The proof proceeds by simultaneous induction on the structure if the step relation on $\Lam$-terms.
+  The proof proceeds by induction on the structure of the step relation on $\Lam$-terms.
 
   \cref{psi_subst_lemma} is crucial for cases dealing with $\beta$ steps.
 \end{proof}
 
-\subsection{Isomorphism at the level of typed terms}
-
-\begin{theorem}[$\theta$ admissibility]
-  \label{theorem11}
-  The following rules are admissible:
-  \[ \begin{prooftree}
-      \hypo{ \Gamma \vdash t : A }
-      \infer1{ \Gamma \vdash \theta(t) : A } 
-    \end{prooftree}
-    \qquad \qquad
-    \begin{prooftree}
-      \hypo{ \Gamma \vdash M : A }
-      \hypo{ \Gamma ; A \vdash l : B }
-      \infer2{ \Gamma \vdash \theta'(M, l) : B }.
-    \end{prooftree} \]
-\end{theorem}
-\begin{proof}
-  The proof proceeds easily by simultaneous induction on the structure of the typing rules of $\LamV$-terms.
-\end{proof}
-
-\begin{theorem}[$\psi'$ admissibility]
-  \label{theorem12}
-  The following rules is admissible:
-  \[ \begin{prooftree}
-      \hypo{ \Gamma \vdash M : A }
-      \hypo{ \Gamma ; A \vdash l : B }
-      \infer2{ \Gamma \vdash \psi'(M, l) : B }.
-    \end{prooftree} \]
-\end{theorem}
-\begin{proof}
-  The proof proceeds easily by induction on the structure of the typing rules of $\Lam$-terms.
-\end{proof}
 
 \subsection{Bijection at the level of normal forms}
 
@@ -236,7 +214,43 @@ One can find similar results to this in~\cite{LuisDychkoff}.
 Alternatively, we could prove that $M \in \text{NF} \implies \psi(M) \in \text{NT}$ and $t \in \text{NT} \implies \theta(t) \in \text{NF}$. Then, the shown theorems would automatically follow.
 
 For example, from the assumption that $M \in \text{NF}$, using~\cref{beta_nfs_claim}, one gets that $M$ is irreducible by $\to_\beta$.
-Then, from~\cref{theorem10}, $\psi(M)$ is also irreducible by $\to_\beta$ (in $\LamV$), which in turn means that $\psi(M) \in \text{NT}$ (by~\cref{beta_nfs_can_claim}).
+Then, from~\cref{psi_step_pres}, $\psi(M)$ is also irreducible by $\to_\beta$ (in $\LamV$), which in turn means that $\psi(M) \in \text{NT}$ (by~\cref{beta_nfs_can_claim}).
+
+
+\subsection{Isomorphism at the level of typed terms}
+
+\begin{theorem}[$\theta$ admissibility]
+  % \label{some_theorem_name}
+  The following rules are admissible:
+  \[ \begin{prooftree}
+      \hypo{ \Gamma \vdash t : A }
+      \infer1{ \Gamma \vdash \theta(t) : A } 
+    \end{prooftree}
+    \qquad \qquad
+    \begin{prooftree}
+      \hypo{ \Gamma \vdash M : A }
+      \hypo{ \Gamma ; A \vdash l : B }
+      \infer2{ \Gamma \vdash \theta'(M, l) : B }.
+    \end{prooftree} \]
+\end{theorem}
+\begin{proof}
+  The proof proceeds easily by simultaneous induction on the structure of the typing rules of $\LamV$-terms.
+\end{proof}
+
+\begin{theorem}[$\psi'$ admissibility]
+  % \label{theorem12}
+  The following rules is admissible:
+  \[ \begin{prooftree}
+      \hypo{ \Gamma \vdash M : A }
+      \hypo{ \Gamma ; A \vdash l : B }
+      \infer2{ \Gamma \vdash \psi'(M, l) : B }.
+    \end{prooftree} \]
+\end{theorem}
+\begin{proof}
+  The proof proceeds easily by induction on the structure of the typing rules of $\Lam$-terms.
+\end{proof}
+
+% ---
 
 \section{Mechanisation in \textit{Rocq}}
 

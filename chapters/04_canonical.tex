@@ -698,18 +698,18 @@ As an immediate application of the conservativeness result just proved, we can d
   We use dashed lines for derivations that do not follow from typing rules or rules already proven admissible.
   \[ \begin{prooftree}      
       \hypo{ \Gamma \vdash t:A }
-      \infer[left label=\text{\cref{i_admissibility}}]1{ \Gamma \vdash_c i(t):A }
-      \infer[dashed,left label=\text{*\cref{canonical_typing}}]1{ \Gamma \vdash t_0:A }
-      \infer[dashed]0[\text{\cref{h_is_multistep}}]{ t_0 \twoheadrightarrow_{h} h(t_0) }
-      \infer[dashed]1[\twoheadrightarrow_{h} \subset \twoheadrightarrow_{\beta h}]{ t_0 \twoheadrightarrow_{\beta h} h(t_0) }
-      \infer[dashed,left label=\text{\cref{type_preservation2}}]2{ \Gamma \vdash i(t):A }
+      \infer[left label=\cref{i_admissibility}]1{ \Gamma \vdash_c i(t):A }
+      \infer[dashed,left label=*\cref{canonical_typing}]1{ \Gamma \vdash t_0:A }
+      \infer[dashed]0[\cref{h_is_multistep}]{ t_0 \twoheadrightarrow_{h} h(t_0) }
+      \infer[dashed]1[$\twoheadrightarrow_{h} \subset \twoheadrightarrow_{\beta h}$]{ t_0 \twoheadrightarrow_{\beta h} h(t_0) }
+      \infer[dashed,left label=\cref{type_preservation2}]2{ \Gamma \vdash i(t):A }
       \hypo{ t \to_{\beta} t' }
-      \infer[dashed]1[\text{\cref{conservativeness}}]{ i(t) \twoheadrightarrow_{\beta h} i(t') }
-      \infer[dashed]2[\text{\cref{type_preservation2}}]{ \Gamma \vdash i(t'):A }
-      \infer1[\text{\cref{canonical_typing}}]{ \Gamma \vdash_c h(i(t')):A }
-      \infer[dashed]1[\text{\cref{h_fixpoints}}]{ \Gamma \vdash_c i(t'):A }
-      \infer1[\text{\cref{p_admissibility}}]{ \Gamma \vdash p(i(t')):A }
-      \infer[dashed]1[\text{\cref{inversion_pi}}]{ \Gamma \vdash t':A }
+      \infer[dashed]1[\cref{conservativeness}]{ i(t) \twoheadrightarrow_{\beta h} i(t') }
+      \infer[dashed]2[\cref{type_preservation2}]{ \Gamma \vdash i(t'):A }
+      \infer1[\cref{canonical_typing}]{ \Gamma \vdash_c h(i(t')):A }
+      \infer[dashed]1[\cref{h_fixpoints}]{ \Gamma \vdash_c i(t'):A }
+      \infer1[\cref{p_admissibility}]{ \Gamma \vdash p(i(t')):A }
+      \infer[dashed]1[\cref{inversion_pi}]{ \Gamma \vdash t':A }
     \end{prooftree} \]
   *\cref{canonical_typing}: inverting this definition with $\Gamma \vdash_c i(t):A$ we get that there exists a $\LamM$-term $t_0$ such that $h(t_0) = i(t)$ and that $\Gamma \vdash t_0:A$.
 \end{proof}
