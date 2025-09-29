@@ -2,15 +2,14 @@
 \label{c:intro}
 
 \section{Motivation}
-Looking at the title for this dissertation, we can explain what motivated the following dissertation by asking ourselves: ``Why mechanise metatheory?'' and ``Why the multiary $\Lam$-calculus?''.
+Looking at the title for this dissertation, we can explain what motivated the following dissertation by asking ourselves: ``Why mechanise?'' and ``Why the multiary $\Lam$-calculus?''.
 
 Before addressing these questions formally, we could just say that mechanising mathematics is an enjoyable task.
 And for what matters, this could be all we say about our motivation.
 All I intend to say is that even if our work in mathematics had no application or direct consequences, the fun of doing it would be a good enough motivation.
 Mechanising mathematics is like a computer game for a mathematician.
 
-\subsection{Why mechanise (metatheory)?}
-The mechanisation of metatheory has been taken seriously for at least 20 years~\cite{POPLmark}.
+\paragraph{Why mechanise?}
 By mechanisation we mean a well-founded description of a mathematical object using a proof assistant.
 Such proof assistants have attracted the attention of mathematicians because of the reliability and automation they provide for writing computer verified proofs~\cite{FourColourThm}.
 There has also been an increasing interest by engineers in the use of such tools for the security guarantees achieved when formally proving properties about computer programmes~\cite{CompCert}.
@@ -25,14 +24,16 @@ One could even argue that any work of mechanisation is useful, because it will:
 
 All of the latter are perfectly good motivations for the work done in this dissertation.
 
-Then, the question of \textit{Why metatheory?} arises.
-From the reasons above, some are highlighted by the task of mechanising metatheory.
+Then, the question of \textit{Why mechanise metatheory?} arises.
+From the reasons given above, some are highlighted by the task of mechanising metatheory.
 For example, it is often argued that metatheoretical proofs \textit{``are long, contain few essential insights, and have a lot of tedious but error-prone cases''}~\cite{AutosubstSchafer}.
+This provides fertile ground for computer verification and automation of proofs.
+Furthermore, the mechanisation of metatheory has also gained some attention in the past 20 years~\cite{POPLmark, POPLmarkReloaded}.
 
 In our case, mechanising theoretical results related to the multiary $\Lam$-calculus could enable new ways of continuing the work being done in this topic.
 Curiously, our work with an unusual version of the $\Lam$-calculus could even suggest some improvements in already mature tools for mechanising metatheory (as is the case with the used \textit{Autosusbt} library for the \textit{Rocq Prover}).
 
-\subsection{Why the multiary $\Lam$-calculus?}
+\paragraph{Why the multiary $\Lam$-calculus?}
 In the begining of~\cite[Chapter~7.3]{CurryHoward}, one is confronted with a natural question: \textit{``Natural deduction proofs correspond to $\Lam$-terms with types, and Hilbert style proofs correspond to combinators with types. What do sequent calculus proofs correspond to?''}.
 This question has its starting point in the well-known Curry-Howard isomorphism, that relates natural deduction proofs with $\Lam$-terms with types, as said above.
 
@@ -47,9 +48,9 @@ The study of the computational meaning behind the sequent calculus is one of the
 The theoretical objectives for this dissertation are the study of:
 \begin{enumerate}
 \item system $\LamM$, reduction rules, typing rules and standard results like subject reduction;
-\item system $\LamV$ as subsystem of $\LamM$;
-\item the conservativeness of $\LamV$ over $\LamM$;
-\item the isomorphism between $\LamV$ and $\Lam$.
+\item the canonical subsystem of $\LamM$;
+\item the conservativeness of the canonical subsystem over $\LamM$;
+\item the isomorphism between the canonical subsystem and $\Lam$.
 \end{enumerate}
 
 We say theoretical objectives because the complete objective is to mechanise in the \textit{Rocq Prover} each of the mentioned items.
@@ -75,8 +76,7 @@ The last section also provides a mechanisation overview, similar to the previous
 
 The fifth chapter is only about the isomorphism between the ordinary $\Lam$-calculus and system $\LamV$.
 
-A last (sixth) chapter with the title of ``Discussion'' contains many directions that were not explored in the development of our work along with some further justification of the choices taken and some possible further work.
-
+A last (sixth) chapter with the title of ``Discussion'' lists our contributions and some possible further work.
 
 %%% Local Variables:
 %%% mode: LaTeX

@@ -184,44 +184,51 @@ Now, we are essentially ready to obtain the isomorphism at the level of reductio
   \cref{psi_subst_lemma} is crucial for cases dealing with $\beta$ steps.
 \end{proof}
 
+Of course that the previous theorem gives us the preservation of reduction for map $\psi$, as it is a particular case of map $\psi'$ when $l = []$.
+% Notice that in \cref{psi_step_pres} when $l = []$ we get that $\psi$ preserves the reduction 
 
-\subsection{Bijection at the level of normal forms}
+\subsection{Isomorphism at the level of $\beta$-normal forms}
 
-For the following results recall both~\cref{beta_nfs} and~\cref{beta_nfs_can}.
-We prove both bijections directly and give a hint on how they could be proved using the claims that we have provided.
-One can find similar results to this in~\cite{LuisDychkoff}.
+Now, we will argue that the bijection between $\Lam$-terms and $\LamV$-terms still holds when we restrict to $\beta$-normal forms.
+For this, is convenient to recall both~\cref{beta_nfs} and~\cref{beta_nfs_can}.
+% Here, a direct proof for the preservation of normal forms is given.
+% However, we also give a hint on how this could be proved using~\cref{beta_nfs_claim,beta_nfs_can_claim}.
 
-\begin{theorem}
-  \begin{align*}
-    \psi \circ \theta |_{\text{NT}} &= id_{\text{NT}} \\
-    \psi \circ \theta'|_{\text{NA} \times \text{NL}} &= \psi' |_{\text{NA} \times \text{NL}}
-  \end{align*}
+\begin{theorem}[$\theta$ preserves $\beta$-nfs]
+  \label{theta_nfs_pres}
+  \[ t \in \text{NT} \implies \theta(t) \in \text{NF} \]
 \end{theorem}
 \begin{proof}
-  The proof proceeds easily by simultaneous induction on the structure of $\LamV$-terms in $\text{NT}$ and $\LamV$-lists in $\text{NL}$.
+  Given $t \in$ NT, by~\cref{beta_nfs_can_claim}, there exists no $t'$ such that $t \to_\beta t'$ (or $t$ is a $\beta$-nf).
+
+  Now let us prove that $\theta(t)$ is a $\beta$-nf.
+
+  Suppose there exists a $\Lam$-term $N$ such that $\theta(t) \to_\beta N$.
+  From~\cref{psi_step_pres}, it is also true that $\psi(\theta(t)) \to_\beta \psi(N)$.
+  And, using~\cref{psi_theta_inversion}, we may rewrite $\psi(\theta(t))$ as $t$, obtaining a contradiction as $t \to_\beta \psi(N)$ while $t$ is a $\beta$-nf.
+
+  Therefore, such $N$ cannot exist and $\theta(t)$ is a $\beta$-nf (consequently, from~\cref{beta_nfs_claim}, $\theta(t) \in \text{NF})$.
 \end{proof}
 
-\begin{theorem}
-  \begin{align*}
-    \theta \circ \psi |_{\text{NF}} &= id_{\text{NF}} \\
-    \theta \circ \psi'|_{\text{NA} \times \text{NL}} &= \theta' |_{\text{NA} \times \text{NL}}
-  \end{align*}
+We can prove an analogous result for $\psi$. 
+
+\begin{theorem}[$\psi$ preserves $\beta$-nfs]
+  \[ M \in \text{NF} \implies \psi(M) \in \text{NT} \]
 \end{theorem}
 \begin{proof}
-  The proof proceeds easily by simultaneous induction on the structure of $\Lam$-terms in $\text{NF}$ and $\text{NA}$.
+  Analogous to proof of~\cref{theta_nfs_pres}.
 \end{proof}
 
-Alternatively, we could prove that $M \in \text{NF} \implies \psi(M) \in \text{NT}$ and $t \in \text{NT} \implies \theta(t) \in \text{NF}$. Then, the shown theorems would automatically follow.
-
-For example, from the assumption that $M \in \text{NF}$, using~\cref{beta_nfs_claim}, one gets that $M$ is irreducible by $\to_\beta$.
-Then, from~\cref{psi_step_pres}, $\psi(M)$ is also irreducible by $\to_\beta$ (in $\LamV$), which in turn means that $\psi(M) \in \text{NT}$ (by~\cref{beta_nfs_can_claim}).
-
+% As an alternative path to obtain the previous theorem, from the assumption that $M \in \text{NF}$, using~\cref{beta_nfs_claim}, one gets that $M$ is in $\beta$-normal form.
+% Then, from~\cref{psi_step_pres}, $\psi(M)$ is also in $\beta$-normal form (for system $\LamV$), which in turn means that $\psi(M) \in \text{NT}$ (by~\cref{beta_nfs_can_claim}).
 
 \subsection{Isomorphism at the level of typed terms}
 
+Finally, we complete the proof of our isomorphism by showing a 1-1 correspondence between typed terms of the simply typed $\Lam$-calculus and system $\LamV$.
+
 \begin{theorem}[$\theta$ admissibility]
   % \label{some_theorem_name}
-  The following rules are admissible:
+  The following rules are admissible in the simply typed $\Lam$-calculus:
   \[ \begin{prooftree}
       \hypo{ \Gamma \vdash t : A }
       \infer1{ \Gamma \vdash \theta(t) : A } 
@@ -234,12 +241,12 @@ Then, from~\cref{psi_step_pres}, $\psi(M)$ is also irreducible by $\to_\beta$ (i
     \end{prooftree} \]
 \end{theorem}
 \begin{proof}
-  The proof proceeds easily by simultaneous induction on the structure of the typing rules of $\LamV$-terms.
+  The proof proceeds easily by simultaneous induction on the structure of the typing derivations in the system $\LamV$.
 \end{proof}
 
 \begin{theorem}[$\psi'$ admissibility]
   % \label{theorem12}
-  The following rules is admissible:
+  The following rule is admissible in system $\LamV$:
   \[ \begin{prooftree}
       \hypo{ \Gamma \vdash M : A }
       \hypo{ \Gamma ; A \vdash l : B }
@@ -247,17 +254,17 @@ Then, from~\cref{psi_step_pres}, $\psi(M)$ is also irreducible by $\to_\beta$ (i
     \end{prooftree} \]
 \end{theorem}
 \begin{proof}
-  The proof proceeds easily by induction on the structure of the typing rules of $\Lam$-terms.
+  The proof proceeds easily by induction on the structure of the typing derivations in the simply typed $\Lam$-calculus.
 \end{proof}
 
 % ---
 
 \section{Mechanisation in \textit{Rocq}}
 
-In this section we provide a brief description of the mechanisations, as they follow from many previous definitions.
-Essentially, we just defined maps $\theta$ and $\psi$ and mechanised every result.
+In this section we provide a brief description of the mechanisation of the concepts and results described in the previous section.
+Essentially, we just defined maps $\theta$ and $\psi$ and mechanised each of the results provided.
 
-One detail that may be highlighted is the definition for maps $\theta$ and $\theta'$.
+One detail that should be highlighted is the definition for maps $\theta$ and $\theta'$.
 \begin{lstlisting}[language=Coq]
 Fixpoint theta (t: Canonical.term) : Lambda.term :=
   match t with
@@ -273,13 +280,12 @@ Definition theta' (s: Lambda.term) (l: list Canonical.term) :
 
 The mechanised object that represents map $\theta'$ uses a higher order function on lists called \lst$fold_left$ that behaves exactly as $\theta'$, given the function \lst$(fun s v => App s (theta v))$ which folds the $\LamV$-list into a $\Lam$-term.
 
-This was an undesired consequence of the use of polymorphic lists in the definition for $\LamV$-terms.
-We could not define mutually recursive functions on the structure of the term and list because the proof assistant fails to recognise their termination.
+Such representation of map $\theta$ was an undesired consequence of the use of polymorphic lists in the definition for $\LamV$-terms.
+We could not define mutually recursive functions on the structure of the term and list because the proof assistant fails to recognise their termination~\cite{YvesStackOverflow}.
 Instead, we have to define these maps using higher order functions.
 In this specific case, we could even enjoy the generality of the \lst$fold_left$ function.
-
-As the mechanised $\theta'$ is defined after $\theta$, we have to consistently fold the definition for $\theta'$ in proofs to make them goal more readable.
-This can be seen in the mechanisation of~\cref{theta_step_lemma}:
+Unfortunately, with such definition for $\theta'$, we had to repeatedly fold the definition for $\theta'$ in our proofs to make the goal more readable (hiding the calls to the \lst$fold_left$).
+This necessity of ``folding'' a definition can be seen in the mechanisation of~\cref{theta_step_lemma}:
 \begin{lstlisting}[language=Coq]
 Lemma theta'_step_pres l :
   forall s s', Lambda.step s s' -> Lambda.step (theta' s l) (theta' s' l).
