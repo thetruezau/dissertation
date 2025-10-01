@@ -507,7 +507,7 @@ The \textit{POPLmark} challenge \cite{POPLmark} points to the topic of binding a
 From the many alternatives, we chose to follow the nameless syntax proposed by de~Bruijn.
 This is because this approach seemed widely used in the mechanisation of meta-theory.
 
-\subsection{Autosubst library}
+\subsection{\textit{Autosubst} library}
 
 The \textit{Autosubst} library~\cite{AutosubstSchafer,AutosubstManual} for the \textit{Rocq Prover} facilitates the formalisation of syntax with binders.
 It provides the \textit{Rocq Prover} with two kinds of tactics:
@@ -575,8 +575,8 @@ Inductive type: Type :=
 This module contains the definitions we need for the formalisations dealing with the simply typed $\Lam$-calculcus.
 The syntax for terms and \textit{Autosubst} definitions were already presented and explained in the prior subsection.
 
-The module then includes the definition for the one step $\beta$-relation (recall~\cref{beta-reduction}).
-This inductive definition mechanises the $\beta$ relation altogether with the compatibility closure ($\to_\beta$).
+The module then includes the definition for the one step $\beta$-reduction (recall~\cref{beta-reduction}).
+This inductive definition mechanises the $\beta$-reduction altogether with the compatibility closure steps ($\to_\beta$).
 \begin{lstlisting}[language=Coq]
 Inductive step : relation term :=
 | Step_Beta s s' u : s' = s.[u.:ids] ->

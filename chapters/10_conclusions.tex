@@ -1,11 +1,67 @@
 \chapter{Conclusions}
-\label{c:conc}
-Final chapter, present your conclusions.
+\label{c:conclusions}
 
+In this chapter, we first describe our contributions and then discuss possible directions for future work.
 
-\section{Summary of Findings}
-Highlight per-chapter content here, with a general conclusion in the end.
+\section{Contributions}
 
+We list below the contributions achieved with this dissertation.
 
-\section{Future Work}
-There's no lack of future work.
+First and more important, we used the \textit{Rocq Prover} and the \textit{Autosubst} library to mechanise the following systems introduced in this work:
+\begin{enumerate}
+\item the multiary $\Lam$-calculus (system $\LamM$);
+\item the canonical subsystem of $\LamM$;
+\item the canonical $\Lam$-calculus (system $\LamV$).
+\end{enumerate}
+Taking the formalisations of these systems on the proof assistant, we also obtained computer verified proofs for results such as:
+\begin{enumerate}
+\item subject reduction for systems $\LamM$ and $\LamV$;
+\item isomorphism between the canonical subsystem of $\LamM$ and system $\LamV$;
+\item conservativeness of $\LamV$ over $\LamM$;
+\item isomorphism between the simply typed $\Lam$-calculus and system $\LamV$.
+\end{enumerate}
+
+Second, we gave an exhaustive definition for the concept of subsystem, separating two isomorphic representations of the canonical subsystem of $\LamM$.
+This helped us clarify the loose idea of subsystem and simplify some of the result proven (for example, using the self-contained system $\LamV$ for proving the theorem of conservativeness).
+From this idea, we could even propose a standard aproach to formalise any subsystem.
+
+Third and last, through this document, a detailed exposition of the mechanised systems and proofs using the \textit{Rocq Prover} along with some digressions over formalisation choices.
+
+% Fourth and last, we layed out a modularised formalisation that helped us enjoy the automated tactics of the \textit{Rocq Prover}.
+% This way, many of the provided proofs were obtained automatically.
+
+\section{Future work}
+
+% We did not focus in results of confluency that could easily be added
+In this dissertation, we did not focus so much on results such as the confluency of reduction in our systems.
+We suspect that these could easily be added with the help of the \textit{Autosubst} library (one can found a case study of confluence of reduction in \cite[Section~2.2]{AutosubstSchafer}).
+
+Furthermore,
+\begin{itemize}
+\item Could we have more automation?
+  \subitem Could we only provide proofs for the hard cases proved in paper (easy results should be done automatically)?
+  \subitem Could we have more \textit{Autosubst} automation available for our systems? Discuss this here? What about \textit{Autosubst2}?
+  \subitem Could we have simpler formalisations? How so?
+\item System $\pmb{\lambda Jm}$ is still not formalised.
+\item Our modular definitions allow us to use the \textit{Autosubst} library to enrich our typing systems (dependent types, intersection types, SystemF, Lambda Cube and so on).
+
+  % ... \item Many more mechanisations of metatheory?
+\end{itemize}
+
+\begin{comment}
+Mechanisations in relation with the formalisations on the paper.
+\begin{itemize}
+\item Some ideas for the metatheory formalised come from attempts of mechanisations.
+\item The metatheory mechanised does not correspond exactly to the formalised in the literature.
+  \subitem An example: the polymorphic definition for system  $\LamM$.
+\end{itemize}
+
+Further work?
+\begin{itemize}
+\item Because of the modularity and of the \textit{Autosubst} library we have the facility to enrich our typing systems (ex: SystemF?).
+\item Could there be more automation?  
+\item Why use a outdated library for mechanising binders? What about \textit{Autosubst 2}?
+\item Obstacles on the mechanisation of a non standard substitution operation.
+\item SSreflect style proofs for \textit{Rocq Prover}.
+\end{itemize}
+\end{comment}
