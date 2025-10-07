@@ -16,7 +16,7 @@ The naming of this system is motivated by two reasons.
 On the one hand, it is isomorphic to the canonical subsystem of $\LamM$ seen in the previous chapter.
 On the other hand, it is also isomorphic to the simply typed $\Lam$-calculus.
 
-The system $\LamV$ is a self-contained representation of the canonical subsystem (one can notice the similarities between the definitions for system $\LamM$).
+The system $\LamV$ is a self-contained representation of the canonical subsystem of $\LamM$ (one can notice the similarities between the definitions for system $\LamM$).
 We will give a complete proof for this isomorphism in the second section of this chapter.
 In the third section we give the proof for the theorem of conservativeness, stating that $\LamM$ is a conservative extension of $\LamV$. 
 The isomorphism between system $\LamV$ and the simply typed $\Lam$-calculus is left for \cref{c:isomorphism}.
@@ -26,8 +26,8 @@ The isomorphism between system $\LamV$ and the simply typed $\Lam$-calculus is l
 \begin{definition}[$\LamV$-expressions]
   The $\LamV$-terms are simultaneously defined with $\LamV$-lists by the following grammar:  
   \begin{align*} 
-    (\LamV \text{-terms}) && t, u &::= \ var(x) \ | \ \lambda x.t \ | \ app_{v}(x, u, l) \ | \ app_{\lambda} (x.t, u, l) \\
-    (\LamV \text{-lists}) && l    &::= \ [] \  | \ u :: l.
+    (\LamV \text{-terms}) && \hspace{-1cm} t, u &::= \ var(x) \ | \ \lambda x.t \ | \ app_{v}(x, u, l) \ | \ app_{\lambda} (x.t, u, l) \\
+    (\LamV \text{-lists}) && \hspace{-1cm} l    &::= \ [] \  | \ u :: l.
   \end{align*}
   We will refer to the union of $\LamV$-terms and $\LamV$-lists as $\LamV$-expressions.
 \end{definition}
@@ -467,6 +467,19 @@ The following technical lemma says that we can derive the compatibilty rules of 
   \cref{compatibility_lemmas} is useful in some compatibility cases.
 \end{proof}
 
+Summarising the previous results, we state the following corollary.
+
+\begin{corollary}[Isomorphism of reduction] \hfill
+  
+  \begin{enumerate}
+  \item $t \to_{\beta} t'$ in $\LamV$ $\iff$ $i(t) \ ({\to_{\beta}})_c \ i(t')$ in $Can$
+  \item $t \ ({\to_{\beta}})_c \ t'$ in $Can$ $\iff$ $p(t) \to_{\beta} p(t')$ in $\LamV$
+  \end{enumerate}
+\end{corollary}
+\begin{proof}
+  Immediate by \cref{inversion_pi,inversion_ip,i_step_pres,p_step_pres}.
+\end{proof}
+
 % ---
 % 123
 % ---
@@ -506,7 +519,7 @@ We are now ready to prove the two theorems that provide the isomorphism of the c
 
 \begin{theorem}[$i$ admissibility]
   \label{i_admissibility}
-    For every $\LamV$-term $t$ and $\LamV$-list $l$, the following rules are admissible:
+    For every $\LamV$-term $t$ and $\LamV$-list $l$, the following rules hold:
   \[ \begin{prooftree}
       \hypo{ \Gamma \vdash t : A }
       \infer1{ \Gamma \vdash_c i(t) : A } 
@@ -524,7 +537,7 @@ We are now ready to prove the two theorems that provide the isomorphism of the c
 
 \begin{theorem}[$p$ admissibility]
   \label{p_admissibility}
-  For every $t \in Can$ and $l \in CanList$, the following rules are admissible:
+  For every $t \in Can$ and $l \in CanList$, the following rules hold:
   \[ \begin{prooftree}
       \hypo{ \Gamma \vdash_c t : A }
       \infer1{ \Gamma \vdash p(t) : A } 
@@ -713,6 +726,35 @@ As an immediate application of the conservativeness result just proved, we can d
   *\cref{canonical_typing}: inverting this definition with $\Gamma \vdash_c i(t):A$ we get that there exists a $\LamM$-term $t_0$ such that $h(t_0) = i(t)$ and that $\Gamma \vdash t_0:A$.
 \end{proof}
 
+As another consequence of conservativeness, confluence of $\LamV$ can be lifted to $\LamM$.
+
+\begin{corollary}[Confluence lift]
+  If $\twoheadrightarrow_\beta$ is confluent in $\LamV$, then $\twoheadrightarrow_{\beta h}$ is confluent in $\LamM$. 
+\end{corollary}
+\begin{proof}
+  Given $\LamM$-terms $t, t_1, t_2$, we have the following:
+  \[
+    % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQcQBfU9TXfIRTlSxanSat2OAPrFuvEBmx4CRMmJoMWbRCCwAKNAZwBKUwF4AFidMK+KwUQBMo8dql7Zz+0v6qhZBFnd0ldfSMTOXNrKOI7HgcBNRRXEK0w9kNjbxibXN9lZMCyAGZQnXYAHSqYAA8sOBw4AAIalsMcAHIE8RgoAHN4IlAAMwAnCABbJBEOCCQyCUrEMGZGRhpGegAjGEYABX8nPUYYUc4aKxh6KGkAdwhr24REkAnp2ZocBcRSjJWaw2W12+yOjhSIDOFxAVxudy8j2eUFeig+M0Qcx+SFcy08QM2UNBh2OkOhlxAyIeT3hqLGkwxS2xiAALAD8etCds9iSIUIoecKVTETSXr50Tjvr8AGzs3QEkE88HFdjk2FQrBgcJQehwa53N4SxC45lsvHyzmKsGk-lquG3anIunvBmS+ZIACscqQCqJSptqsF6uFHCRtPFrr+Us93tWlr91r5gZh9oRodFKIjn1Z0cQsvNPvj3MTKtOQdTjvDhsjXvdedjvuLvNLApTlPhlbFXEoXCAA
+    \begin{tikzcd}
+      & t \arrow[ld, two heads, "\beta h"] \arrow[rd, two heads, "\beta h"] \arrow[d, two heads, "h"] & \\
+      t_1 \arrow[d, two heads, "h"] & i(p(t))=h(t) \arrow[dd, two heads, dashed, "\beta h"] \arrow[ld, two heads, "\beta h"] \arrow[rd, two heads, "\beta h"] & t_2 \arrow[d, two heads, "h"] \\
+      i(p(t_1))=h(t_1) \arrow[rd, two heads, "\beta h"] && i(p(t_2))=h(t_2) \arrow[ld, two heads, "\beta h"] \\
+      & \exists \ i(t') &
+    \end{tikzcd}
+  \]
+  
+  In the latter diagram, the existance of such $t'$ comes from the fact that $\LamV$ is confluent and from using \cref{conservativeness} to lift the following diagram to $\LamM$.
+  \[
+    % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQ0AKHAShAF9S6TLnyEU5UsWp0mrdlxwB9Yn0HDseAkQBMUmQxZtEHbkp1qhHEVvElSOg3OMgAOq5gAPLHBxwABO7+OADkAjIwUADm8ESgAGYAThAAtkiSIDgQSADMNIbyiGDMjIw0jPQARjCMAAo2YuyMMPE4IOVYYC5Q9HAAFpECVkmp6TRZSGSyRkjFpeVVNfWajSbNre0gA-RQ7DgA7hDbUAjqICNpiBkTiHrThXNlIBXVdQ3aay1tNMd7h8enYbJS5TG55e7GR4LV7LUQfZ5fTa-EwHI4wHaAhLApB3MH5ZyzEpPF5Ld7iBEbH7o3Yo-7U06UfhAA
+    \begin{tikzcd}
+      & p(t) \arrow[dd, dashed, "\beta"] \arrow[ld, two heads, "\beta"] \arrow[rd, two heads, "\beta"] & \\
+      p(t_1) \arrow[rd, two heads, "\beta"] && p(t_2) \arrow[ld, two heads, "\beta"] \\
+      & \exists \ t' &                             
+    \end{tikzcd}
+  \]
+\end{proof}
+  
+% ---
 \section{Mechanisation in \textit{Rocq}}
 
 The mechanisation for the system $\LamV$ also uses the \textit{Autosubst} library, and follows the same style of the mechanisation of the system $\LamM$, except for the nonstandard substitution operation (that we cover in more detail by the end of the chapter).

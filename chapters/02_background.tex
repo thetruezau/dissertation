@@ -283,7 +283,7 @@ The proof for $\boxed{\text{(ii)} \Rightarrow \text{(i)}}$ is also mechanised in
 
 \section{$\Lam$-calculus with de~Bruijn syntax}
 
-In the 1970s, de Bruijn started working on the \textit{Automath} proof assistant and proposed a simplified syntax to deal with generic binders \cite{deBruijn}.
+In the 1970s, de Bruijn started working on the \textit{Automath} proof checker and proposed a simplified syntax to deal with generic binders \cite{deBruijn}.
 This approach is claimed by the author to be good for meta-lingual discussion and for implementation in computer programmes.
 In contrast, this syntax is further away from the human reader.
 This section will serve as an intermediate step to the mechanised version of the simply typed $\Lam$-calculus described in the next section.
@@ -340,19 +340,22 @@ This definition for instantiation describes a capture-avoiding substitution oper
 Thus, we may also refer to these substitutions as parallel substitutions.
 It is based on the ideas introduced in~\cite{AutosubstSchafer} and is very close to the actual mechanisation done using the \textit{Autosubst} library.
 
+Using the previous definition of substitution, we could now define the $\beta$-reduction rule as
+\[ (\lambda . M) N \to M[N \cdot id]. \]
+
 Another variation we may encounter when formalising $\Lam$-terms using a nameless syntax is the typing system.
 A similar aproach to our modification of the typing system can be found in~\cite[Chapter~7]{AndrewAdams}.
 We formulate the definition of context and derivable sequents in the nameless setting as follows.
 
 \begin{definition}[Nameless context]
-  A nameless context~$\Gamma, \Delta, \dots$ is a finite (possibly empty) sequence of simple types.
+  A nameless context \ $\Gamma, \Delta, \dots$ is a finite (possibly empty) sequence of simple types.
 \end{definition}
 
 \begin{notation} \hfill
   
-  $| \Gamma |$ is used to denote the length of context $\Gamma$;
+  $| \Gamma |$ is used to denote the length of a context \ $\Gamma$;
 
-  $\Gamma_i$ is used to denote the $i$th element of a context $\Gamma$, given $i < | \Gamma |$.
+  $\Gamma_i$ is used to denote the $i$th element of a context \ $\Gamma$, given $i < | \Gamma |$.
 \end{notation}
 
 \begin{definition}[Typing rules for nameless $\Lam$-terms]

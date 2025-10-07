@@ -184,8 +184,22 @@ Now, we are essentially ready to obtain the isomorphism at the level of reductio
   \cref{psi_subst_lemma} is crucial for cases dealing with $\beta$ steps.
 \end{proof}
 
-Of course that the previous theorem gives us the preservation of reduction for map $\psi$, as it is a particular case of map $\psi'$ when $l = []$.
-% Notice that in \cref{psi_step_pres} when $l = []$ we get that $\psi$ preserves the reduction 
+Of course that the preservation of reduction by map $\psi$ follows trivially by the previous theorem, as $\psi$ is a particular case of $\psi'$.
+
+Summarising our isomorphism at the level of reduction, we state the following corollary.
+
+\begin{corollary}[Isomorphism of reduction] \hfill
+  
+  \begin{enumerate}
+  \item $t \to_{\beta} t' \text{ in } \LamV \iff \theta(t) \to_{\beta} \theta(t') \text{ in } \Lam$
+  \item $M \to_{\beta} N \text{ in } \Lam \iff \psi(M) \to_{\beta} \psi(N) \text{ in } \LamV$
+  \end{enumerate}
+\end{corollary}
+\begin{proof}
+  Immediate by \cref{theta_psi_inversion,psi_theta_inversion,theta_step_pres,psi_step_pres}.
+\end{proof}
+
+% ---
 
 \subsection{Isomorphism at the level of $\beta$-normal forms}
 
@@ -216,7 +230,7 @@ We can prove an analogous result for $\psi$.
   \[ M \in \text{NF} \implies \psi(M) \in \text{NT} \]
 \end{theorem}
 \begin{proof}
-  Analogous to proof of~\cref{theta_nfs_pres}.
+  Analogous to the proof of~\cref{theta_nfs_pres}.
 \end{proof}
 
 % As an alternative path to obtain the previous theorem, from the assumption that $M \in \text{NF}$, using~\cref{beta_nfs_claim}, one gets that $M$ is in $\beta$-normal form.
@@ -228,7 +242,7 @@ Finally, we complete the proof of our isomorphism by showing a 1-1 correspondenc
 
 \begin{theorem}[$\theta$ admissibility]
   % \label{some_theorem_name}
-  The following rules are admissible in the simply typed $\Lam$-calculus:
+  The following rules hold:
   \[ \begin{prooftree}
       \hypo{ \Gamma \vdash t : A }
       \infer1{ \Gamma \vdash \theta(t) : A } 
@@ -246,7 +260,7 @@ Finally, we complete the proof of our isomorphism by showing a 1-1 correspondenc
 
 \begin{theorem}[$\psi'$ admissibility]
   % \label{theorem12}
-  The following rule is admissible in system $\LamV$:
+  The following rule holds:
   \[ \begin{prooftree}
       \hypo{ \Gamma \vdash M : A }
       \hypo{ \Gamma ; A \vdash l : B }

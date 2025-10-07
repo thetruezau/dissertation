@@ -15,8 +15,8 @@ First, we introduce some standard definitions for our system, like the grammar f
 \begin{definition}[$\LamM$-expressions]
   The $\LamM$-terms are simultaneously defined with $\LamM$-lists by the following grammar:  
   \begin{align*} 
-    (\LamM \text{-terms}) && t, u, v &::= \ x \ | \ \lambda x . t \ | \ t(u, l) \ \\
-    (\LamM \text{-lists}) && l       &::= \ []\  | \ u :: l.
+    (\LamM \text{-terms}) && \hspace{-2cm} t, u, v &::= \ x \ | \ \lambda x . t \ | \ t(u, l) \ \\
+    (\LamM \text{-lists}) && \hspace{-2cm} l       &::= \ []\  | \ u :: l.
   \end{align*}
   We will refer to the union of $\LamM$-terms and $\LamM$-lists as $\LamM$-expressions.
 \end{definition}
@@ -331,8 +331,30 @@ Then, we can define a function that collapses $\LamM$-terms to their $h$-normal 
 \end{proposition}
 \begin{proof}
   The proof proceeds easily by simultaneous induction on the structure of $\LamM$-expressions.
+  As map $h$ is defined using $app$, \cref{app_is_multistep} is crucial for the case where $t$ is an application. 
+\end{proof}
 
-  As $h$ is defined using $app$, \cref{app_is_multistep} is crucial for the case where $t$ is an application. 
+With the following auxiliary result we can easily prove the confluence of $\twoheadrightarrow_h$.
+
+\begin{lemma}[Map $h$ collapses $\to_h$]
+  \label{h_collapse}
+  For every $\LamM$-terms $t, t'$, \[ t \to_h t' \implies h(t) = h(t'). \]
+\end{lemma}
+\begin{proof}
+  The proof proceeds easily by induction on the structure of $t \to_h t'$.
+\end{proof}
+
+\begin{corollary}[Confluence of $\twoheadrightarrow_h$]
+  For every $\LamM$-terms $t, t_1, t_2$,
+  % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQcQBfU9TXfIRTlSxanSat2OAPrFuvEBmx4CRAEyjxDFm0QcZ6hXxWCiZddsl6QACwAUOAJTdxMKAHN4RUADMAThAAtkgiHBBIZHYw9FDSAO4QtjFQCDSM9ABGMIwACvyqQiD+WB62nDx+gSGIYTgRiJrRsQlJKQiVIAHBkTT1SADMNMkt+jiJI6nGXdVITf2IQ81xYxPt0901dQ1Lk62TaSCMWGA2UPRwyXFclFxAA
+  \[\begin{tikzcd}
+      & t \arrow[ld, two heads, "h"] \arrow[rd, two heads, "h"] \arrow[dd, two heads, dashed, "h"] & \\
+      t_1 \arrow[rd, two heads, "h"] && t_2 \arrow[ld, two heads, "h"] \\
+      & h(t) & 
+    \end{tikzcd}\]
+\end{corollary}
+\begin{proof}
+  Immediate by \cref{h_collapse,h_is_multistep}.
 \end{proof}
 
 The following theorem states that the canonical terms are invariant or fixpoints for map $h$.
@@ -861,7 +883,7 @@ Inductive can_step : canonical -> canonical -> Prop :=
 ...
 \end{lstlisting}
 
-So far, our aproach on the formalisation of the canonical subsystem of $\LamM$ was to view it according to map $h$, that it, defining reduction and typification using this map.
+So far, our aproach on the formalisation of the canonical subsystem of $\LamM$ was to view it according to map $h$, that is, defining reduction and typification using this map.
 However, we may also define a self-contained version of the canonical subsystem with its own syntax and definitions (in the spirit of~\cite[Chapter~3.1]{JCES2002}). % , by having no reference to any definition from system $\LamM$ and
 Then, we may prove that both representations are in fact isomorphic.
 That is the goal for~\cref{c:canonical}.

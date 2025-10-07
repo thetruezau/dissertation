@@ -13,36 +13,97 @@ First and more important, we used the \textit{Rocq Prover} and the \textit{Autos
 \item the canonical subsystem of $\LamM$;
 \item the canonical $\Lam$-calculus (system $\LamV$).
 \end{enumerate}
-Taking the formalisations of these systems on the proof assistant, we also obtained computer verified proofs for results such as:
+Then, using with the formalisation of these systems on the proof assistant, we also obtained computer-verified proofs for results such as:
 \begin{enumerate}
 \item subject reduction for systems $\LamM$ and $\LamV$;
 \item isomorphism between the canonical subsystem of $\LamM$ and system $\LamV$;
 \item conservativeness of $\LamV$ over $\LamM$;
-\item isomorphism between the simply typed $\Lam$-calculus and system $\LamV$.
+\item isomorphism between the simply typed $\Lam$-calculus and system $\LamV$;
+\item confluence of systems $\LamV$ and $\LamM$.
 \end{enumerate}
 
 Second, we gave an exhaustive definition for the concept of subsystem, separating two isomorphic representations of the canonical subsystem of $\LamM$.
 This helped us clarify the loose idea of subsystem and simplify some of the result proven (for example, using the self-contained system $\LamV$ for proving the theorem of conservativeness).
-From this idea, we could even propose a standard aproach to formalise any subsystem.
+From this idea, we could even propose a standard approach to formalise any subsystem.
 
-Third and last, through this document, a detailed exposition of the mechanised systems and proofs using the \textit{Rocq Prover} along with some digressions over formalisation choices.
+Third and last, through this document, a detailed exposition of the mechanised systems and proofs using the \textit{Rocq Prover} along with some digressions over our formalisation choices.
 
 % Fourth and last, we layed out a modularised formalisation that helped us enjoy the automated tactics of the \textit{Rocq Prover}.
 % This way, many of the provided proofs were obtained automatically.
 
 \section{Discussion and related work}
 
-% distance from the paper to the proof assistant:
-% binding
-% infinite contexts
-% subsystems
+Now, we provide some discussion over our techniques for the mechanisation of metatheory, connecting them with related work.
+
+\subsection{De~Bruijn indices}
+As introduced earlier, de~Bruijn indices (introduced in \cite{deBruijn}) is a technique to define a capture-avoiding substitution by working with expressions up to $\alpha$-equivalence.
+In the original work of de~Bruijn, the use of parallel substitutions is already present, as a way to simplify the presentation of the substitution operation and at the same time generalising it.
+This technique is often criticised for its unreadability and distance to the systems and results written in paper.
+
+The literature is vast on other alternatives for representing syntax with binders \cite[Section~2.3]{POPLmark}.
+Therefore, one can find a formalisation for the $\Lam$-calculus in these many flavours: nominal \cite{Vestergaard2001}, locally nameless \cite{McKinna1999} and HOAS \cite{Despeyroux1995}, to name a few.
+We chose to use de~Bruijn syntax in the proof assistant as, in our case, it was a way to avoid digressions over metatheory that is not central to our objectives.
+
+\subsection{\textit{Autosubst} library}
+The \textit{Autosubst} library \cite{AutosubstSchafer} was indeed a central choice along our work of formalisation using the \textit{Rocq Prover}.
+It is an accessible tool for the mechanisation of metatheory of general syntax with binders that relies on the use of parallel substitutions and $\sigma$-calculus theory in order to simplify and automatise the metatheory around substitution operations.
+Moreover, many of the operations provided for substitutions can work when using a general concept of typing systems with infinite contexts.
+
+Other well-known libraries/code generators for mechanising syntax with binders in the \textit{Rocq Prover} are \textit{GMeta} \cite{GMeta} (a code generator for generic representations), \textit{Dblib} \cite{Dblib} (a library for representations using de~Bruijn indices) and \textit{LNGen} \cite{LNGen} (a code generator for locally nameless representations).
+However, these libraries do not have support for expressions with many syntactical classes and have a higher cost of entrance (in our opinion) comparing with \textit{Autosubst}.
+
+Another code generator that should be highlighted is \textit{Autosubst2} \cite{Autosubst2}.
+Using the \textit{Autosubst} library seems an unusual choice, considering the existence of a code generator that appeared to fix many of its known problems, like not supporting many-sorted syntaxes.
+Adding to this, many use cases prove its effectiveness in the mechanisation of metatheory \cite{Forster2019,Dudenhefner2024,POPLmarkReloaded}.
+We can argue for the use of the less sophisticated \textit{Autosubst} library in two ways.
+First, we were able to achieve the desired support in the case of our systems thanks to the use of polymorphic lists.
+Second, in the case of our system with a non conventional substitution operation, we would have nothing generated by \textit{Autosubst2}, as this system has an unexpected behaviour.
+Using a library tool instead of a code generator allows us to use some working parts of the infrastructure and manually provide what is left.
+
+\subsection{Typing systems with infinite contexts}
+Related with the choice of using the \textit{Autosubst} library, we recall the use of infinite contexts, or contexts as functions mapping natural numbers to simple types.
+As already mentioned, this idea comes from the tutorial found in \cite{AutosubstManual}.
+However, these are not the contexts that we work with in our paper proofs, thus, one would require a formal proof to admit this use.
+We did not invest much on this and much like the case of de~Bruijn indices, we admit these facilities in order to invest our effort in the essential part of the metatheory.
+Using this definition for contexts makes our metatheory simpler and allows using the \textit{Autosubst} operations and tactics already defined for substitutions (as the type for contexts coincides with the type for substitutions over simple types).
+
+\subsection{What is a subsystem?}
+In contrast to some decisions mentioned that facilitated our work of formalisation, the rigorous presentation of the canonical subsystem of $\LamM$ was one of our major efforts.
+The task of mechanising a subsystem motivated us in this direction.
+In \cite[Chapter~3]{JCES2002}, system $\pmb{\lambda \mathcal{P}}$ is introduced as an isolated system that uses expressions from another system ($\pmb{\lambda \mathcal{P} h}$).
+
+We instead started by separating two different systems.
+First we defined what a subsystem of $\LamM$ was: a subset of expressions with a closed notion of reduction and derivable sequent.
+Then, we wanted a different (yet isomorphic) representation of this same subsystem, with its appropriate notion of substitution.
+Defining a reduction over this ``self-contained'' subsystem and proving the isomorphism with the induced notion of reduction for the subsystem was the last ingredient for our complete description of the (untyped) canonical subsystem of $\LamM$ (for the typing systems we equally prove an isomorphism between the typing relations).
+
+In terms of the mechanisation we found this useful, as we could work with a system with its own induction principles and many other dedicated definitions.
+The downside to this technique was the need to prove an isomorphism.
+Instead, we could have used the subset types from the \textit{Rocq Prover}, but as we have already argued, this would become tiring because of the constant necessity for proving a designated predicate.
+
+\begin{comment}
+In the mechanisation work found in \cite{AndrewAdams}, similar metatheory to ours is mechanised.
+\end{comment}
+% ---
 
 \section{Future work}
 
-% We did not focus in results of confluency that could easily be added
-In this dissertation, we did not focus so much on results such as the confluency of reduction in our systems.
-We suspect that these could easily be added with the help of the \textit{Autosubst} library (one can found a case study of confluence of reduction in \cite[Section~2.2]{AutosubstSchafer}).
+Lastly, we mention two directions that could be followed as a continuation of this dissertation.
 
+% organization of work? modularisation and lemmas architecture - software engineering with mathematics
+% We did not focus in results of confluency that could easily be added
+% In this dissertation, we did not focus so much on results such as the confluency of reduction in our systems.
+% We suspect that these could easily be added with the help of the \textit{Autosubst} library (one can found a case study of confluence of reduction in \cite[Section~2.2]{AutosubstSchafer}).
+
+A first direction would be to extend the metatheory considered in our exercise of formalisation.
+An initial approach could be to mechanise more metatheoretical results.
+Furthermore, we could extend our formalisation by enriching our systems with a more complex syntax (for example, system $\LamM$ is a subsystem of system $\pmb{\lambda J^m}$ from \cite{JCESLuis}).
+A distinct and possible new way of work would involve generalising our typing systems beyond simple types - for instance, by incorporating polymorphism or dependent types.
+
+A second and completely different direction would be to further explore the problems found in the mentioned libraries that aid the formalisation of syntax with binders.
+From our experience using the \textit{Autosubst} library, we could suggest solutions or improvements that would provide more automation in our use cases.
+
+\begin{comment}
 Furthermore,
 \begin{itemize}
 \item Could we have more automation?
@@ -55,12 +116,11 @@ Furthermore,
   % ... \item Many more mechanisations of metatheory?
 \end{itemize}
 
-\begin{comment}
 Mechanisations in relation with the formalisations on the paper.
 \begin{itemize}
 \item Some ideas for the metatheory formalised come from attempts of mechanisations.
 \item The metatheory mechanised does not correspond exactly to the formalised in the literature.
-  \subitem An example: the polymorphic definition for system  $\LamM$.
+  \subitem An example: the polymorphic definition for system $\LamM$.
 \end{itemize}
 
 Further work?
@@ -72,3 +132,8 @@ Further work?
 \item SSreflect style proofs for \textit{Rocq Prover}.
 \end{itemize}
 \end{comment}
+
+%%% Local Variables:
+%%% mode: LaTeX
+%%% TeX-master: "../dissertation"
+%%% End:

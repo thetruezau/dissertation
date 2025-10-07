@@ -5,8 +5,8 @@
 Looking at the title for this dissertation, we can explain what motivated the following dissertation by asking ourselves: ``Why mechanise?'', ``Why metatheory?'' and ``Why the multiary $\Lam$-calculus?''.
 
 Before addressing these questions formally, we could just say that mechanising mathematics is an enjoyable task.
-And for what matters, this could be all we say about our motivation.
-All I intend to say is that even if our work in mathematics had no application or direct consequences, the fun of doing it would be a good enough motivation.
+And that could be all we say about our motivation.
+Even if our work in mathematics had no application or direct consequences, the fun of mechanising it in a proof assistant would be a good enough motivation.
 Mechanising mathematics is like a computer game for a mathematician.
 
 \paragraph{Why mechanise?}
@@ -37,9 +37,9 @@ In the beginning of~\cite[Chapter~7.3]{CurryHoward}, one is confronted with a na
 This question has its starting point in the well-known Curry-Howard isomorphism, that relates natural deduction proofs with $\Lam$-terms with types, as said above.
 
 Many (naive) alternatives are given in the aforementioned book, but none that can match the process of cut-elimination with normalisation.
-In the novel paper of Herbelin~\cite{Herbelin1994}, a multiary version of the $\Lam$-calculus (with explicit substitutions) is introduced, whose typing rules correspond to a fragment of the sequent calculus and reduction rules behave as cut elimination.
+In the novel paper of Herbelin~\cite{Herbelin1994}, a multiary version of the $\Lam$-calculus (with explicit substitutions) called $\overline{\pmb \lambda}$ is introduced, whose typing rules correspond to a fragment of the sequent calculus and reduction rules behave as cut elimination.
 
-We are interested in a slightly simpler version of the multiary $\Lam$-calculus that excluded explicit substitutions~\cite{JCES2002, JCESLuis}, here named $\LamM$.
+We are interested in the study of a slightly different version of $\overline{\pmb \lambda}$ which has no explicit substitutions \cite{JCES2002, JCESLuis}, here named $\LamM$.
 Studying the computational meaning behind the sequent calculus is one of the main motivations for considering such systems, as they provide meaningful extensions for the ordinary $\Lam$-calculus.
 
 \section{Objectives and contributions}
@@ -53,33 +53,36 @@ The theoretical objectives for this dissertation are the study of:
 
 We say theoretical objectives because the complete objective is to mechanise in the \textit{Rocq Prover} each of the mentioned items.
 The practical (in the sense of the mechanisation task) objectives of this dissertation are first to understand the proof assistant in order to fully develop a mechanisation of the definitions and proofs that were studied using pen-and-paper.
-More concretely, we have the objective of understanding how one can use the \textit{Rocq Prover} to define systems that deal with variable binding, to define subsystems, to define typing rules, to prove isomorphisms and so on.
+Concretely, we have the objective of understanding how one can use the \textit{Rocq Prover} to define systems that deal with variable binding, to define subsystems, to define typing rules, to prove isomorphisms and so on.
 
 A last (and challenging) objective related to the mechanisation is to formalise every definition and proof as close as possible to the pen-and-paper versions, assuring clean and simple presentations.
 
-Our contributions of the mechanised metatheory mentioned above can be found online in an open-source \textit{GitHub} repository (\href{https://github.com/thetruezau/LambdaM}{https://github.com/thetruezau/LambdaM}).
+This dissertation presents a mechanised version of the system $\LamM$ and its associated metatheory - including an isomorphism of its subsystem with the simply typed $\Lam$-calculus and the conservativeness results - within the \textit{Rocq Prover}.
+We know of no other works formalising this metatheory.
+This formalised body of work provides a computer-verified and highly accessible foundation for future study and can be found in an open-source \textit{GitHub} repository \footnote{\href{https://github.com/thetruezau/LambdaM}{https://github.com/thetruezau/LambdaM}}.
 
 \section{Document structure}
 
-This dissertation is structured in six chapters.
+This dissertation is organised as follows:
 
 % include here a general diagram?
 
-The second chapter serves as an introduction to the ordinary $\Lam$-calculus, also containing a second style of $\Lam$-calculus presentation, without variable names (also called de~Bruijn representation).
+\paragraph{\cref{c:background}}
+serves as an introduction to the ordinary $\Lam$-calculus, also containing a second style of $\Lam$-calculus presentation, without variable names (also called de~Bruijn representation).
 This chapter also includes a mechanisation of this system as a way to introduce many proof-assistant concepts used in further chapters.
 
-The third chapter introduces the system $\LamM$ and its canonical subsystem, along with some simple results.
+\paragraph{\cref{c:multiary}} introduces the system $\LamM$ and its canonical subsystem, along with some simple results.
 It also includes a last chapter that provides a walk-through of the mechanised definitions and proofs.
 
-The fourth chapter independently introduces a new system called $\LamV$, that is isomorphic to the introduced canonical subsystem of $\LamM$.
+\paragraph{\cref{c:canonical}} independently introduces a new system called $\LamV$, that is isomorphic to the introduced canonical subsystem of $\LamM$.
 This system will help clarify the mechanisation of the result of conservativeness that can be found in this chapter.
 The last section also provides a mechanisation overview, similar to the previous chapter.
 
-The fifth chapter is only about the isomorphism between the ordinary $\Lam$-calculus and system $\LamV$.
+\paragraph{\cref{c:isomorphism}} is only about the isomorphism between the ordinary $\Lam$-calculus and system $\LamV$.
 
-A last chapter of conclusions lists our contributions, discusses our approaches and related work to then refer some possible future work.
+\paragraph{\cref{c:conclusions}} lists our contributions, discusses our approaches and related work and then points towards possible future work.
 
-% every chapter refers Rocq scripts that belong to the github repo
+Every \textit{Rocq Prover} module/script referred throughout this document may be found in the previously mentioned \textit{GitHub} repository.
 
 %%% Local Variables:
 %%% mode: LaTeX
