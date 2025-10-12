@@ -68,11 +68,11 @@ Now follows a ``strange'' definition for the substitution operation, which needs
 
 \begin{definition}[Reduction rules for $\LamV$-terms]  
   \begin{align*}
-    (\beta_1) & \qquad app_\lambda (x . t, u, []) \to t[x := u] \\
-    (\beta_2) & \qquad app_\lambda (x . t, u, v::l) \to t[x := u]@(v, l)
+    (\vec \beta_1) & \qquad app_\lambda (x . t, u, []) \to t[x := u] \\
+    (\vec \beta_2) & \qquad app_\lambda (x . t, u, v::l) \to t[x := u]@(v, l)
   \end{align*}
   % By abuse of notation, we introduce reduction rules with the notation of their compatible closure ($\to_R$).
-  As before, we look at the previous rules as binary relations on $\LamV$-terms and define a relation $\beta = \beta_1 \cup \beta_2$.
+  As before, we look at the previous rules as binary relations on $\LamV$-terms and define a relation $\vec \beta = \vec \beta_1 \cup \vec \beta_2$.
 \end{definition}
 
 % ---
@@ -173,10 +173,10 @@ Now, we make a small detour dedicated to compatible relations in the context of 
 
 % ---
 
-We now make some considerations about $\beta$-normal forms in this system.
+We now make some considerations about $\vec \beta$-normal forms in this system.
 
 \begin{definition}[$\beta$-normal form]
-  We say that a $\LamV$-term $t$ is in $\beta$-normal form when there exists no $\LamV$-term $t'$ such that \[ t \to_\beta t' . \]
+  We say that a $\LamV$-term $t$ is in $\vec \beta$-normal form when there exists no $\LamV$-term $t'$ such that \[ t \to_{\vec \beta} t' . \]
 \end{definition}
 
 \begin{definition}%[$\beta$-normal forms]
@@ -216,18 +216,18 @@ We now make some considerations about $\beta$-normal forms in this system.
 
   (i) $t \in \text{NT}$.
 
-  (ii) $t$ is in $\beta$-normal form.
+  (ii) $t$ is in $\vec \beta$-normal form.
 \end{claim}
 
 \begin{remark}
-  One could simply describe the $\beta$-normal forms of $\LamV$ as the terms and lists with no occurrences of the constructor $app_{\lambda}$.
+  One could simply describe the $\vec \beta$-normal forms of $\LamV$ as the terms and lists with no occurrences of the constructor $app_{\lambda}$.
   This description is similar to idea of cut-elimination from sequent calculus (where the normal forms are the expressions not using cuts) and is one of the motivations for working with such systems.
   % proof search
   This system offers thus an advantage in comparison to the $\Lam$-calculus, where a description of $\beta$-normal forms is more elaborated.
 \end{remark}
 
 We will not prove this claim here.
-However, we will come back to this claim in the next chapter to provide an alternative argument for the bijection between $\beta$-normal forms of $\Lam$-terms and $\LamV$-terms.
+However, we will come back to it in the next chapter, where we prove that our isomorphism preserves normal forms.
 
 We conclude the description of system $\LamV$ by presenting its typing system.
 
@@ -369,8 +369,6 @@ We have the following result that relates the two notions of substitution.
   \label{i_subst_pres}
   For every $\LamV$-term $t$,
   \[ i(t[x := u]) = h(i(t)[x := i(u)]) . \]
-  % and also, for every $\LamV$-term $u$ and $\LamV$-list $l$,
-  % \[ i'(l[x := u]) = h'(i'(l)[x := i(u)]). \]
 \end{lemma}
 \begin{proof}
   The proof proceeds by induction on the structure of the $\LamV$-term $t$.
@@ -382,8 +380,6 @@ We have the following result that relates the two notions of substitution.
   \label{p_subst_pres}
   For every $\LamM$-terms $t$,
   \[ p(t[x := u]) = p(t)[x := p(u)]. \]
-  % and also, for every $\LamM$-term $u$ and $\LamM$-list $l$,
-  % \[ p'(l[x := u]) = p'(l)[x := p(u)]. \]
 \end{lemma}
 \begin{proof}
   The proof proceeds easily by induction on the structure of the $\LamM$-term $t$.
@@ -438,14 +434,12 @@ The following technical lemma says that we can derive the compatibilty rules of 
 \begin{theorem}
   \label{i_step_pres}
   For every $\LamV$-terms $t, t'$,
-  \[ t \to_{\beta} t' \implies i(t) \ ({\to_{\beta}})_c \ i(t') . \]
-  % and also, for every $\LamV$-lists $l, l'$,
-  % \[ l \to_{\beta} l' \implies i'(l) \ ({\to_{\beta}})_c \ i(l'). \]
+  \[ t \to_{\vec \beta} t' \implies i(t) \ ({\to_{\beta}})_c \ i(t') . \]
 \end{theorem}
 \begin{proof}
-  The proof proceeds by induction on the relation $\to_{\beta}$ of $\LamV$-expressions.
+  The proof proceeds by induction on the relation $\to_{\vec \beta}$ of $\LamV$-expressions.
   
-  \cref{i_subst_pres} deals with substitution preservation in the $\beta$-reduction cases.
+  \cref{i_subst_pres} deals with substitution preservation in the $\vec \beta$-reduction cases.
 
   \cref{step_can_is_compatible} deals with all the compatibility cases.
 \end{proof}
@@ -453,9 +447,7 @@ The following technical lemma says that we can derive the compatibilty rules of 
 \begin{theorem}
   \label{p_step_pres}
   For every $t, t' \in Can$,
-  \[ t \ ({\to_{\beta}})_c \ t' \implies p(t) \to_{\beta} p(t'). \]
-  % and also, for every $l, l' \in CanList$,
-  % \[ l \ ({\to_{\beta}})_c \ l' \implies p'(l) \to_{\beta} p(l'). \]
+  \[ t \ ({\to_{\beta}})_c \ t' \implies p(t) \to_{\vec \beta} p(t'). \]
 \end{theorem}
 \begin{proof}
   The proof starts by inverting our hypothesis $t \ ({\to_{\beta}})_c \ t'$.
@@ -472,8 +464,8 @@ Summarising the previous results, we state the following corollary.
 \begin{corollary}[Isomorphism of reduction] \hfill
   
   \begin{enumerate}
-  \item $t \to_{\beta} t'$ in $\LamV$ $\iff$ $i(t) \ ({\to_{\beta}})_c \ i(t')$ in $Can$
-  \item $t \ ({\to_{\beta}})_c \ t'$ in $Can$ $\iff$ $p(t) \to_{\beta} p(t')$ in $\LamV$
+  \item $t \to_{\vec \beta} t'$ in $\LamV$ $\iff$ $i(t) \ ({\to_{\beta}})_c \ i(t')$ in $Can$
+  \item $t \ ({\to_{\beta}})_c \ t'$ in $Can$ $\iff$ $p(t) \to_{\vec \beta} p(t')$ in $\LamV$
   \end{enumerate}
 \end{corollary}
 \begin{proof}
@@ -568,6 +560,7 @@ From now on, we will use the self contained representation, system $\LamV$, to t
 \section{Conservativeness}
 
 The result of conservativeness establishes the connection between reduction in $\LamV$ and in $\LamM$.
+
 We start by proving a auxiliary result that connects the @ operation with list append.
 
 \begin{lemma}
@@ -583,7 +576,7 @@ We start by proving a auxiliary result that connects the @ operation with list a
   \label{conservativeness}
   For every $\LamV$-terms $t$ and $t'$, we have:
   \[
-    t \twoheadrightarrow_\beta t' \iff
+    t \twoheadrightarrow_{\vec \beta} t' \iff
     i(t) \twoheadrightarrow_{\beta h} i(t').
   \]
 \end{theorem}
@@ -591,9 +584,9 @@ We start by proving a auxiliary result that connects the @ operation with list a
   $\boxed \implies~$
   Let $t$ and $t'$ be $\LamV$-terms.
 
-  For this implication it suffices to mimic $\beta$ steps of the system $\LamV$ in the system $\LamM$.
+  For this implication it suffices to mimic $\vec \beta$-reduction steps of the system $\LamV$ in the system $\LamM$.
 
-  Case $t \to_{\beta_1} t'$:
+  Case $t \to_{\vec \beta_1} t'$:
   % https://q.uiver.app/#q=WzAsMTIsWzAsMiwiYXBwX3tcXGxhbWJkYX0oeC50LCB1LCBbXSkiXSxbMCw0LCJ0W3g6PXVdIl0sWzEsMSwiKFxcbGFtYmRhIHguIGkodCkpKGkodSksIGknKGwpKSJdLFsxLDUsImkodFt4Oj11XSkiXSxbMSwyLCJpKHQpW3ggOj0gaSh1KV0iXSxbMSw0LCJoKGkodClbeDo9aSh1KV0pIl0sWzAsMCwiKFxcdGV4dHtpbn0gXFwgXFx2ZWMgXFxsYW1iZGEpIl0sWzEsMCwiKFxcdGV4dHtpbn0gXFwgXFxsYW1iZGEgbSkiXSxbMCwzXSxbMiwzXSxbMiw0XSxbMiw1XSxbMCwyLCJpIiwxXSxbMSwzLCJpIiwxXSxbMiw0LCJfe1xcYmV0YV8xfSIsMl0sWzUsMywiIiwyLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNCw1LCJfaCIsMix7InN0eWxlIjp7ImhlYWQiOnsibmFtZSI6ImVwaSJ9fX1dLFswLDEsIl97XFxiZXRhXzF9IiwyXSxbOSwxMCwibGVtbWEiLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMTAsMTEsImxlbW1hIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d
   \[\begin{tikzcd}
 	{(\text{in} \ \LamV)} & {(\text{in} \ \LamM)} \\
@@ -604,7 +597,7 @@ We start by proving a auxiliary result that connects the @ operation with list a
 	& {i(t[x:=u])} & {}
 	\arrow["{_{\beta_1}}"', from=2-2, to=3-2]
 	\arrow["i"{description}, maps to, from=3-1, to=2-2]
-	\arrow["{_{\beta_1}}"', from=3-1, to=5-1]
+	\arrow["{_{\vec \beta_1}}"', from=3-1, to=5-1]
 	\arrow["{_h}"', two heads, from=3-2, to=5-2]
 	\arrow["\text{\cref{h_is_multistep}}"{description}, draw=none, from=4-3, to=5-3]
 	\arrow["i"{description}, maps to, from=5-1, to=6-2]
@@ -612,7 +605,7 @@ We start by proving a auxiliary result that connects the @ operation with list a
 	\arrow["\text{\cref{i_subst_pres}}"{description}, draw=none, from=5-3, to=6-3]
       \end{tikzcd}\]
   
-  Case $t \to_{\beta_2} t'$:
+  Case $t \to_{\vec \beta_2} t'$:
   % https://q.uiver.app/#q=WzAsMTUsWzEsMiwiKGkodClbeCA6PSBpKHUpXSkoaSh2KSwgaScobCkpIl0sWzAsMCwiXFxzbWFsbHsoXFx0ZXh0e2lufSBcXCBcXHZlYyBcXGxhbWJkYSl9Il0sWzEsMCwiXFxzbWFsbHsoXFx0ZXh0e2lufSBcXCBcXGxhbWJkYSBtKX0iXSxbMSwxLCIoXFxsYW1iZGEgeC4gaSh0KSkoaSh1KSwgaSh2KTo6aScobCkpIl0sWzEsMywiaChpKHQpW3ggOj0gaSh1KV0pKGkodiksIGknKGwpKSJdLFsxLDYsImkodFt4Oj11XUAodixsKSkiXSxbMSw1LCJhcHAoaSh0W3g6PXVdKSwgaSh2KSwgaScobCkpIl0sWzEsNCwiKGkodFt4IDo9IHVdKShpKHYpLCBpJyhsKSkiXSxbMCwyLCJhcHBfe1xcbGFtYmRhfSh4LnQsIHUsIHY6OmwpIl0sWzAsNSwidFt4Oj11XUAodiwgbCkiXSxbMiw1XSxbMiw0XSxbMiwzXSxbMiwyXSxbMiw2XSxbMywwLCJfe1xcYmV0YV8yfSJdLFswLDQsIl9oIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoiZXBpIn19fV0sWzQsNywiIiwwLHsic2hvcnRlbiI6eyJzb3VyY2UiOjMwLCJ0YXJnZXQiOjMwfSwibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbNiw1LCIiLDEseyJzaG9ydGVuIjp7InNvdXJjZSI6MzAsInRhcmdldCI6MzB9LCJsZXZlbCI6Miwic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFs3LDYsIl9oIiwwLHsic3R5bGUiOnsiaGVhZCI6eyJuYW1lIjoiZXBpIn19fV0sWzgsMywiaSIsMV0sWzksNSwiaSIsMV0sWzgsOSwiX3tcXGJldGFfMn0iXSxbMTEsMTAsImxlbW1hIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEyLDExLCJsZW1tYSBcXCBpc3Vic3RwcmVzIiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzEzLDEyLCJsZW1tYSIsMSx7InN0eWxlIjp7ImJvZHkiOnsibmFtZSI6Im5vbmUifSwiaGVhZCI6eyJuYW1lIjoibm9uZSJ9fX1dLFsxMCwxNCwibGVtbWEgXFwgaWFwcGNvbW0iLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=
   \[\begin{tikzcd}
 	{\small{(\text{in} \ \LamV)}} & {\small{(\text{in} \ \LamM)}} \\
@@ -624,7 +617,7 @@ We start by proving a auxiliary result that connects the @ operation with list a
 	& {i(t[x:=u]@(v,l))} & {}
 	\arrow["{_{\beta_2}}", from=2-2, to=3-2]
 	\arrow["i"{description}, maps to, from=3-1, to=2-2]
-	\arrow["{_{\beta_2}}", from=3-1, to=6-1]
+	\arrow["{_{\vec \beta_2}}", from=3-1, to=6-1]
 	\arrow["{_h}", two heads, from=3-2, to=4-2]
 	\arrow["\text{\cref{h_is_multistep}}"{description}, draw=none, from=3-3, to=4-3]
 	\arrow[equals, from=4-2, to=5-2]
@@ -639,7 +632,7 @@ We start by proving a auxiliary result that connects the @ operation with list a
     $\boxed \Longleftarrow$
     Let $t$ and $t'$ be $\LamM$-terms.    
     
-  For this implication, we first show how a reduction $t \to_{\beta h} t'$ in $\LamM$ is directly translated into a reduction $p(t) \to_{\beta} p(t')$ in $\LamV$. 
+  For this implication, we first show how a reduction $t \to_{\beta h} t'$ in $\LamM$ is directly translated into a reduction $p(t) \to_{\vec \beta} p(t')$ in $\LamV$. 
   
   Case $t \to_{\beta_1} t'$:
   % https://q.uiver.app/#q=WzAsMTAsWzAsMiwiKFxcbGFtYmRhIHgudCkodSwgW10pIl0sWzAsMywidFt4Oj11XSJdLFsxLDIsImFwcF97XFxsYW1iZGF9ICh4LnAodCksIHAodSksIFtdKSJdLFsxLDMsInAodClbeDo9cCh1KV0iXSxbMSw0LCJwKHRbeDo9dV0pIl0sWzEsMSwiKFxcbGFtYmRhIHgucCh0KSlAKHAodSksIFtdKSJdLFswLDAsIihcXHRleHR7aW59IFxcIFxcTGFtTSkiXSxbMSwwLCIoXFx0ZXh0e2lufSBcXCBcXExhbVYpIl0sWzIsM10sWzIsNF0sWzAsMSwiX3tcXGJldGFfMX0iXSxbMiwzLCJfe1xcYmV0YV8xfSJdLFszLDQsIiIsMix7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzAsNSwicCIsMV0sWzUsMiwiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSw0LCJwIiwxXSxbOCw5LCJcXHRleHR7XFxjcmVme3Bfc3Vic3RfcHJlc319IiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d
@@ -653,7 +646,7 @@ We start by proving a auxiliary result that connects the @ operation with list a
         \arrow["{\text{Def. of @}}"{description}, draw=none, from=2-3, to=3-3]
 	\arrow["p"{description}, maps to, from=3-1, to=2-2]
 	\arrow["{_{\beta_1}}", from=3-1, to=4-1]
-	\arrow["{_{\beta_1}}", from=3-2, to=4-2]
+	\arrow["{_{\vec \beta_1}}", from=3-2, to=4-2]
 	\arrow["p"{description}, maps to, from=4-1, to=5-2]
 	\arrow[equals, from=4-2, to=5-2]
 	\arrow["{\text{\cref{p_subst_pres}}}"{description}, draw=none, from=4-3, to=5-3]
@@ -671,7 +664,7 @@ We start by proving a auxiliary result that connects the @ operation with list a
         \arrow["{\text{Def. of @}}"{description}, draw=none, from=2-3, to=3-3]
 	\arrow["p"{description}, maps to, from=3-1, to=2-2]
 	\arrow["{_{\beta_2}}", from=3-1, to=4-1]
-	\arrow["{_{\beta_2}}", from=3-2, to=4-2]
+	\arrow["{_{\vec \beta_2}}", from=3-2, to=4-2]
 	\arrow["p"{description}, maps to, from=4-1, to=5-2]
 	\arrow[equals, from=4-2, to=5-2]
 	\arrow["{\text{\cref{p_subst_pres}}}"{description}, draw=none, from=4-3, to=5-3]
@@ -692,9 +685,9 @@ We start by proving a auxiliary result that connects the @ operation with list a
 
     % From these cases, we proved that:
     From the shown base cases, an easy induction on the relation $\to_{\beta h}$ proves for every $\LamM$-terms $t, t'$:
-    \[ t \twoheadrightarrow_{\beta h} t' \implies p(t) \twoheadrightarrow_{\beta} p(t'). \]
+    \[ t \twoheadrightarrow_{\beta h} t' \implies p(t) \twoheadrightarrow_{\vec \beta} p(t'). \]
     Thus, for every $\LamV$-terms $u, u'$, 
-    \[ i(u) \twoheadrightarrow_{\beta h} i(u') \implies p(i(u)) = u \twoheadrightarrow_{\beta} p(i(u')) = u'. \]
+    \[ i(u) \twoheadrightarrow_{\beta h} i(u') \implies p(i(u)) = u \twoheadrightarrow_{\vec \beta} p(i(u')) = u'. \]
   \end{proof}
 
 As an immediate application of the conservativeness result just proved, we can derive subject reduction for $\LamV$ from $\LamM$ (already proved as \cref{type_preservation}).
@@ -702,7 +695,7 @@ As an immediate application of the conservativeness result just proved, we can d
 \begin{corollary}[Subject Reduction for $\LamV$]
   Given $\LamV$-terms $t$ and $t'$, the follwing holds:
   \[
-    \Gamma \vdash t : A \ \land \ t \to_{\beta} t' \implies \Gamma \vdash t' : A.
+    \Gamma \vdash t : A \ \land \ t \to_{\vec \beta} t' \implies \Gamma \vdash t' : A.
   \]
 \end{corollary}
 \begin{proof}
@@ -715,7 +708,7 @@ As an immediate application of the conservativeness result just proved, we can d
       \infer[dashed]0[\cref{h_is_multistep}]{ t_0 \twoheadrightarrow_{h} h(t_0) }
       \infer[dashed]1[$\twoheadrightarrow_{h} \subset \twoheadrightarrow_{\beta h}$]{ t_0 \twoheadrightarrow_{\beta h} h(t_0) }
       \infer[dashed,left label=\cref{type_preservation2}]2{ \Gamma \vdash i(t):A }
-      \hypo{ t \to_{\beta} t' }
+      \hypo{ t \to_{\vec \beta} t' }
       \infer[dashed]1[\cref{conservativeness}]{ i(t) \twoheadrightarrow_{\beta h} i(t') }
       \infer[dashed]2[\cref{type_preservation2}]{ \Gamma \vdash i(t'):A }
       \infer1[\cref{canonical_typing}]{ \Gamma \vdash_c h(i(t')):A }
@@ -729,7 +722,8 @@ As an immediate application of the conservativeness result just proved, we can d
 As another consequence of conservativeness, confluence of $\LamV$ can be lifted to $\LamM$.
 
 \begin{corollary}[Confluence lift]
-  If $\twoheadrightarrow_\beta$ is confluent in $\LamV$, then $\twoheadrightarrow_{\beta h}$ is confluent in $\LamM$. 
+  \label{confluence_lift}
+  If $\twoheadrightarrow_{\vec \beta}$ is confluent in $\LamV$, then $\twoheadrightarrow_{\beta h}$ is confluent in $\LamM$. 
 \end{corollary}
 \begin{proof}
   Given $\LamM$-terms $t, t_1, t_2$, we have the following:
@@ -747,8 +741,8 @@ As another consequence of conservativeness, confluence of $\LamV$ can be lifted 
   \[
     % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQ0AKHAShAF9S6TLnyEU5UsWp0mrdlxwB9Yn0HDseAkQBMUmQxZtEHbkp1qhHEVvElSOg3OMgAOq5gAPLHBxwABO7+OADkAjIwUADm8ESgAGYAThAAtkiSIDgQSADMNIbyiGDMjIw0jPQARjCMAAo2YuyMMPE4IOVYYC5Q9HAAFpECVkmp6TRZSGSyRkjFpeVVNfWajSbNre0gA-RQ7DgA7hDbUAjqICNpiBkTiHrThXNlIBXVdQ3aay1tNMd7h8enYbJS5TG55e7GR4LV7LUQfZ5fTa-EwHI4wHaAhLApB3MH5ZyzEpPF5Ld7iBEbH7o3Yo-7U06UfhAA
     \begin{tikzcd}
-      & p(t) \arrow[dd, dashed, "\beta"] \arrow[ld, two heads, "\beta"] \arrow[rd, two heads, "\beta"] & \\
-      p(t_1) \arrow[rd, two heads, "\beta"] && p(t_2) \arrow[ld, two heads, "\beta"] \\
+      & p(t) \arrow[dd, dashed, "\vec \beta"] \arrow[ld, two heads, "\vec \beta"] \arrow[rd, two heads, "\vec \beta"] & \\
+      p(t_1) \arrow[rd, two heads, "\vec \beta"] && p(t_2) \arrow[ld, two heads, "\vec \beta"] \\
       & \exists \ t' &                             
     \end{tikzcd}
   \]

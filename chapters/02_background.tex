@@ -139,17 +139,6 @@ At last, we introduce some standard notions related to the $\beta$-reduction.
   \end{align*}
 \end{notation}
 
-\begin{comment}
-\begin{definition}[$\alpha$-equivalence]
-  Consider the following binary relation on $\Lam$-terms:  
-  \[
-    \alpha = \{ (\lambda x . M, \lambda y . M[x := y]) \
-                | \ \text{for every $\Lam$-term $M$ and variable $y$ not occurring in $M$} \}.
-  \]  
-  We call $\alpha$-equivalence to the equivalence relation $=_\alpha$.
-\end{definition}
-\end{comment}
-
 \begin{definition}[$\beta$-reduction]
   \label{beta-reduction}
   Consider the following binary relation on $\Lam$-terms:  
@@ -162,11 +151,24 @@ At last, we introduce some standard notions related to the $\beta$-reduction.
 
 % ---
 
+A classical result about the $\beta$-reduction is the confluence of $\twoheadrightarrow_\beta$ (also called Church-Rosser theorem).
+Many proofs of this result can be found, either in print \cite{Barendregt1987, CurryHoward} or in a proof assistant \cite{Copello2017}.
+We leave it here as a claim because we are only interested in deriving the confluence of other systems from this one.
+In \cref{c:isomorphism}, from proving an isomorphism with the $\Lam$-calculus, we prove the confluence of another system using this claim.
+
+\begin{claim}[Confluence]
+  \label{confluence}
+  The relation $\twoheadrightarrow_{\beta}$ is confluent. 
+\end{claim}
+
+% ---
+
+Finally, a brief introduction of $\beta$-normal forms is given.
+
 \begin{definition}[$\beta$-normal form]
   We say that a $\Lam$-term $t$ is in $\beta$-normal form (or irreducible by $\to_\beta$) when there exists no $\Lam$-term $t'$ such that
   \[ t \to_\beta t' . \]
 \end{definition}
-
 
 \begin{definition}% [$\beta$-normal forms]
   \label{beta_nfs}
@@ -204,8 +206,8 @@ At last, we introduce some standard notions related to the $\beta$-reduction.
   (ii) $M$ is in $\beta$-normal form.
 \end{claim}
 
-We leave this claim here, but we will show the mechanised proof for $\boxed{\text{(i)} \Rightarrow \text{(ii)}}$ in the last section of this chapter.
-The proof for $\boxed{\text{(ii)} \Rightarrow \text{(i)}}$ is also mechanised in the script repository of our development.
+We also leave this claim here, but we will show the mechanised proof for $\boxed{\text{(i)} \Rightarrow \text{(ii)}}$ in the last section of this chapter.
+The proof for $\boxed{\text{(ii)} \Rightarrow \text{(i)}}$ can be found in the script repository of our development.
 
 % --- 
 

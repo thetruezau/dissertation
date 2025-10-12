@@ -3,7 +3,7 @@
 
 In~\cref{c:background}, the simply typed $\Lam$-calculus was introduced.
 Now, we show an isomorphism between the system $\LamV$ introduced in the previous chapter and the simply typed $\Lam$-calculus.
-This isomorphism will come at the level of terms, reduction, $\beta$-normal forms and typing rules.
+This isomorphism will come at the level of terms, reduction, normal forms and typing rules.
 
 This isomorphism is of great interest as $\LamV$ typing rules resemble a sequent calculus style.
 In this sense, the isomorphism studided in this chapter establishes a correspondence between natural deduction system (the simply typed $\Lam$-calculus) and a fragment of sequent calculus (the system $\LamV$).
@@ -13,17 +13,16 @@ The chapter is inspired in the works~\cite{LuisDychkoff} and~\cite[Chapter~4]{JC
 \[\begin{tikzcd}
     {\boxed\lambda} && {\boxed{\vec \lambda}} \\
     \\
-    {\boxed{\text{NF}}} && {\boxed{\text{NT}}}
+    {\boxed{\beta-nfs}} && {\boxed{\vec \beta-nfs}}
     \arrow["\psi"{description}, shift left=2, from=1-1, to=1-3]
     \arrow["{\downarrow_\beta}"{description}, from=1-1, to=3-1]
     \arrow["\theta"{description}, shift left=2, from=1-3, to=1-1]
-    \arrow["{\downarrow_{\beta}}"{description}, from=1-3, to=3-3]
-    \arrow["\cong"{description}, <->, from=3-1, to=3-3]
+    \arrow["{\downarrow_{\vec \beta}}"{description}, from=1-3, to=3-3]
+    \arrow[<->, from=3-1, to=3-3]
   \end{tikzcd}\]
 
-% The $\vec \beta$ refers to the $\beta$-reduction steps in system $\LamV$ and is used in the diagram to create a clear distinction.
 In this diagram: the horizontal arrows symbolize the inverse maps underlying the isomorphism; the down arrows symbolize (partial) maps associating expressions to the respective beta-normal form (when existing).
-Also recall the sets NF$\subset \Lam$-terms and NT$\subset \LamV$-terms of the respective $\beta$-normal forms.
+% Also recall the sets NF$\subset \Lam$-terms and NT$\subset \LamV$-terms of the respective $\beta$-normal forms.
 
 \section{Mappings $\theta$ and $\psi$}
 
@@ -100,7 +99,7 @@ Now, we will establish that $\theta$ and $\psi$ are indeed inverse maps, and thu
 
 \subsection{Isomorphism at the level of reduction}
 
-Now we turn our attention to reduction, showing that the reduction relations $\to_\beta$ of $\Lam$-calculus and $\LamV$ are isomorphic.
+Now we turn our attention to reduction, showing that the reduction relations $\to_\beta$ of $\Lam$-calculus and $\to_{\vec \beta}$ of $\LamV$ are isomorphic.
 
 First, introduce some lemmata, in order to relate the mappings $\theta'$ and $\psi'$ with the @ operation and list append.
 
@@ -160,23 +159,23 @@ Now, we are essentially ready to obtain the isomorphism at the level of reductio
 \begin{theorem}[Preservation of reduction by $\theta$]
   \label{theta_step_pres}
   For every $\LamV$-terms $t, t'$,
-  \[ t \to_{\beta} t' \implies \theta(t) \to_{\beta} \theta(t') \]
+  \[ t \to_{\vec \beta} t' \implies \theta(t) \to_{\beta} \theta(t') \]
   and also, for every $\Lam$-term $M$ and $\LamV$-lists $l, l'$,
-  \[ l \to_{\beta} l' \implies \theta'(M, l) \to_{\beta} \theta(M, l'). \]
+  \[ l \to_{\vec \beta} l' \implies \theta'(M, l) \to_{\beta} \theta(M, l'). \]
 \end{theorem}
 \begin{proof}
   The proof proceeds by simultaneous induction on the structure of the step relation on $\LamV$-expressions.
 
   \cref{theta_app_lemma} is useful for the cases of compatibility steps.
 
-  \cref{theta_subst_lemma} is crucial for cases dealing with $\beta$ steps.
+  \cref{theta_subst_lemma} is crucial for cases dealing with $\vec \beta$ steps.
 \end{proof}
 
 
 \begin{theorem}[Preservation of reduction by $\psi'$]
   \label{psi_step_pres}
   For every $\Lam$-terms $M, N$ and $\LamV$-list $l$,
-  \[ M \to_{\beta} N \implies \psi'(M, l) \to_{\beta} \psi'(N, l). \]
+  \[ M \to_{\beta} N \implies \psi'(M, l) \to_{\vec \beta} \psi'(N, l). \]
 \end{theorem}
 \begin{proof}
   The proof proceeds by induction on the structure of the step relation on $\Lam$-terms.
@@ -189,37 +188,52 @@ Of course that the preservation of reduction by map $\psi$ follows trivially by 
 Summarising our isomorphism at the level of reduction, we state the following corollary.
 
 \begin{corollary}[Isomorphism of reduction] \hfill
-  
+  \label{reduction_isomorphism}
   \begin{enumerate}
-  \item $t \to_{\beta} t' \text{ in } \LamV \iff \theta(t) \to_{\beta} \theta(t') \text{ in } \Lam$
-  \item $M \to_{\beta} N \text{ in } \Lam \iff \psi(M) \to_{\beta} \psi(N) \text{ in } \LamV$
+  \item $t \to_{\vec \beta} t' \text{ in } \LamV \iff \theta(t) \to_{\beta} \theta(t') \text{ in } \Lam$
+  \item $M \to_{\beta} N \text{ in } \Lam \iff \psi(M) \to_{\vec \beta} \psi(N) \text{ in } \LamV$
   \end{enumerate}
 \end{corollary}
 \begin{proof}
   Immediate by \cref{theta_psi_inversion,psi_theta_inversion,theta_step_pres,psi_step_pres}.
 \end{proof}
 
+As a direct consequence of this isomorphism we get the two following results.
+
+\begin{corollary}[Confluence of $\LamV$]
+  \label{can_confluence}
+  The relation $\twoheadrightarrow_{\vec \beta}$ is confluent in $\LamV$. 
+\end{corollary}
+\begin{proof}
+  Immediate from \cref{confluence,reduction_isomorphism}.
+\end{proof}
+
+\begin{corollary}[Confluence of $\LamM$]
+  The relation $\twoheadrightarrow_{\beta h}$ is confluent in $\LamM$. 
+\end{corollary}
+\begin{proof}
+  Immediate from \cref{confluence_lift,can_confluence}.
+\end{proof}
+
 % ---
 
-\subsection{Isomorphism at the level of $\beta$-normal forms}
+\subsection{Preservation of normal forms}
 
-Now, we will argue that the bijection between $\Lam$-terms and $\LamV$-terms still holds when we restrict to $\beta$-normal forms.
+Now, we will argue that the bijection between $\Lam$-terms and $\LamV$-terms still holds when we restrict to normal forms.
 For this, is convenient to recall both~\cref{beta_nfs} and~\cref{beta_nfs_can}.
-% Here, a direct proof for the preservation of normal forms is given.
-% However, we also give a hint on how this could be proved using~\cref{beta_nfs_claim,beta_nfs_can_claim}.
 
-\begin{theorem}[$\theta$ preserves $\beta$-nfs]
+\begin{theorem}[$\theta$ preserves $\vec \beta$-nfs]
   \label{theta_nfs_pres}
   \[ t \in \text{NT} \implies \theta(t) \in \text{NF} \]
 \end{theorem}
 \begin{proof}
-  Given $t \in$ NT, by~\cref{beta_nfs_can_claim}, there exists no $t'$ such that $t \to_\beta t'$ (or $t$ is a $\beta$-nf).
+  Given $t \in$ NT, by~\cref{beta_nfs_can_claim}, there exists no $t'$ such that $t \to_{\vec \beta} t'$ (or $t$ is a $\beta$-nf).
 
   Now let us prove that $\theta(t)$ is a $\beta$-nf.
 
   Suppose there exists a $\Lam$-term $N$ such that $\theta(t) \to_\beta N$.
-  From~\cref{psi_step_pres}, it is also true that $\psi(\theta(t)) \to_\beta \psi(N)$.
-  And, using~\cref{psi_theta_inversion}, we may rewrite $\psi(\theta(t))$ as $t$, obtaining a contradiction as $t \to_\beta \psi(N)$ while $t$ is a $\beta$-nf.
+  From~\cref{psi_step_pres}, it is also true that $\psi(\theta(t)) \to_{\vec \beta} \psi(N)$.
+  And, using~\cref{psi_theta_inversion}, we may rewrite $\psi(\theta(t))$ as $t$, obtaining a contradiction, since $t \to_{\vec \beta} \psi(N)$ while $t$ is a $\vec \beta$-nf.
 
   Therefore, such $N$ cannot exist and $\theta(t)$ is a $\beta$-nf (consequently, from~\cref{beta_nfs_claim}, $\theta(t) \in \text{NF})$.
 \end{proof}
@@ -241,7 +255,6 @@ We can prove an analogous result for $\psi$.
 Finally, we complete the proof of our isomorphism by showing a 1-1 correspondence between typed terms of the simply typed $\Lam$-calculus and system $\LamV$.
 
 \begin{theorem}[$\theta$ admissibility]
-  % \label{some_theorem_name}
   The following rules hold:
   \[ \begin{prooftree}
       \hypo{ \Gamma \vdash t : A }
@@ -259,7 +272,6 @@ Finally, we complete the proof of our isomorphism by showing a 1-1 correspondenc
 \end{proof}
 
 \begin{theorem}[$\psi'$ admissibility]
-  % \label{theorem12}
   The following rule holds:
   \[ \begin{prooftree}
       \hypo{ \Gamma \vdash M : A }
@@ -270,6 +282,13 @@ Finally, we complete the proof of our isomorphism by showing a 1-1 correspondenc
 \begin{proof}
   The proof proceeds easily by induction on the structure of the typing derivations in the simply typed $\Lam$-calculus.
 \end{proof}
+
+Again, from the previous theorem, the following rule is derivable for map $\psi$.
+\[ \begin{prooftree}
+    \hypo{ \Gamma \vdash M : A }
+    \hypo{ \Gamma ; A \vdash [] : A }
+    \infer2{ \Gamma \vdash \psi(M) : A }.
+  \end{prooftree} \]
 
 % ---
 
