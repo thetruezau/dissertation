@@ -255,6 +255,7 @@ We can prove an analogous result for $\psi$.
 Finally, we complete the proof of our isomorphism by showing a 1-1 correspondence between typed terms of the simply typed $\Lam$-calculus and system $\LamV$.
 
 \begin{theorem}[$\theta$ admissibility]
+  \label{theta_admiss}
   The following rules hold:
   \[ \begin{prooftree}
       \hypo{ \Gamma \vdash t : A }
@@ -272,6 +273,7 @@ Finally, we complete the proof of our isomorphism by showing a 1-1 correspondenc
 \end{proof}
 
 \begin{theorem}[$\psi'$ admissibility]
+  \label{psi'_admiss}
   The following rule holds:
   \[ \begin{prooftree}
       \hypo{ \Gamma \vdash M : A }
@@ -290,6 +292,31 @@ Again, from the previous theorem, the following rule is derivable for map $\psi$
     \infer2{ \Gamma \vdash \psi(M) : A }.
   \end{prooftree} \]
 
+Using the previous theorems, we state our isomorphism at the level of typed terms with the following result.
+
+\begin{corollary}[Isomorphism between typed terms] \hfill
+  \label{typing_isomorphism}
+  \begin{enumerate}
+  \item $\Gamma \vdash t:A \text{ in } \LamV \iff \Gamma \vdash \theta(t):A  \text{ in } \Lam$
+  \item $\Gamma \vdash M:A \text{ in } \Lam \iff \Gamma \vdash \psi(M):A \text{ in } \LamV$
+  \end{enumerate}
+\end{corollary}
+\begin{proof}
+  Immediate by \cref{theta_psi_inversion,psi_theta_inversion,theta_admiss,psi'_admiss}.
+\end{proof}
+
+Interestingly, the isomorphism between typed terms provides us with a proof for the subject reduction of the simply typed $\Lam$-calculus.
+
+\begin{corollary}[Subject Reduction for $\Lam$]
+  Given $\Lam$-terms $M$ and $N$, the follwing holds:
+  \[
+    \Gamma \vdash M:A \ \land \ M \to_{\beta} N \implies \Gamma \vdash N:A.
+  \]
+\end{corollary}
+\begin{proof}
+  Immediate by \cref{typing_isomorphism,can_subject_reduction}.
+\end{proof}
+  
 % ---
 
 \section{Mechanisation in \textit{Rocq}}

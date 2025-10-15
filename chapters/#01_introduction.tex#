@@ -101,7 +101,7 @@ A last section provides a walk-through of the mechanised definitions and proofs.
 Using this system, we will state the theorem of conservativeness.
 The $\vec \beta$-normal forms ($\vec \beta$-nfs) in this system are also introduced.
 A last section includes an outline of the mechanisation.
-
+ 
 \paragraph{\Cref{c:isomorphism}} is about the isomorphism between the simply typed $\Lam$-calculus and system $\LamV$.
 Using this isomorphism, we will derive the confluence for $\LamV$ and $\LamM$.
 

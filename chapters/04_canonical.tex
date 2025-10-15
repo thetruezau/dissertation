@@ -692,7 +692,8 @@ We start by proving a auxiliary result that connects the @ operation with list a
 
 As an immediate application of the conservativeness result just proved, we can derive subject reduction for $\LamV$ from $\LamM$ (already proved as \cref{type_preservation}).
 
-\begin{corollary}[Subject Reduction for $\LamV$]
+\begin{corollary}[Subject reduction for $\LamV$]
+  \label{can_subject_reduction}
   Given $\LamV$-terms $t$ and $t'$, the follwing holds:
   \[
     \Gamma \vdash t : A \ \land \ t \to_{\vec \beta} t' \implies \Gamma \vdash t' : A.
