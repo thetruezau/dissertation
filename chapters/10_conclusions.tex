@@ -1,7 +1,7 @@
 \chapter{Conclusions}
 \label{c:conclusions}
 
-In this chapter, we describe our contributions and then discuss possible directions for future work.
+In this chapter, we describe our contributions, provide some discussion over our methodology and consider possible directions for future work.
 
 \section{Contributions}
 
@@ -24,21 +24,22 @@ Additionally, using these mechanised systems, we also obtained computer-verified
 \item subject reduction and confluence for systems $\LamM$ and $\LamV$.
 \end{enumerate}
 
-We can see these contributions in \cref{scripts_roadmap} by recalling our initial roadmap in \cref{roadmap}.
-Each system and relationship is explicitly replaced by its corresponding script of formalisaion.
+We can visualise some of these contributions in \cref{scripts_roadmap} by recalling our initial roadmap in \cref{roadmap}.
+Each system and relationship is explicitly replaced by its corresponding script of formalisation.
 
 % ---------------
 \begin{figure}[h]
   \centering
   \includegraphics[width=1\textwidth]{pictures/scripts_roadmap}
-  \caption{Roadmap of scrips in \textit{Rocq Prover}} \label{scripts_roadmap}
+  \caption{Roadmap of scrips in the \textit{Rocq Prover}} \label{scripts_roadmap}
 \end{figure}
 % ----------
 
 We also see this document as a contribution, since we give a detailed exposition on how to use the \textit{Rocq Prover} to mechanise certain logical systems and mathematical results.
 % along with some digressions over our formalisation choices.
 
-A last contribution we highlight is the in-depth study of the concept of subsystem, further clarifying the often-loose definition for this and separating two isomorphic representations of the canonical subsystem of $\LamM$.
+A last contribution we emphasise is the in-depth study of the concept of subsystem.
+By clarifying this often-loose definition, we separated two isomorphic representations of the canonical subsystem of $\LamM$.
 For example, this clarification led us to simplify the statement and proof of the conservativeness theorem by using the self-contained system $\LamV$.
 
 \section{Discussion and related work}
@@ -61,7 +62,8 @@ Adding to this, in our case, it was a way to avoid digressions over metatheory a
 
 \paragraph{\textit{Autosubst} library}
 The \textit{Autosubst} library \cite{AutosubstSchafer} was indeed a central choice along our work of formalisation using the \textit{Rocq Prover}.
-It is an accessible tool for the mechanisation of metatheory of general syntax with binders that relies on the use of parallel substitutions and $\sigma$-calculus theory in order to simplify and automatise the metatheory around substitution operations.
+It is an accessible tool for the mechanisation of metatheory of general syntax with binders.
+It relies on the use of parallel substitutions and $\sigma$-calculus theory to simplify and automatise the metatheory around substitution operations.
 Moreover, many of the operations provided for substitutions can work when using a general concept of typing systems with infinite contexts.
 
 Other well-known libraries/code generators for mechanising syntax with binders in the \textit{Rocq Prover} are \textit{GMeta} \cite{GMeta} (a code generator for generic representations), \textit{Dblib} \cite{Dblib} (a library for representations using de~Bruijn indices) and \textit{LNGen} \cite{LNGen} (a code generator for locally nameless representations).
@@ -80,7 +82,7 @@ Related with the choice of using the \textit{Autosubst} library, we recall the u
 As already mentioned, this idea comes from the tutorial found in \cite{AutosubstManual}.
 However, these are not the contexts that we work with in our paper proofs, thus, one would require a formal proof to admit this use.
 We did not invest much on this and much like the case of de~Bruijn indices, we admit these facilities in order to invest our effort in the essential part of the metatheory.
-Using this definition for contexts makes our statements simpler and allows using the \textit{Autosubst} operations and tactics already defined for substitutions because contexts have the same type of substitutions over simple types (\lst$Gamma:var->type$).
+Using this definition for contexts makes our statements simpler and allows using the \textit{Autosubst} operations and tactics already defined for substitutions because, in the proof assistant, contexts and substitutions over simple types have the same type (\lst$Gamma:var->type$).
 
 \paragraph{Mechanising a subsystem}
 In contrast to some decisions mentioned that facilitated our work of formalisation, the rigorous presentation of the canonical subsystem of $\LamM$ was one of our major efforts.
@@ -93,9 +95,10 @@ First, we defined what a subsystem of $\LamM$ was: a subset of expressions ($Can
 Afterwards, we wanted a direct, yet isomorphic, representation of this same subsystem ($\LamV$), with its appropriate notion of substitution.
 A reduction over this ``self-contained'' canonical system is then defined and proved to be isomorphic to the induced notion of reduction for the canonical subsystem (the same is done for the typing systems).
 
-In terms of the mechanisation we found this useful, as we could work with a system with its own induction principles and many other dedicated definitions.
+In terms of the mechanisation, we found this useful.
+It enabled us to work with a system with its own induction principles and many other dedicated definitions.
 The downside to this technique was the need to prove an isomorphism.
-An alternative could be the subset types provided in \textit{Rocq}, but this would rapidly become tiring because of the constant need to prove a certain predicate that defines the subset.
+An alternative could be the subset types provided in \textit{Rocq}, but this would rapidly become tiring because of the constant need to provide the proof object of a predicate defining the subset.
 
 \section{Future work}
 
@@ -113,7 +116,7 @@ A distinct and possible new way of work would involve generalising our typing sy
 
 A second and completely different direction would be to further explore the problems found in the mentioned libraries that aid the formalisation of syntax with binders.
 From our experience using the \textit{Autosubst} library, we could suggest improvements in the automated tactics for deriving the substitution operation and substitution lemmas (motivated by our case with an unconventional substitution).
-It would also be interesting to have a library containing many formalised systems and classical results (such as subject reduction, confluence, strong normalisation, etc...) using \textit{Autosubst} that could easily be used for other developments.
+It would also be interesting to have a library containing many formalised systems and classical results (such as subject reduction, confluence, strong normalisation, etc...) using \textit{Autosubst} that could easily be used for in developments.
 
 %%% Local Variables:
 %%% mode: LaTeX

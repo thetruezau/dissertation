@@ -13,12 +13,12 @@ Mechanising mathematics is like a computer game for a mathematician.
 
 \paragraph{Why mechanise?}
 By mechanisation we mean a formal representation of a mathematical object (and this includes mathematical proofs) using a proof assistant.
-Such proof assistants have attracted the attention of mathematicians because of the reliability and automation they provide for writing computer verified proofs~\cite{FourColourThm}.
+Such proof assistants have attracted the attention of mathematicians because of the reliability and automation they provide for writing computer-verified proofs~\cite{FourColourThm}.
 There has also been an increasing interest by engineers in the use of such tools for the security guarantees achieved when formally proving properties about computer programmes~\cite{CompCert}.
 
 One could even argue that any work of mechanisation is useful, because it will:
 \begin{enumerate}
-\item result in a computer-verified work,
+\item result in a mechine-checked work,
 \item expose the difficulties behind any mathematical formalisation,
 \item provide automation for routine and tedious parts,
 \item potentially allow some theory to be extended with less cost.
@@ -37,14 +37,14 @@ Research on the mechanisation of metatheory also gained some popularity in the p
 In the beginning of~\cite[Chapter~7.3]{CurryHoward}, one is confronted with a natural question: \textit{``Natural deduction proofs correspond to $\Lam$-terms with types, and Hilbert style proofs correspond to combinators with types. What do sequent calculus proofs correspond to?''}.
 This question has its starting point in the well-known Curry-Howard isomorphism, that relates natural deduction proofs with $\Lam$-terms with types, as said above.
 
-Many alternatives are given in the aforementioned book, but there exists no intent in carefully matching the process of cut elimination with normalisation.
-In~\cite{Herbelin1994}, Herbelin introduced a multiary $\Lam$-calculus (with explicit substitutions) called $\overline{\pmb \lambda}$, whose typing rules correspond to a fragment of the sequent calculus and every explicit reduction rule behaves as cut elimination.
-The term multiary comes from the fact that applicative terms have a list of arguments ($M [N_1, N_2, \dots, N_k]$) instead of a single argument (as in $(((M N_1) N_2) \dots N_k)$).
+Many alternatives are given in the aforementioned book, but there exists no intent in carefully matching the process of cut-elimination with normalisation.
+In~\cite{Herbelin1994}, Herbelin introduced a multiary $\Lam$-calculus (with explicit substitutions) called $\overline{\pmb \lambda}$, whose typing rules correspond to a fragment of the sequent calculus and every explicit reduction rule behaves as cut-elimination.
+The term multiary comes from the fact that applicative terms have a list of arguments ($t [u_1, u_2, \dots, u_k]$) instead of a single argument (as in $(((t u_1) u_2) \dots u_k)$).
 
 We are interested in the study of a multiary $\Lam$-calculus \cite{JCES2002, JCESLuis} (here named $\LamM$) that is slightly different from $\overline{\pmb \lambda}$ by removing the use of explicit substitutions and having an application with an exposed argument $t(u, l)$ instead of $t l$.
 
 Studying the computational meaning behind the sequent calculus is one of the main motivations for considering such systems, since we extend our understanding of the Curry-Howard isomorphism.
-As an example of the meaning of this, we can see that a system with typing rules based on the sequent calculus is closer to a Krivine-like abstract machine implementation - ``Then the second rule of Krivine abstract machine reads as a cut between an implication which has been introduced on the right and an implication which has been introduced on the left. We are here in the world of sequent calculi, not of natural deduction.'' \cite{Curien2000}.
+As an example of the meaning of this, we can see that a system with typing rules similar to the sequent calculus is closer to a Krivine abstract machine implementation - \textit{``Then the second rule of Krivine abstract machine reads as a cut between an implication which has been introduced on the right and an implication which has been introduced on the left. We are here in the world of sequent calculi, not of natural deduction.''} \cite{Curien2000}.
 
 \section{Objectives and contributions}
 The theoretical objectives for this dissertation are the study of:
@@ -55,15 +55,15 @@ The theoretical objectives for this dissertation are the study of:
 \item the isomorphism between the canonical subsystem and the simply typed $\Lam$-calculus.
 \end{enumerate}
 
-We say theoretical objectives because the complete objective is to mechanise in the \textit{Rocq Prover} each of the mentioned items.
-The practical (in the sense of the mechanisation task) objectives of this dissertation are first to understand the proof assistant in order to fully develop a mechanisation of the definitions and proofs that were studied using pen-and-paper.
-Concretely, we have the objective of understanding how one can use the \textit{Rocq Prover} to define systems that deal with variable binding, to define subsystems, to define typing rules, to prove isomorphisms and so on.
+We say theoretical objectives because the complete objective is to mechanise each of the mentioned items.
+The practical objectives - in the sense of the mechanisation task - of this dissertation are first to understand the proof assistant in order to fully develop a mechanisation of the definitions and proofs that were studied using pen and paper.
+Concretely, we have the objective of understanding how to use the \textit{Rocq Prover} to define systems that deal with variable binding, to define subsystems, to define typing rules, to prove isomorphisms and so on.
 
-A last (and challenging) objective related to the mechanisation is to formalise every definition and proof as close as possible to the pen-and-paper versions, assuring clean and simple presentations.
+A last and challenging objective related to the mechanisation is to formalise every definition and proof as close as possible to the pen-and-paper versions, assuring clean and simple presentations.
 
-Our contributions with this dissertation are a mechanised version of the system $\LamM$ and its associated metatheory - including an isomorphism of its subsystem with the simply typed $\Lam$-calculus, the theorem of conservativeness, confluence results derived from $\Lam$-calculus - within the \textit{Rocq Prover}.
+Our contributions with this dissertation are a mechanised version of the system $\LamM$ - including the result of subject reduction, the theorem of conservativeness, an isomorphism of its subsystem with the simply typed $\Lam$-calculus and confluence results derived from $\Lam$-calculus - within the \textit{Rocq Prover}.
 We know of no other works formalising this metatheory.
-This formalised body of work provides a computer-verified and highly accessible foundation for future study and can be found in an open-source \textit{GitHub} repository \footnote{\href{https://github.com/thetruezau/LambdaM}{https://github.com/thetruezau/LambdaM}}.
+This formalised body of work provides a computer-verified and highly accessible foundation for future developments and can be found in an open-source \textit{GitHub} repository \footnote{\href{https://github.com/thetruezau/LambdaM}{https://github.com/thetruezau/LambdaM}}.
 
 \section{Document structure}
 
@@ -90,7 +90,7 @@ An overview of our work can be illustrated by the following figure. % in \cref{r
 
 This document is organised as follows:
 
-\paragraph{\Cref{c:background}} serves as an introduction to the ordinary $\Lam$-calculus with two different presentations: first, a standard approach that uses variable names and $\alpha$-equivalence and a second one that uses indexes for the names of variables (also called de~Bruijn syntax).
+\paragraph{\Cref{c:background}} serves as an introduction to the simply typed $\Lam$-calculus with two different presentations: first, a standard approach that uses variable names and $\alpha$-congruence and a second one that uses indices for the names of variables (also called de~Bruijn syntax).
 A brief introduction to $\beta$-normal forms ($\beta$-nfs) is given.
 By the end of the chapter one finds mechanised definitions and proofs using the \textit{Rocq Prover} as a way to introduce many concepts used along the dissertation (including a formalisation of the simply typed $\Lam$-calculus using \textit{Autosubst}).
 
@@ -101,11 +101,12 @@ A last section provides a walk-through of the mechanised definitions and proofs.
 Using this system, we will state the theorem of conservativeness.
 The $\vec \beta$-normal forms ($\vec \beta$-nfs) in this system are also introduced.
 A last section includes an outline of the mechanisation.
-
+ 
 \paragraph{\Cref{c:isomorphism}} is about the isomorphism between the simply typed $\Lam$-calculus and system $\LamV$.
 Using this isomorphism, we will derive the confluence for $\LamV$ and $\LamM$.
+Some considerations about the formalised definitions are left for a final section.
 
-\paragraph{\Cref{c:conclusions}} lists our contributions, discusses our approaches and related work and finally points towards possible future work.
+\paragraph{\Cref{c:conclusions}} lists our contributions, discusses our approaches in comparison to some related work, and points towards possible future work.
 
 % Every \textit{Rocq Prover} module/script referred throughout this document may be found in the previously mentioned \textit{GitHub} repository.
 

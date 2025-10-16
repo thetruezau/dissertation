@@ -5,8 +5,8 @@ This chapter introduces the main system that was studied in this dissertation: t
 We introduce this system as the system $\pmb{\lambda \mathcal{P}h}$ studied in~\cite[Chapter~3]{JCES2002}.
 This system can also be found as $\pmb{\lambda^m}$ in~\cite[Section~3]{JCESLuis}, as a subsystem of $\pmb{\lambda J^m}$.
 
-We provide an alternative description for a subsystem of $h$-normal forms of $\LamM$ (corresponding to the system $\pmb{\lambda \mathcal{P}}$ found in~\cite[Chapter~3]{JCES2002}).
-At the end of this chapter one can find a detailed overview of the mechanisation done in this dissertation of the multiary $\Lam$-calculus and subsystems.
+We provide an alternative description for a subsystem of $h$-normal forms of $\LamM$ (corresponding to the system $\pmb{\lambda \mathcal{P}}$ from \cite[Chapter~3]{JCES2002}).
+At the end of this chapter one can find a detailed overview of the mechanisation done in this dissertation of the multiary $\Lam$-calculus and its canonical subsystem.
 
 \section{The system $\LamM$}
 
@@ -51,7 +51,7 @@ First, we introduce some standard definitions for our system, like the grammar f
     (h)       & \qquad t(u, l)(u', l')          \to t(u, l + (u'::l'))
   \end{align*}
   Of course, one may also interpret the given rules as binary relations on $\LamM$-terms.
-  That way, we can define a relation $\beta$ as the relation $\beta_1 \cup \beta_2$ and analogously a relation $\beta h$ as the relation $\beta \cup h$.
+  That way, we define a relation $\beta$ as the relation $\beta_1 \cup \beta_2$ and analogously a relation $\beta h$ as the relation $\beta \cup h$.
 \end{definition}
 
 % Therefore, we can make sense of the following definitions.
@@ -194,7 +194,7 @@ Subject reduction then states that any given term preserves its type upon $\beta
 
 \begin{theorem}[Subject reduction]
   \label{type_preservation}
-  Given $\LamM$-terms $t$ and $t'$, the follwing holds:
+  Given $\LamM$-terms $t$ and $t'$, the following holds:
   \[
     \Gamma \vdash t : A \ \land \ t \to_{\beta h} t' \implies \Gamma \vdash t' : A.
   \]
@@ -209,7 +209,7 @@ Subject reduction then states that any given term preserves its type upon $\beta
 
 \begin{corollary}[Multistep subject reduction]
   \label{type_preservation2}
-  Given $\LamM$-terms $t$ and $t'$, the follwing holds:
+  Given $\LamM$-terms $t$ and $t'$, the following holds:
   \[
     \Gamma \vdash t : A \ \land \ t \twoheadrightarrow_{\beta h} t' \implies \Gamma \vdash t' : A.
   \]
@@ -218,7 +218,8 @@ Subject reduction then states that any given term preserves its type upon $\beta
   Trivial.
 \end{proof}
   
-Other classical results from $\Lam$-calculus like confluency and strong normalisation could also be proved for system $\LamM$, but are not covered in this dissertation.
+Other classical results from $\Lam$-calculus - such as strong normalisation - could also be shown for system $\LamM$, but are not covered in this dissertation.
+The confluence for this system is proven in \cref{c:isomorphism}.
 
 % ---
 % 123
@@ -311,7 +312,7 @@ First, we define the function $app : Can \times Can \times CanList \to Can$ that
   For the cases where $t$ is not an application, we have an equality.
 \end{proof}
 
-Then, we can define a function that collapses $\LamM$-terms to their $h$-normal form.
+Then, we define a function that collapses $\LamM$-terms to their $h$-normal form.
 
 \begin{definition}
   Consider the following map $h : \LamM \text{-terms} \to Can$, recursively defined as follows:
@@ -419,7 +420,7 @@ Then,
 
 Lastly, simplifying $h$ and rewriting $h(u)$ and $h(u')$, we conclude that $\lambda x.t \ (\to_\beta)_c \ \lambda x.t'$.
 
-We now conclude the presentation of the canonical subsystem in $\LamM$, by equiping canonical expressions with a typing relation, in the same spirit of~\cref{canonical_closure}.
+We now conclude the presentation of the canonical subsystem in $\LamM$, by equipping canonical expressions with a typing relation, in the same spirit of~\cref{canonical_closure}.
 
 \begin{definition}[Canonical typing closure]
   \label{canonical_typing}
@@ -457,7 +458,7 @@ By inverting our assumption of $x:A, \Gamma \vdash_c t:B$, we get that there exi
 
 And again, simplifying and rewriting $h$, we have derived the sequent $\Gamma \vdash_c \lambda x.t : A \supset B$.
 
-Our presentation of the canonical subsystem of $\LamM$ does not exaclty coincide with system $\pmb{\lambda \mathcal{P}}$ from~\cite[Chapter~3.1]{JCES2002}.
+Our presentation of the canonical subsystem of $\LamM$ does not exactly coincide with system $\pmb{\lambda \mathcal{P}}$ from~\cite[Chapter~3.1]{JCES2002}.
 We define a subsystem of $\LamM$ by restricting our syntax of expressions via a map $h$.
 Then, we introduce reduction and a typing relation by exclusively using map $h$.
 Trivially, we get a subsystem with appropriate notions of reduction and typing but still preserving their expected behaviour (as seen above).
@@ -485,11 +486,11 @@ Inductive term: Type :=
 | mApp (t: term) (u: term) (l: list term).
 \end{lstlisting}
 Note that the definition for $\LamM$-lists is hidden under the polymorphic list type \lst$list term$.
-We explain the reason for more details for this option at the end of this section.
+We give more details on this option at the end of this section.
 
 To mechanise the reduction relations, we first defined the notion of compatibility for binary relations on $\LamM$-expressions (as in~\cref{compatible_relation}) and then define the base step relations $\beta_1$, $\beta_2$ and $h$ separately.
 That way we can distinguish between the notions of compatible closure of a base relation and of a relation being compatible.
-This aproach is more elaborated than the one presented for the simply typed $\Lam$-calculus and we also get into more details about these decisions at the end of this section.
+This approach is more elaborated than the one presented for the simply typed $\Lam$-calculus and we also get into more details about these decisions at the end of this section.
 
 \begin{lstlisting}[language=Coq]
 Inductive beta1: relation term :=
@@ -572,7 +573,7 @@ Lemma weak_type_substitution Gamma t A :
   sequent Gamma t.[u.:sigma] A).
 \end{lstlisting}
 
-The used \textit{Autosubst} aproach takes this notion of well-typed substitutions or context morphisms (see~\cite[Chapter~4]{AutosubstSchafer}) to generalise these lemmas.
+The used \textit{Autosubst} approach takes this notion of well-typed substitutions or context morphisms (see~\cite[Chapter~4]{AutosubstSchafer}) to generalise these lemmas.
 
 As already mentioned, we use the combined induction principles (for $\LamM$-expressions) to prove the statements that are declared using a conjunction on terms and lists.
 
@@ -600,7 +601,7 @@ with is_canonical_list: list term -> Prop :=
   is_canonical_list (u::l).
 \end{lstlisting}
 
-The module then contains defintions for the $app$ operation (called \lst$capp$ because append of lists in \textit{Rocq} is already called \lst$app$) and map $h$.
+The module then contains definitions for the $app$ operation (called \lst$capp$ because append of lists in \textit{Rocq} is already called \lst$app$) and map $h$.
 \begin{lstlisting}[language=Coq]
 Definition capp (v u: term) (l: list term) : term :=
   match v with
@@ -750,7 +751,7 @@ End dedicated_induction_principle.
 
 \subsubsection{Formalising a compatible closure}
 
-Defining reduction relations in $\Lam$-calculi like systems always involve the notion of compatiblity closure, as we want to allow reduction to happen at the level of subterms.
+Defining reduction relations in $\Lam$-calculi like systems always involve the notion of compatibility closure, as we want to allow reduction to happen at the level of subterms.
 
 We took inspiration from the definitions in the \lst$Relations$ libraries of the \textit{Rocq Prover}.
 This library provides many definitions on binary relations.
@@ -883,7 +884,7 @@ Inductive can_step : canonical -> canonical -> Prop :=
 ...
 \end{lstlisting}
 
-So far, our aproach on the formalisation of the canonical subsystem of $\LamM$ was to view it according to map $h$, that is, defining reduction and typification using this map.
+So far, our approach on the formalisation of the canonical subsystem of $\LamM$ was to view it according to map $h$, that is, defining reduction and typification using this map.
 However, we may also define a self-contained version of the canonical subsystem with its own syntax and definitions (in the spirit of~\cite[Chapter~3.1]{JCES2002}). % , by having no reference to any definition from system $\LamM$ and
 Then, we may prove that both representations are in fact isomorphic.
 That is the goal for~\cref{c:canonical}.

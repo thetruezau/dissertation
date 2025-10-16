@@ -1,16 +1,6 @@
 \chapter{Canonical $\Lam$-calculus}
 \label{c:canonical}
 
-% ideias:
-% este canonical lambda calculus e uma versao autocontida do canonical subsistema (sem referencias ao lambda m)
-% no capitulo 5 vamos demonstrar que este sistema 'e isomorfo ao lambda calculus
-% este canonical lambda calculus corresponde a um lambda calculus vectorial (dai a sua notacao!)
-% estas duas ideais justificam a terminologia
-
-% continue (in the same paragraph) with the ideas of the initial sentence of the following paragraph, and the last paragraph of this introduction; something like: The naming of this system is justified by two reasons. On the one hand, it is isomorphic to the canonical subsystem of lambdam seen in the previous chapter. On the other hand, it is also isomorphic to the STLC. 
-% Then, start a new paragraph, like: The system $\vect lambda$ is a self-contained ...
-% Don't forget to include in this second paragraph the last sentence of the last paragraph of the introduction (on the formalisation of the isomorphism with STLC).
-
 In this chapter we present a system that we give the name of canonical $\Lam$-calculus ($\LamV$).
 The naming of this system is motivated by two reasons.
 On the one hand, it is isomorphic to the canonical subsystem of $\LamM$ seen in the previous chapter.
@@ -46,7 +36,7 @@ The isomorphism between system $\LamV$ and the simply typed $\Lam$-calculus is l
     app_v(x, u', l')@(u, l)          &= app_v(x, u', l'+(u::l)) \\
     app_\lambda (x. t, u', l')@(u, l) &= app_\lambda (x. t, u', l'+(u::l)),
   \end{align*}
-  where the list append, $l + l'$, has the expected bahaviour (as in $\LamM$).
+  where the list append, $l + l'$, has the expected behaviour (as in $\LamM$).
 \end{definition}
 
 Now follows a ``strange'' definition for the substitution operation, which needs to be careful when dealing with a substitution over a constructor $app_v$.
@@ -307,7 +297,7 @@ We start by defining two functions that play a key role in this isomorphism.
   \end{align*}
 \end{definition}
 
-The following diagram summarizes the connection between the defined maps and map $h$ defined in \cref{c:multiary}.
+The following diagram summarises the connection between the defined maps and map $h$ defined in \cref{c:multiary}.
 
 % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQAdDtAWwCNgXRvX5R6AAh4BfEFNLpMufIRRli1Ok1bsuvAQGF6YGXIXY8BIuVLqaDFm0Sdu-QR1owAxuKEi+Ykw0YKABzeCJQADMAJwgeJGsQHAgkMhBhPhhGAAVFCxV0mEicEDstRxAAC1l5EBi4pAAmGmTUsod2LFL0+kycvOV2aKwQypLTOtj4xETWxGbNDqc0boys3PNBp2HR8copIA
 \[
@@ -318,7 +308,7 @@ The following diagram summarizes the connection between the defined maps and map
 \]
 
 % We show some useful lemmas for the following results.
-We begin by proving that the diagram shown is commutative.
+We begin by proving that the above diagram is commutative.
 This will require the following auxiliary result.
 
 \begin{lemma}
@@ -362,7 +352,7 @@ This will require the following auxiliary result.
 
 \subsection{Isomorphism at the level of reduction}
 
-In our subsytem of canonical terms, the substitution is not closed for the substitution operation.
+Canonical terms are not closed for the substitution operation in $\LamM$.
 We have the following result that relates the two notions of substitution.
 
 \begin{lemma}
@@ -385,12 +375,11 @@ We have the following result that relates the two notions of substitution.
   The proof proceeds easily by induction on the structure of the $\LamM$-term $t$.
 \end{proof}
 
-The following technical lemma says that we can derive the compatibilty rules of the system $\LamV$ given the canonoical closure of a compatible relation on $\LamM$.
+The following technical lemma says that we can derive the compatibility rules of the system $\LamV$ given the canonical closure of a compatible relation on $\LamM$.
 
 \begin{lemma}
   \label{step_can_is_compatible}
   Let $R$ and $R'$ be two binary relations on $\LamM$-terms and $\LamM$-lists respectively.
-
   The following binary relations are compatible in $\LamV$:
   \begin{align*}
     I &= \{ (t, t') \ | \ i(t) \ ({\to_R})_c \ i(t'), \text{for $\LamV$-terms $t, t'$} \} \\
@@ -406,7 +395,7 @@ The following technical lemma says that we can derive the compatibilty rules of 
 
   From the definition of $I$, $(t, t') \in I \implies i(t) \ ({\to_R})_c \ i(t')$.
 
-  Then, from the definition of the canonical closure relation, we have that there exist $\LamM$-terms $t_1$ and $t_2$ such that $h(t_1) = i(t)$ and $h(t_2) = i(t')$ and $t_1 \to_R t_2$.
+  Then, from \cref{canonical_closure}, we have that there exist $\LamM$-terms $t_1$ and $t_2$ such that $h(t_1) = i(t)$ and $h(t_2) = i(t')$ and $t_1 \to_R t_2$.
 
   We have:
   \[
@@ -560,7 +549,6 @@ From now on, we will use the self contained representation, system $\LamV$, to t
 \section{Conservativeness}
 
 The result of conservativeness establishes the connection between reduction in $\LamV$ and in $\LamM$.
-
 We start by proving a auxiliary result that connects the @ operation with list append.
 
 \begin{lemma}
@@ -738,7 +726,7 @@ As another consequence of conservativeness, confluence of $\LamV$ can be lifted 
     \end{tikzcd}
   \]
   
-  In the latter diagram, the existance of such $t'$ comes from the fact that $\LamV$ is confluent and from using \cref{conservativeness} to lift the following diagram to $\LamM$.
+  In the latter diagram, the existence of such $t'$ comes from the fact that $\LamV$ is confluent and from using \cref{conservativeness} to lift the following diagram to $\LamM$.
   \[
     % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQ0AKHAShAF9S6TLnyEU5UsWp0mrdlxwB9Yn0HDseAkQBMUmQxZtEHbkp1qhHEVvElSOg3OMgAOq5gAPLHBxwABO7+OADkAjIwUADm8ESgAGYAThAAtkiSIDgQSADMNIbyiGDMjIw0jPQARjCMAAo2YuyMMPE4IOVYYC5Q9HAAFpECVkmp6TRZSGSyRkjFpeVVNfWajSbNre0gA-RQ7DgA7hDbUAjqICNpiBkTiHrThXNlIBXVdQ3aay1tNMd7h8enYbJS5TG55e7GR4LV7LUQfZ5fTa-EwHI4wHaAhLApB3MH5ZyzEpPF5Ld7iBEbH7o3Yo-7U06UfhAA
     \begin{tikzcd}
@@ -801,7 +789,7 @@ with list_sequent (Gamma:var->type) : type -> (list term) -> type -> Prop :=
 \end{lstlisting}
 
 The formalisation of the step relations works as shown for the system $\LamM$ using a \lst$comp$ meta-relation for compatibility closure.
-In the next subsection we describe in more detail the aproach used to define the substitution operation for this system.
+In the next subsection we describe in more detail the approach used to define the substitution operation for this system.
 
 This module also contains proofs for every compatibility lemma (recall~\cref{compatibility_lemmas}).
 \begin{lstlisting}[language=Coq]
@@ -839,7 +827,7 @@ Proof.
 \end{lstlisting}
 
 We prove every compatibility step by inverting first the definition of \lst$step_can$.
-Despite being a bureocratic result, it helps simplifying further proofs (such as \cref{i_step_pres} shown below) and reveals some benefits of formalising the general predicate of compatibility \lst$is_compatible$.
+Despite being a bureaucratic result, it helps simplifying further proofs (such as \cref{i_step_pres} shown below) and reveals some benefits of formalising the general predicate of compatibility \lst$is_compatible$.
 
 \begin{lstlisting}[language=Coq]
 Theorem i_step_pres :
@@ -857,12 +845,13 @@ Proof.
 \end{lstlisting}
 
 The mechanised proof shown above makes use of the automation provided by the \lst$auto$ tactic by strategically adding relevant lemmas to the proof context.
-More specifically, the line \lst$ pose step_can_is_compatible as Hic$ adds to the proof context the fact that \lst$step_can$ is a compatible relation for $\LamV$-terms.
+More specifically, the first line of the proof is adding to the context the fact of \lst$step_can$ being a compatible relation for $\LamV$-terms.
 
 \subsection{\lst$Conservativeness.v$}
 
 This module is only about the proof for the conservativeness theorem.
-The mechanised theorem follows exactly the proof given diagramatically in~\cref{conservativeness}, divided into two parts, \lst$conservativeness1$ and \lst$conservativeness2$, for each of the two concerned implications.
+The mechanised theorem follows exactly the proof given diagrammatically in~\cref{conservativeness}.
+We explicitly divided the proof into two parts, \lst$conservativeness1$ and \lst$conservativeness2$, for each of the two concerned implications.
 
 \begin{lstlisting}[language=Coq]
 Theorem conservativeness :
@@ -886,10 +875,10 @@ Qed.
   
 \subsection{A closer look at the mechanisation}
 
-\subsubsection{\textit{Autosubst} and a nonstandard substitution operation}
+\subsubsection{Mechanising a nonstandard substitution operation}
 
 One of the most peculiar definitions in system $\LamV$ is the substitution operation (\cref{canonical_substitution}).
-As referred before, we have an unusual behaviour for the constructor $app_v$.
+As said before, we have an unusual behaviour for the constructor $app_v$.
 In practice, on a substitution $app_v (x, u, l)[x:=t]$, there occurs an inspection of the term $t$ that dictates the result of the substitution operation.
 
 As we are working with the \textit{Autosubst} library, we tried to automatically generate the substitution operation for our case.
@@ -932,7 +921,7 @@ Defined.
 \end{lstlisting}
 
 The downside to our approach was the need to manually prove every substitution lemma required by the \textit{Autosubst} instance \lst$SubstLemmas$.
-However, proving such lemmas was crucial to enjoy the automation provided from the library for the mechanised inductive type of the $\LamV$-terms.
+However, proving such lemmas was crucial to enjoy the simplification tactics and automation provided from the library for the mechanised inductive type of the $\LamV$-terms.
 
 %%% Local Variables:
 %%% mode: LaTeX

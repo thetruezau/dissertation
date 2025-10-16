@@ -3,9 +3,9 @@
 
 % In this chapter, we intend to take the example of formalising some theory about the $\Lam$-calculus as a motivation to display some core aspects involved in the more elaborate formalisations ahead.
 
+
+
 This chapter introduces essential background for the reading of this dissertation.
-% It will take the scheme used in the subsequent chapters:
-% a first part of theoretical presentation and a second part of mechanisation.
 First, we introduce the well-known simply typed $\Lam$-calculus.
 Then, we delve into a known variation of the introduced $\Lam$-calculus theory using de~Bruijn indices, that has known facilities when it comes to mechanisation.
 Lastly, we present and explain a mechanisation of the simply typed $\Lam$-calculus in the \textit{Rocq Prover}.
@@ -14,7 +14,7 @@ Lastly, we present and explain a mechanisation of the simply typed $\Lam$-calcul
 \section{Simply typed $\Lam$-calculus}
 
 For the basic concepts and basic theory of the untyped $\Lam$-calculus we refer to \cite{Barendregt1987}.
-For what types and the simply typed lambda calculus is about we refer to \cite{Barendregt2013} and \cite{Hindley1997}.
+For what types and the simply typed $\Lam$-calculus is about we refer to \cite{Barendregt2013} and \cite{Hindley1997}.
 
 \subsection{Syntax}
 
@@ -225,7 +225,7 @@ The proof for $\boxed{\text{(ii)} \Rightarrow \text{(i)}}$ can be found in the s
   \begin{enumerate}
   \item A denumerable set of atomic variables is assumed and letters $p, q, r$ range over this set.
   \item Notice that we use the symbol $\supset$, coming from logic, to denote implication.
-    This is motivated by the well-known correspondence between function types and implicational proposition, through the Curry-Howard isomrphism.
+    This is motivated by the well-known correspondence between function types and implicational proposition, through the Curry-Howard isomorphism.
   \end{enumerate}
 \end{remark}
 
@@ -346,7 +346,7 @@ Using the previous definition of substitution, we could now define the $\beta$-r
 \[ (\lambda . M) N \to M[N \cdot id]. \]
 
 Another variation we may encounter when formalising $\Lam$-terms using a nameless syntax is the typing system.
-A similar aproach to our modification of the typing system can be found in~\cite[Chapter~7]{AndrewAdams}.
+A similar approach to our modification of the typing system can be found in~\cite[Chapter~7]{AndrewAdams}.
 We formulate the definition of context and derivable sequents in the nameless setting as follows.
 
 \begin{definition}[Nameless context]
@@ -381,20 +381,6 @@ We formulate the definition of context and derivable sequents in the nameless se
   \]
 \end{definition}
 
-\begin{comment}
-\begin{remark}
-  \label{nameless_typing_remark}
-  For such strict definitions of contexts and typing rules we would require admissibility for structural rules (like the weakening rule shown below).
-  \[
-    \begin{prooftree}
-      \hypo{ \Gamma \vdash M:A }
-      \infer1[Weakening]{ B, \Gamma \vdash M[\uparrow]:A } 
-    \end{prooftree}
-  \]
-  That way, we show that our contexts as sequences may behave as multisets (as expected).
-\end{remark}
-\end{comment}
-
 \begin{claim}
   \label{nameless_typing_claim}  
   Structural rules of weakening, contraction and exchange are admissible in this setting.
@@ -412,20 +398,20 @@ We look at the particular case of the weakening rule that corresponds to the inc
 % 123
 % ---
 
-\section{Mechanising meta-theory in \textit{Rocq}}
+\section{Mechanising metatheory in \textit{Rocq}}
 
 In this section we discuss basic questions arising in the formalisation of syntax with binders, and introduce a \textit{Rocq} library that helps with such task.
-Additionally, we illustrate how to formalise basic concepts of the simply typed lambda calculus.
-This will help to understand our main decisions on the mechanisation of meta-theory developed in this dissertation.
+Additionally, we illustrate how to formalise basic concepts of the simply typed $\Lam$-calculus.
+This will help to understand our main decisions on the mechanisation of metatheory developed in this dissertation.
 The multiary versions of the $\Lam$-calculus that we are going to introduce will follow closely the basic approach described here with the corresponding adaptations.
 
 \subsection{The \textit{Rocq Prover}}
 
 The \textit{Rocq Prover} (former \textit{Coq Proof Assistant}) \cite{RocqManual} is an interactive theorem prover based on the expressive formal language called the Polymorphic, Cumulative Calculus of Inductive Constructions.
 This is a tool that helps in the formalisation of mathematical results and that can interact with a human to generate machine-verified proofs.
-\textit{Rocq} encode propositions as types and proofs for these propositions as programs in $\Lam$-calculus, in line with the Curry-Howard isomorphism.
+\textit{Rocq} encodes propositions as types and proofs for these propositions as programs in $\Lam$-calculus, in line with the Curry-Howard isomorphism.
 
-It is arguably a great tool for mechanising meta-theory as it was widely used in the \textit{POPLmark} challenge \cite{POPLmark}.
+It is arguably a great tool for mechanising metatheory as it was widely used in solutions for the \textit{POPLmark} challenge \cite{POPLmark}.
 Also, this proof assistant provides many libraries to deal with the issue of variable binding, like \textit{Autosubst}, as we will see in the next sections.
 
 We illustrate two examples of simple inductive definitions in \textit{Rocq}: the natural numbers and polymorphic lists.
@@ -485,7 +471,7 @@ Lemma map_app f : forall l l', map f (l++l') = (map f l)++(map f l').
 
 This lemma relates two operations on lists:
 \begin{enumerate}
-\item \lst$app$ (abreviated as \lst$++$): appends two lists (ex: \lst$[1,2,3]++[4,5] = [1,2,3,4,5]$);
+\item \lst$app$ (abbreviated as \lst$++$): appends two lists (ex: \lst$[1,2,3]++[4,5] = [1,2,3,4,5]$);
 \item \lst$map$: applies a function to every element on the list (ex: \lst$map f [x,y] = [f x, f y]$).
 \end{enumerate}
 Given their widespread utility, these operations will be often used in parts of our mechanisation.
@@ -507,10 +493,9 @@ Of course this is fine when dealing with proofs and definitions in a paper.
 To simplify this, we can even take advantage of conventions, like the one referenced above (by Barendregt).
 However, this approach to define the \lst$var$ type becomes rather exhausting when it comes to rigorously define the required syntactical ingredients, including substitution operations.
 
-There are several alternative approaches described in the literature of mechanisation of meta-theory. 
-The \textit{POPLmark} challenge \cite{POPLmark} points to the topic of binding as central for discussing the potential of modern-day proof assistants.
-From the many alternatives, we chose to follow the nameless syntax proposed by de~Bruijn.
-This is because this approach seemed widely used in the mechanisation of meta-theory.
+There are several alternative approaches described in the literature.
+The \textit{POPLmark} challenge \cite{POPLmark} points to the topic of binding as central for discussing the potential of modern-day proof assistants and lists many options available.
+From these many alternatives, we chose to follow the nameless syntax proposed by de~Bruijn because of its extensive use in the mechanisation of metatheory.
 
 \subsection{\textit{Autosubst} library}
 
@@ -550,13 +535,13 @@ Instance SubstLemmas_term : SubstLemmas term. derive. Defined.
 
 The first three lines derive the operations necessary to define the (parallel) substitution over a term.
 \begin{enumerate}
-\item Defining the \lst$ids$ function that maps every index into the corresponding variable term ($i \mapsto $ \lst$(Var i)$).
+\item Defining the \lst$ids$ function that maps every index to the corresponding variable term ($i \mapsto $ \lst$(Var i)$).
 \item Defining the \lst$rename$ function that instantiates a term under a variable renaming.
-\item Defining the \lst$subst$ function that instantiates a term under a parallel substitution over (making use of the already \lst$rename$ and \lst$ids$).
+\item Defining the \lst$subst$ function that instantiates a term under a parallel substitution (using the already defined \lst$rename$ and \lst$ids$).
 \end{enumerate}
 
 Finally, there is also the proof for the substitution lemmas.
-Here, we see the power of this library, as the proofs for these lemmas (for fairly simple syntaxes) can be generated automatically through the \lst$derive$ tactic. 
+Here, we see the power of this library, as the proofs for these lemmas (for fairly simple syntaxes) can also be generated automatically with the aid of the \lst$derive$ tactic. 
 
 % exemplos de provas que usem asimpl ou autosubst?
 
@@ -577,7 +562,7 @@ Inductive type: Type :=
 
 \subsubsection{\lst$Lambda.v$}
 
-This module contains the definitions we need for the formalisations dealing with the simply typed $\Lam$-calculcus.
+This module contains the definitions we need for the formalisation dealing with the simply typed $\Lam$-calculus.
 The syntax for terms and \textit{Autosubst} definitions were already presented and explained in the prior subsection.
 
 The module then includes the definition for the one step $\beta$-reduction (recall~\cref{beta-reduction}).
@@ -611,10 +596,10 @@ with apps: term -> Prop :=
 \end{lstlisting}
 
 As before, we do not define directly a set NF of $\Lam$-terms, but rather an inductive predicate that $\Lam$-terms $t \in \text{NF}$ satisfy.
-This will be our standard aproach when mechanising subsets, as the subset itself is the extension of the defined predicate.
+This will be our standard approach when mechanising subsets, as the subset itself is the extension of the defined predicate.
 
 However, we have to be careful using mutually inductive predicates (we refer to~\cite[Chapter~14.1]{CoqArt} for a detailed overview on mutually inductive types and their induction principles).
-If we want to prove certain propositions that proceed by indcution on the structure of a normal term, we need to have a simultaneous induction principle and prove two propositions simultaneously.
+If we want to prove certain propositions that proceed by induction on the structure of a normal term, we need to have a simultaneous induction principle and prove two propositions simultaneously.
 \begin{lstlisting}[language=Coq]
 Scheme sim_normal_ind := Induction for normal Sort Prop
   with sim_apps_ind := Induction for apps Sort Prop.

@@ -20,7 +20,7 @@ The chapter is inspired in the works~\cite{LuisDychkoff} and~\cite[Chapter~4]{JC
     \arrow[<->, from=3-1, to=3-3]
   \end{tikzcd}\]
 
-In this diagram: the horizontal arrows refer to the inverse maps underlying the isomorphism; the down arrows symbolize (partial) maps associating expressions to the respective normal form (when existing).
+In this diagram: the horizontal arrows refer to the inverse maps underlying the isomorphism; the down arrows symbolise (partial) maps associating expressions to the respective normal form (when existing).
 % Also recall the sets NF$\subset \Lam$-terms and NT$\subset \LamV$-terms of the respective $\beta$-normal forms.
 
 \section{Mappings $\theta$ and $\psi$}
@@ -307,7 +307,7 @@ We state our isomorphism at the level of typed terms with the following result.
 Interestingly, the isomorphism between typed terms provides us with a proof for the subject reduction of the simply typed $\Lam$-calculus.
 
 \begin{corollary}[Subject Reduction for $\Lam$]
-  Given $\Lam$-terms $M$ and $N$, the follwing holds:
+  Given $\Lam$-terms $M$ and $N$, the following holds:
   \[
     \Gamma \vdash M:A \ \land \ M \to_{\beta} N \implies \Gamma \vdash N:A.
   \]
