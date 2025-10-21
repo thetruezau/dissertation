@@ -6,7 +6,7 @@ This dissertation presents a mechanisation in the \textit{Rocq Prover} \cite{Roc
 \section{Motivation}
 We can explain what motivated our work by asking ourselves: ``Why mechanise?'', ``Why mechanise metatheory?'' and ``Why the multiary $\Lam$-calculus?''.
 
-Before addressing these questions formally, we could just say that mechanising mathematics is an enjoyable task.
+Before addressing these questions, we could just say that mechanising mathematics is an enjoyable task.
 And that could be all we say about our motivation.
 Even if our work in mathematics had no application or direct consequences, the fun of mechanising it with a proof assistant would be a good enough motivation.
 Mechanising mathematics is like a computer game for a mathematician.
@@ -29,9 +29,10 @@ Some of the mentioned items may even be highlighted when the mechanisation refer
 \paragraph{Why mechanise metatheory?}
 It is often argued that metatheoretical proofs \textit{``are long, contain few essential insights, and have a lot of tedious but error-prone cases''}~\cite{AutosubstSchafer}.
 This inherent complexity and potential for human error provide fertile ground for computer verification and automation of proofs.
-Furthermore, formalising a system using a proof assistant enhances its reusability.
+Furthermore, formalising a system using a proof assistant enhaces reusability of such formalisation.
 Research on the mechanisation of metatheory also gained some popularity in the past 20 years~\cite{POPLmark, POPLmarkReloaded}, facilitating significantly computer developments of this kind.
 % Ultimately, adopting computer verification for proofs in metatheory is fast
+The \textit{Autosubst} library \cite{AutosubstSchafer} used in our work is a great example of these advancements in the research of mechanised metatheory.
 
 \paragraph{Why the multiary $\Lam$-calculus?}
 In the beginning of~\cite[Chapter~7.3]{CurryHoward}, one is confronted with a natural question: \textit{``Natural deduction proofs correspond to $\Lam$-terms with types, and Hilbert style proofs correspond to combinators with types. What do sequent calculus proofs correspond to?''}.
@@ -49,10 +50,10 @@ As an example of the meaning of this, we can see that a system with typing rules
 \section{Objectives and contributions}
 The theoretical objectives for this dissertation are the study of:
 \begin{enumerate}
-\item system $\LamM$, reduction rules, typing rules and standard results like subject reduction;
+\item system $\LamM$, namely its reduction theory, its typing system and standard results like subject reduction or confluence;
 \item the canonical subsystem of $\LamM$;
-\item the conservativeness of the canonical subsystem over $\LamM$;
-\item the isomorphism between the canonical subsystem and the simply typed $\Lam$-calculus.
+\item the conservativeness of $\LamM$ over its canonical subsystem;
+\item the isomorphism between the canonical subsystem of $\LamM$ and the simply typed $\Lam$-calculus.
 \end{enumerate}
 
 We say theoretical objectives because the complete objective is to mechanise each of the mentioned items.
@@ -61,7 +62,8 @@ Concretely, we have the objective of understanding how to use the \textit{Rocq P
 
 A last and challenging objective related to the mechanisation is to formalise every definition and proof as close as possible to the pen-and-paper versions, assuring clean and simple presentations.
 
-Our contributions with this dissertation are a mechanised version of the system $\LamM$ - including the result of subject reduction, the theorem of conservativeness, an isomorphism of its subsystem with the simply typed $\Lam$-calculus and confluence results derived from $\Lam$-calculus - within the \textit{Rocq Prover}.
+Our main contribution with this dissertation is a mechanisation in the \textit{Rocq Prover} of the system $\LamM$.
+This includes the result of subject reduction, the theorem of conservativeness, an isomorphism of its subsystem with the simply typed $\Lam$-calculus and confluence results derived from $\Lam$-calculus.
 We know of no other works formalising this metatheory.
 This formalised body of work provides a computer-verified and highly accessible foundation for future developments and can be found in an open-source \textit{GitHub} repository \footnote{\href{https://github.com/thetruezau/LambdaM}{https://github.com/thetruezau/LambdaM}}.
 

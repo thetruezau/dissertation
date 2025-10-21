@@ -1,15 +1,16 @@
 \chapter*{Abstract}
 \thispagestyle{title_on_header}
 
-This dissertation details the mechanisation within the \textit{Rocq Prover} of a multiary $\Lam$-calculus (system $\LamM$) and associated metatheory.
-We are motivated by the necessity for computer verification of metatheoretical proofs - which are often lengthy and prone to human error in manual treatments - and by the interest to extend the Curry-Howard isomorphism to calculi whose typing rules are inspired by the sequent calculus.
-Our development uses a de~Bruijn representation to mechanise terms and uses the \textit{Autosubst} library to define the desired capture-avoiding substitution operations.
-The formalised system $\LamM$ includes its reduction rules, typing system and core theorems like subject reduction.
-A major contribution was the study of its canonical subsystem, an isomorphism of this subsystem with the simply typed $\Lam$-calculus and a conservativeness result.
+This dissertation presents the mechanisation within the \textit{Rocq Prover} of a multiary $\Lam$-calculus (system $\LamM$) and associated metatheory.
+This mechanisation has two primary objectives: first, a formal verification of metatheoretical proofs, which are often lengthy and prone to human error in manual treatments; second, a study of system $\LamM$ as an extension of the Curry-Howard isomorphism to the sequent calculus paradigm.
+Our development uses a de~Bruijn representation to mechanise syntax with binders and uses the \textit{Autosubst} library to define the desired capture-avoiding substitution operations.
+The formalisation of the system $\LamM$ includes its reduction rules, typing system and core theorems like subject reduction.
+A major contribution is the study of the canonical subsystem within $\LamM$, an isomorphism of this subsystem with the simply typed $\Lam$-calculus and a conservativeness result.
 Interestingly, by formalising the isomorphism with the $\Lam$-calculus, we were able to derive the confluence for $\LamM$.
-This work presents a novel mechanisation of this metatheory and describes the rigorous methodology implemented.
+% This work details a novel mechanisation of this metatheory and describes the rigorous methodology implemented.
+Throughout this dissertation we offer a detailed description of this novel mechanisation of system $\LamM$ and of its metatheory, including commentary on methodological aspects.
 
-\paragraph{Keywords} $\lambda$-calculus, sequent calculus, proof assistants
+\paragraph{Keywords} $\lambda$-calculus, sequent calculus, metatheory, \textit{Rocq Prover}, \textit{Autosubst}
 
 %%% Local Variables:
 %%% mode: LaTeX
