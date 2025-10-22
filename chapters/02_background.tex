@@ -151,19 +151,7 @@ At last, we introduce some standard notions related to the $\beta$-reduction.
 
 % ---
 
-A classical result about the $\beta$-reduction is the confluence of $\twoheadrightarrow_\beta$ (also called Church-Rosser theorem).
-Many proofs of this result can be found, either in print \cite{Barendregt1987, CurryHoward} or in a proof assistant \cite{Copello2017}.
-We leave it here as a claim because we are only interested in deriving the confluence of other systems from this one.
-In \cref{c:isomorphism}, from proving an isomorphism with the $\Lam$-calculus, we prove the confluence of another system using this claim.
-
-\begin{claim}[Confluence]
-  \label{confluence}
-  The relation $\twoheadrightarrow_{\beta}$ is confluent. 
-\end{claim}
-
-% ---
-
-Finally, a brief introduction of $\beta$-normal forms is given.
+Now, a brief introduction of $\beta$-normal forms is given.
 
 \begin{definition}[$\beta$-normal form]
   We say that a $\Lam$-term $t$ is in $\beta$-normal form (or irreducible by $\to_\beta$) when there exists no $\Lam$-term $t'$ such that
@@ -196,7 +184,6 @@ Finally, a brief introduction of $\beta$-normal forms is given.
   \]
 \end{definition}
 
-
 \begin{claim}
   \label{beta_nfs_claim}
   Given a $\Lam$-term $M$, the following are equivalent:
@@ -206,10 +193,25 @@ Finally, a brief introduction of $\beta$-normal forms is given.
   (ii) $M$ is in $\beta$-normal form.
 \end{claim}
 
-We also leave this claim here, but we will show the mechanised proof for $\boxed{\text{(i)} \Rightarrow \text{(ii)}}$ in the last section of this chapter.
+We leave this claim here, but we will show the mechanised proof for $\boxed{\text{(i)} \Rightarrow \text{(ii)}}$ in the last section of this chapter.
 The proof for $\boxed{\text{(ii)} \Rightarrow \text{(i)}}$ can be found in the script repository of our development.
 
 % --- 
+
+Finally, we state a classical result about $\beta$-reduction --- the confluence of $\twoheadrightarrow_\beta$ (also called Church-Rosser theorem).
+Many proofs of this result can be found, either in print \cite{Barendregt1987, CurryHoward} or in a proof assistant \cite{Copello2017}.
+Therefore, a proof for confluence is not provided here because we are only interested in deriving the confluence of other systems from this one.
+In \cref{c:isomorphism}, from proving an isomorphism with the $\Lam$-calculus, we prove the confluence of another system using the fact that the $\Lam$-calculus is confluent.
+
+\begin{theorem}[Confluence]
+  \label{confluence}
+    For every $\Lam$-terms $M, M_1, M_2$, 
+  \[\begin{tikzcd}
+      & M \arrow[ld, two heads, "\beta"] \arrow[rd, two heads, "\beta"] & \\
+      M_1 \arrow[rd, two heads, dashed, "\beta"] && M_2 \arrow[ld, two heads, dashed, "\beta"] \\
+      & \exists N & 
+    \end{tikzcd}\]
+\end{theorem}
 
 \subsection{Types}
 

@@ -715,13 +715,13 @@ As another consequence of conservativeness, confluence of $\LamV$ can be lifted 
   If $\twoheadrightarrow_{\vec \beta}$ is confluent in $\LamV$, then $\twoheadrightarrow_{\beta h}$ is confluent in $\LamM$. 
 \end{corollary}
 \begin{proof}
-  Given $\LamM$-terms $t, t_1, t_2$, we have the following:
+  Recall \cref{h_is_multistep}. Given $\LamM$-terms $t, t_1, t_2$, we have the following:
   \[
     % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQcQBfU9TXfIRTlSxanSat2OAPrFuvEBmx4CRMmJoMWbRCCwAKNAZwBKUwF4AFidMK+KwUQBMo8dql7Zz+0v6qhZBFnd0ldfSMTOXNrKOI7HgcBNRRXEK0w9kNjbxibXN9lZMCyAGZQnXYAHSqYAA8sOBw4AAIalsMcAHIE8RgoAHN4IlAAMwAnCABbJBEOCCQyCUrEMGZGRhpGegAjGEYABX8nPUYYUc4aKxh6KGkAdwhr24REkAnp2ZocBcRSjJWaw2W12+yOjhSIDOFxAVxudy8j2eUFeig+M0Qcx+SFcy08QM2UNBh2OkOhlxAyIeT3hqLGkwxS2xiAALAD8etCds9iSIUIoecKVTETSXr50Tjvr8AGzs3QEkE88HFdjk2FQrBgcJQehwa53N4SxC45lsvHyzmKsGk-lquG3anIunvBmS+ZIACscqQCqJSptqsF6uFHCRtPFrr+Us93tWlr91r5gZh9oRodFKIjn1Z0cQsvNPvj3MTKtOQdTjvDhsjXvdedjvuLvNLApTlPhlbFXEoXCAA
     \begin{tikzcd}
       & t \arrow[ld, two heads, "\beta h"] \arrow[rd, two heads, "\beta h"] \arrow[d, two heads, "h"] & \\
-      t_1 \arrow[d, two heads, "h"] & i(p(t))=h(t) \arrow[dd, two heads, dashed, "\beta h"] \arrow[ld, two heads, "\beta h"] \arrow[rd, two heads, "\beta h"] & t_2 \arrow[d, two heads, "h"] \\
-      i(p(t_1))=h(t_1) \arrow[rd, two heads, "\beta h"] && i(p(t_2))=h(t_2) \arrow[ld, two heads, "\beta h"] \\
+      t_1 \arrow[d, two heads, "h"] & i(p(t))=h(t) \arrow[ld, two heads, "\beta h"] \arrow[rd, two heads, "\beta h"] & t_2 \arrow[d, two heads, "h"] \\
+      i(p(t_1))=h(t_1) \arrow[rd, two heads, dashed, "\beta h"] && i(p(t_2))=h(t_2) \arrow[ld, two heads, dashed, "\beta h"] \\
       & \exists \ i(t') &
     \end{tikzcd}
   \]
@@ -730,8 +730,8 @@ As another consequence of conservativeness, confluence of $\LamV$ can be lifted 
   \[
     % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQ0AKHAShAF9S6TLnyEU5UsWp0mrdlxwB9Yn0HDseAkQBMUmQxZtEHbkp1qhHEVvElSOg3OMgAOq5gAPLHBxwABO7+OADkAjIwUADm8ESgAGYAThAAtkiSIDgQSADMNIbyiGDMjIw0jPQARjCMAAo2YuyMMPE4IOVYYC5Q9HAAFpECVkmp6TRZSGSyRkjFpeVVNfWajSbNre0gA-RQ7DgA7hDbUAjqICNpiBkTiHrThXNlIBXVdQ3aay1tNMd7h8enYbJS5TG55e7GR4LV7LUQfZ5fTa-EwHI4wHaAhLApB3MH5ZyzEpPF5Ld7iBEbH7o3Yo-7U06UfhAA
     \begin{tikzcd}
-      & p(t) \arrow[dd, dashed, "\vec \beta"] \arrow[ld, two heads, "\vec \beta"] \arrow[rd, two heads, "\vec \beta"] & \\
-      p(t_1) \arrow[rd, two heads, "\vec \beta"] && p(t_2) \arrow[ld, two heads, "\vec \beta"] \\
+      & p(t) \arrow[ld, two heads, "\vec \beta"] \arrow[rd, two heads, "\vec \beta"] & \\
+      p(t_1) \arrow[rd, two heads, dashed, "\vec \beta"] && p(t_2) \arrow[ld, two heads, dashed, "\vec \beta"] \\
       & \exists \ t' &                             
     \end{tikzcd}
   \]

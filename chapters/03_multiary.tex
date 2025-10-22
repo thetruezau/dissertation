@@ -349,8 +349,8 @@ With the following auxiliary result we can easily prove the confluence of $\twoh
   For every $\LamM$-terms $t, t_1, t_2$,
   % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQcQBfU9TXfIRTlSxanSat2OAPrFuvEBmx4CRAEyjxDFm0QcZ6hXxWCiZddsl6QACwAUOAJTdxMKAHN4RUADMAThAAtkgiHBBIZHYw9FDSAO4QtjFQCDSM9ABGMIwACvyqQiD+WB62nDx+gSGIYTgRiJrRsQlJKQiVIAHBkTT1SADMNMkt+jiJI6nGXdVITf2IQ81xYxPt0901dQ1Lk62TaSCMWGA2UPRwyXFclFxAA
   \[\begin{tikzcd}
-      & t \arrow[ld, two heads, "h"] \arrow[rd, two heads, "h"] \arrow[dd, two heads, dashed, "h"] & \\
-      t_1 \arrow[rd, two heads, "h"] && t_2 \arrow[ld, two heads, "h"] \\
+      & t \arrow[ld, two heads, "h"] \arrow[rd, two heads, "h"] \arrow[dd, two heads, "h"] & \\
+      t_1 \arrow[rd, two heads, dashed, "h"] && t_2 \arrow[ld, two heads, dashed, "h"] \\
       & h(t) & 
     \end{tikzcd}\]
 \end{corollary}
