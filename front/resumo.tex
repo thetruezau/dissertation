@@ -1,5 +1,17 @@
 \chapter*{Resumo}
 \thispagestyle{title_on_header}
-Abstract em português.
 
-\paragraph{Palavras-chave} 3 a 5 palavras-chave, ordenadas alfabeticamente e separadas por vírgulas
+Esta dissertação apresenta a mecanização no \textit{Rocq Prover} de um cálculo-$\Lam$ multiário (sistema $\LamM$) e da sua metateoria associada.
+Esta mecanização tem dois objectivos principais: primeiro, uma verificação formal de provas acerca de metateoria, que são frequentemente longas e propensas a erros humanos nos tratamentos manuais; segundo, um estudo do sistema $\LamM$ como uma extensão do isomorfismo de Curry-Howard para o paradigma do cálculo de sequentes.
+O nosso desenvolvimento usa uma representação de~Bruijn para mecanizar a sintaxe com mecanismos de ligação e usa a biblioteca \textit{Autosubst} para definir as operações de substituição sem captura de variáveis.
+A formalização do sistema $\LamM$ inclui as suas regras de redução, o sistema de tipificação e teoremas centrais como a redução do sujeito.
+Uma contribuição importante é o estudo do subsistema canónico em $\LamM$, um isomorfismo deste subsistema com o cálculo-$\Lam$ com tipos simples e um resultado de conservatividade.
+Curiosamente, ao formalizar o isomorfismo com o cálculo-$\Lam$, conseguimos derivar a confluência para $\LamM$.
+Ao longo desta dissertação oferecemos uma descrição detalhada desta nova mecanização do sistema $\LamM$ e da sua metateoria, incluindo comentários sobre aspectos metodológicos.
+
+\paragraph{Palavras-chave} cálculo-$\lambda$, cálculo de sequentes, \textit{Rocq Prover}, \textit{Autosubst}
+
+%%% Local Variables:
+%%% mode: LaTeX
+%%% TeX-master: "../dissertation"
+%%% End:
