@@ -10,7 +10,7 @@ The chapter is inspired in the works~\cite{LuisDychkoff} and~\cite[Chapter~4]{JC
 
 % https://q.uiver.app/#q=WzAsNCxbMiwwLCJcXGJveGVke1xcdmVjIFxcbGFtYmRhfSJdLFsyLDIsIlxcYm94ZWR7XFxzbWFsbHtcXHZlYyBcXGJldGEtbmZzfX0iXSxbMCwwLCJcXGJveGVkXFxsYW1iZGEiXSxbMCwyLCJcXGJveGVke1xcc21hbGx7XFxiZXRhLW5mc319Il0sWzAsMSwiXFxkb3duYXJyb3dfe1xcdmVjIFxcYmV0YX0iLDFdLFsyLDMsIlxcZG93bmFycm93X1xcYmV0YSIsMV0sWzMsMSwiXFxjb25nIiwxLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn19fV0sWzIsMCwiXFxwc2kiLDEseyJvZmZzZXQiOi0yfV0sWzAsMiwiXFx0aGV0YSIsMSx7Im9mZnNldCI6LTJ9XV0=
 \[\begin{tikzcd}
-    {\boxed\lambda} && {\boxed{\vec \lambda}} \\
+    {\boxed\Lam} && {\boxed{\LamV}} \\
     \\
     {\boxed{\beta-nfs}} && {\boxed{\vec \beta-nfs}}
     \arrow["\psi"{description}, shift left=2, from=1-1, to=1-3]
@@ -20,7 +20,7 @@ The chapter is inspired in the works~\cite{LuisDychkoff} and~\cite[Chapter~4]{JC
     \arrow[<->, from=3-1, to=3-3]
   \end{tikzcd}\]
 
-In this diagram: the horizontal arrows refer to the inverse maps underlying the isomorphism; the down arrows symbolize (partial) maps associating expressions to the respective normal form (when existing).
+In this diagram: the horizontal arrows refer to the inverse maps underlying the isomorphism; the down arrows symbolise (partial) maps associating expressions to the respective normal form (when existing).
 % Also recall the sets NF$\subset \Lam$-terms and NT$\subset \LamV$-terms of the respective $\beta$-normal forms.
 
 \section{Mappings $\theta$ and $\psi$}
@@ -100,7 +100,7 @@ Now, we will establish that $\theta$ and $\psi$ are indeed inverse maps, and thu
 
 Now we turn our attention to reduction, showing that the reduction relations $\to_\beta$ of $\Lam$-calculus and $\to_{\vec \beta}$ of $\LamV$ are isomorphic.
 
-First, introduce some lemmata, in order to relate the mappings $\theta'$ and $\psi'$ with the @ operation and list append.
+First, we introduce some lemmata, in order to relate the mappings $\theta'$ and $\psi'$ with the @ operation and list append.
 
 \begin{lemma}
   \label{theta_app_lemma}
@@ -201,14 +201,14 @@ As a direct consequence of this isomorphism we get the two following results.
 
 \begin{corollary}[Confluence of $\LamV$]
   \label{can_confluence}
-  The relation $\twoheadrightarrow_{\vec \beta}$ is confluent in $\LamV$. 
+  The relation $\twoheadrightarrow_{\vec \beta}$ is confluent. 
 \end{corollary}
 \begin{proof}
   Immediate from \cref{confluence,reduction_isomorphism}.
 \end{proof}
 
 \begin{corollary}[Confluence of $\LamM$]
-  The relation $\twoheadrightarrow_{\beta h}$ is confluent in $\LamM$. 
+  The relation $\twoheadrightarrow_{\beta h}$ is confluent.
 \end{corollary}
 \begin{proof}
   Immediate from \cref{confluence_lift,can_confluence}.
@@ -253,7 +253,7 @@ We can prove an analogous result for $\psi$.
 
 Finally, we complete the proof of our isomorphism by showing a 1-1 correspondence between typed terms of the simply typed $\Lam$-calculus and system $\LamV$.
 
-\begin{theorem}[$\theta$ admissibility]
+\begin{theorem}[Soundness of $\theta$]
   \label{theta_admiss}
   The following rules hold:
   \[ \begin{prooftree}
@@ -271,7 +271,7 @@ Finally, we complete the proof of our isomorphism by showing a 1-1 correspondenc
   The proof proceeds easily by simultaneous induction on the structure of the typing derivations in the system $\LamV$.
 \end{proof}
 
-\begin{theorem}[$\psi'$ admissibility]
+\begin{theorem}[Soundness of $\psi'$]
   \label{psi'_admiss}
   The following rule holds:
   \[ \begin{prooftree}
@@ -287,8 +287,8 @@ Finally, we complete the proof of our isomorphism by showing a 1-1 correspondenc
 Again, from the previous theorem, the following rule is derivable for map $\psi$.
 \[ \begin{prooftree}
     \hypo{ \Gamma \vdash M : A }
-    \hypo{ \Gamma ; A \vdash [] : A }
-    \infer2{ \Gamma \vdash \psi(M) : A }.
+    % \hypo{ \Gamma ; A \vdash [] : A }
+    \infer1{ \Gamma \vdash \psi(M) : A }.
   \end{prooftree} \]
 
 We state our isomorphism at the level of typed terms with the following result.
@@ -307,7 +307,7 @@ We state our isomorphism at the level of typed terms with the following result.
 Interestingly, the isomorphism between typed terms provides us with a proof for the subject reduction of the simply typed $\Lam$-calculus.
 
 \begin{corollary}[Subject Reduction for $\Lam$]
-  Given $\Lam$-terms $M$ and $N$, the follwing holds:
+  Given $\Lam$-terms $M$ and $N$, the following holds:
   \[
     \Gamma \vdash M:A \ \land \ M \to_{\beta} N \implies \Gamma \vdash N:A.
   \]

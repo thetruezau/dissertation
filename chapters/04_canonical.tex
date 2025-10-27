@@ -2,13 +2,15 @@
 \label{c:canonical}
 
 In this chapter we present a system that we give the name of canonical $\Lam$-calculus ($\LamV$).
+The notation used for this system intentionally points towards its vectorial style.
 The naming of this system is motivated by two reasons.
-On the one hand, it is isomorphic to the canonical subsystem of $\LamM$ seen in the previous chapter.
-On the other hand, it is also isomorphic to the simply typed $\Lam$-calculus.
+On the one hand, as we will see in this chapter, it is isomorphic to the canonical subsystem $\LamCan$ seen in the previous chapter.
+On the other hand, as we will see in the next chapter, it is also isomorphic to the simply typed $\Lam$-calculus.
 
-The system $\LamV$ is a self-contained representation of the canonical subsystem of $\LamM$ (one can notice the similarities between the definitions for system $\LamM$).
-We will give a complete proof for this isomorphism in the second section of this chapter.
-In the third section we give the proof for the theorem of conservativeness, stating that $\LamM$ is a conservative extension of $\LamV$. 
+System $\LamV$ is an independent representation of the canonical subsystem of $\LamM$ (in opposition to $\LamCan$).
+We will give a complete proof for the isomorphism between both systems in the second section of this chapter.
+In the third section, we prove a conservativeness result that links reduction in system $\LamM$ and system $\LamV$.
+In turn, such result proves that $\LamM$ is a conservative extension of $\LamCan$.
 The isomorphism between system $\LamV$ and the simply typed $\Lam$-calculus is left for \cref{c:isomorphism}.
 
 \section{The system $\LamV$}
@@ -24,8 +26,10 @@ The isomorphism between system $\LamV$ and the simply typed $\Lam$-calculus is l
 
 \begin{remark}
   The $\LamV$-terms have two different binding constructors: $\lambda x.t$ and $app_{\lambda} (x.t, u, l)$.
-  In both constructors, every occurrence of the variable $x$ in subterms $var(x)$ of the term $t$ is bound (and not free).
-  System $\LamV$ has in $app_{\lambda} (x.t, u, l)$ a dedicated constructor for the multiary application $(\lambda x.t)(u, l)$ of system $\LamM$.  
+  In both constructors, every occurrence of the variable $x$ is bound (and not free).
+  System $\LamV$ has in $app_{\lambda} (x.t, u, l)$ a dedicated constructor for the multiary application $(\lambda x.t)(u, l)$ of system $\LamM$.
+
+  Even more, $\LamV$-terms have two constructors that introduce occurrences of free variables: $var(x)$ and $app_{v} (x, u, l)$.
 \end{remark}
 
 \begin{definition}
@@ -39,7 +43,7 @@ The isomorphism between system $\LamV$ and the simply typed $\Lam$-calculus is l
   where the list append, $l + l'$, has the expected behaviour (as in $\LamM$).
 \end{definition}
 
-Now follows a ``strange'' definition for the substitution operation, which needs to be careful when dealing with a substitution over a constructor $app_v$.
+Now follows a ``strange'' definition for a substitution operation, because, in the critical substitution case $app_v(x, u', l)[x := u]$, the usual behaviour for the substitution would result in an incorrect $\LamV$-term $app_v(u, u', l)$.
 
 \begin{definition}[Substitution for $\LamV$-expressions]
   \label{canonical_substitution}
@@ -213,7 +217,7 @@ We now make some considerations about $\vec \beta$-normal forms in this system.
   One could simply describe the $\vec \beta$-normal forms of $\LamV$ as the terms and lists with no occurrences of the constructor $app_{\lambda}$.
   This description is similar to idea of cut-elimination from sequent calculus (where the normal forms are the expressions not using cuts) and is one of the motivations for working with such systems.
   % proof search
-  This system offers thus an advantage in comparison to the $\Lam$-calculus, where a description of $\beta$-normal forms is more elaborated.
+  System $\LamV$ offers thus an advantage in comparison to the $\Lam$-calculus, where a description of $\beta$-normal forms is more elaborated.
 \end{remark}
 
 We will not prove this claim here.
@@ -265,11 +269,18 @@ We conclude the description of system $\LamV$ by presenting its typing system.
   \]
 \end{definition}
 
+We should briefly highlight the sequent calculus features found in the previous typing rules.
+Firstly, it is clear that we have rules not only for the introduction of implication on the right (Abs), but also for the introduction of implication on the left (Cons).
+Secondly, we may also see rule App$_v$ as introducing an implication $A \supset B$ on the left and immediately contracting it with $x: A \supset B$.
+% of implication ($A \supset B$) on the left followed by a contraction.
+Thirdly, in the rule App$_\lambda$, we have two simultaneous cuts happening (the first and second premises cut on $A$, and, the first and third premises cut on $B$).
+Indeed, we have a rather specific typing system, but still with a strong sequent calculus flavour.
+
 % ---
 % 123
 % ---
 
-\section{$\LamV$ vs the canonical subsystem of $\LamM$}
+\section{$\LamV$ vs $\LamCan$}
 
 In this section we prove an isomorphism between $\LamV$ and the canonical subsystem in $\LamM$. 
 We start by defining two functions that play a key role in this isomorphism.
@@ -303,7 +314,7 @@ The following diagram summarises the connection between the defined maps and map
 \[
   \begin{tikzcd}
     & \pmb{\lambda m} \arrow[d, "h"] \arrow[ld, "p"'] \\
-    \pmb{\vec \lambda} \arrow[r, "i"'] & Can                                      
+    \pmb{\vec \lambda} \arrow[r, "i"'] & \LamCan                                      
   \end{tikzcd}
 \]
 
@@ -426,7 +437,7 @@ The following technical lemma says that we can derive the compatibility rules of
   \[ t \to_{\vec \beta} t' \implies i(t) \ ({\to_{\beta}})_c \ i(t') . \]
 \end{theorem}
 \begin{proof}
-  The proof proceeds by induction on the relation $\to_{\vec \beta}$ of $\LamV$-expressions.
+  The proof proceeds by induction on the relation $\to_{\vec \beta}$ on $\LamV$-expressions.
   
   \cref{i_subst_pres} deals with substitution preservation in the $\vec \beta$-reduction cases.
 
@@ -451,7 +462,7 @@ The following technical lemma says that we can derive the compatibility rules of
 Summarising the previous results, we state the following corollary.
 
 \begin{corollary}[Isomorphism of reduction] \hfill
-  
+  \label{canonical_reduction_iso}
   \begin{enumerate}
   \item $t \to_{\vec \beta} t'$ in $\LamV$ $\iff$ $i(t) \ ({\to_{\beta}})_c \ i(t')$ in $Can$
   \item $t \ ({\to_{\beta}})_c \ t'$ in $Can$ $\iff$ $p(t) \to_{\vec \beta} p(t')$ in $\LamV$
@@ -469,7 +480,7 @@ Summarising the previous results, we state the following corollary.
 
 We start by establishing admissibility of the typing rules for the append and @ operations.
 
-\begin{lemma}[Append admissibility]
+\begin{lemma}[Append typing rule]
   \label{append_admissibility}
   The following rule is admissible in $\LamV$:
   \[ \begin{prooftree}
@@ -482,7 +493,7 @@ We start by establishing admissibility of the typing rules for the append and @ 
   The proof proceeds easily by induction on the list $l$.
 \end{proof}
 
-\begin{lemma}[@ admissibility]
+\begin{lemma}[@ typing rule]
   \label{app_admissibility}
   The following rule is admissible in $\LamV$:
   \[ \begin{prooftree}
@@ -498,7 +509,7 @@ We start by establishing admissibility of the typing rules for the append and @ 
 
 We are now ready to prove the two theorems that provide the isomorphism of the canonical subsystem of $\LamM$ and system $\LamV$ at the typing level.
 
-\begin{theorem}[$i$ admissibility]
+\begin{theorem}[Soundness of $i$]
   \label{i_admissibility}
     For every $\LamV$-term $t$ and $\LamV$-list $l$, the following rules hold:
   \[ \begin{prooftree}
@@ -516,7 +527,7 @@ We are now ready to prove the two theorems that provide the isomorphism of the c
 \end{proof}
 
 
-\begin{theorem}[$p$ admissibility]
+\begin{theorem}[Soundness of $p$]
   \label{p_admissibility}
   For every $t \in Can$ and $l \in CanList$, the following rules hold:
   \[ \begin{prooftree}
@@ -539,8 +550,8 @@ We are now ready to prove the two theorems that provide the isomorphism of the c
   \cref{app_admissibility} is crucial for the application case.
 \end{proof}
 
-Our argument for the isomorphism between the canonical subsystem in $\LamM$ and $\LamV$ ends here.
-From now on, we will use the self contained representation, system $\LamV$, to talk about canonical terms.
+Our argument for the isomorphism between the canonical subsystem $\LamCan$ and $\LamV$ ends here.
+From now on, we will use the self contained representation, system $\LamV$, to prove results about the canonical subsystem in $\LamM$.
 
 % ---
 % 123
@@ -557,16 +568,13 @@ We start by proving a auxiliary result that connects the @ operation with list a
   \[ (t@(u, p(l)))@(p(v), p(l')) = t@(u, p(l+(v::l'))) \]
 \end{lemma}
 \begin{proof}
-  The proof proceeds by inspection of $\LamV$-term $t$ and uses the simple fact that $p(l+(v::l')) = p(l)+p(v)::p(l')$.
+  The proof proceeds by inspection of $\LamV$-term $t$ and uses the simple fact that $p(l+(v::l')) = p(l)+(p(v)::p(l'))$.
 \end{proof}
   
 \begin{theorem}[Conservativeness]
   \label{conservativeness}
   For every $\LamV$-terms $t$ and $t'$, we have:
-  \[
-    t \twoheadrightarrow_{\vec \beta} t' \iff
-    i(t) \twoheadrightarrow_{\beta h} i(t').
-  \]
+  \[ t \twoheadrightarrow_{\vec \beta} t' \iff i(t) \twoheadrightarrow_{\beta h} i(t'). \]
 \end{theorem}
 \begin{proof}
   $\boxed \implies~$
@@ -620,69 +628,85 @@ We start by proving a auxiliary result that connects the @ operation with list a
     $\boxed \Longleftarrow$
     Let $t$ and $t'$ be $\LamM$-terms.    
     
-  For this implication, we first show how a reduction $t \to_{\beta h} t'$ in $\LamM$ is directly translated into a reduction $p(t) \to_{\vec \beta} p(t')$ in $\LamV$. 
+  For this implication, we first show how a reduction $t \to_{\beta h} t'$ in $\LamM$ is directly translated into a reduction $p(t) \twoheadrightarrow_{\vec \beta} p(t')$ in $\LamV$. 
   
   Case $t \to_{\beta_1} t'$:
   % https://q.uiver.app/#q=WzAsMTAsWzAsMiwiKFxcbGFtYmRhIHgudCkodSwgW10pIl0sWzAsMywidFt4Oj11XSJdLFsxLDIsImFwcF97XFxsYW1iZGF9ICh4LnAodCksIHAodSksIFtdKSJdLFsxLDMsInAodClbeDo9cCh1KV0iXSxbMSw0LCJwKHRbeDo9dV0pIl0sWzEsMSwiKFxcbGFtYmRhIHgucCh0KSlAKHAodSksIFtdKSJdLFswLDAsIihcXHRleHR7aW59IFxcIFxcTGFtTSkiXSxbMSwwLCIoXFx0ZXh0e2lufSBcXCBcXExhbVYpIl0sWzIsM10sWzIsNF0sWzAsMSwiX3tcXGJldGFfMX0iXSxbMiwzLCJfe1xcYmV0YV8xfSJdLFszLDQsIiIsMix7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzAsNSwicCIsMV0sWzUsMiwiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSw0LCJwIiwxXSxbOCw5LCJcXHRleHR7XFxjcmVme3Bfc3Vic3RfcHJlc319IiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d
   \[\begin{tikzcd}
-	{(\text{in} \ \LamM)} & {(\text{in} \ \LamV)} \\
-	& {(\lambda x.p(t))@(p(u), [])} & {} \\
-	{(\lambda x.t)(u, [])} & {app_{\lambda} (x.p(t), p(u), [])} & {} \\
-	{t[x:=u]} & {p(t)[x:=p(u)]} & {} \\
-	& {p(t[x:=u])} & {}
-	\arrow[equals, from=2-2, to=3-2]
-        \arrow["{\text{Def. of @}}"{description}, draw=none, from=2-3, to=3-3]
-	\arrow["p"{description}, maps to, from=3-1, to=2-2]
-	\arrow["{_{\beta_1}}", from=3-1, to=4-1]
-	\arrow["{_{\vec \beta_1}}", from=3-2, to=4-2]
-	\arrow["p"{description}, maps to, from=4-1, to=5-2]
-	\arrow[equals, from=4-2, to=5-2]
-	\arrow["{\text{\cref{p_subst_pres}}}"{description}, draw=none, from=4-3, to=5-3]
-      \end{tikzcd}\]
+      {(\text{in} \ \LamM)} & {(\text{in} \ \LamV)} \\
+      & {(\lambda x.p(t))@(p(u), [])} & {} \\
+      {(\lambda x.t)(u, [])} & {app_{\lambda} (x.p(t), p(u), [])} & {} \\
+      {t[x:=u]} & {p(t)[x:=p(u)]} & {} \\
+      & {p(t[x:=u])} & {}
+      \arrow[equals, from=2-2, to=3-2]
+      \arrow["{\text{Def. of @}}"{description}, draw=none, from=2-3, to=3-3]
+      \arrow["p"{description}, maps to, from=3-1, to=2-2]
+      \arrow["{_{\beta_1}}", from=3-1, to=4-1]
+      \arrow["{_{\vec \beta_1}}", from=3-2, to=4-2]
+      \arrow["p"{description}, maps to, from=4-1, to=5-2]
+      \arrow[equals, from=4-2, to=5-2]
+      \arrow["{\text{\cref{p_subst_pres}}}"{description}, draw=none, from=4-3, to=5-3]
+    \end{tikzcd}\]
 
-    Case $t \to_{\beta_2} t'$:
-    % https://q.uiver.app/#q=WzAsMTAsWzAsMiwiKFxcbGFtYmRhIHgudCkodSwgdjo6bCkiXSxbMCwzLCJ0W3g6PXVdKHYsIGwpIl0sWzEsMiwiYXBwX3tcXGxhbWJkYX0gKHgucCh0KSwgcCh1KSwgcCcobCkpIl0sWzEsMywicCh0KVt4Oj1wKHUpXUAocCh2KSwgcCcobCkpIl0sWzEsNCwicCh0W3g6PXVdKUAocCh2KSwgcCcobCkpIl0sWzEsMSwiKFxcbGFtYmRhIHgucCh0KSlAKHAodSksIHAnKGwpKSJdLFswLDAsIihcXHRleHR7aW59IFxcIFxcTGFtTSkiXSxbMSwwLCIoXFx0ZXh0e2lufSBcXCBcXExhbVYpIl0sWzIsM10sWzIsNF0sWzAsMSwiX3tcXGJldGFfMn0iXSxbMiwzLCJfe1xcYmV0YV8yfSJdLFszLDQsIiIsMix7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzAsNSwicCIsMV0sWzUsMiwiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSw0LCJwIiwxXSxbOCw5LCJcXHRleHR7XFxjcmVme2NvbXBhdGliaWxpdHlfbGVtbWFzfSBhbmQgXFxjcmVme3Bfc3Vic3RfcHJlc319IiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d
-    \[\begin{tikzcd}
-	{(\text{in} \ \LamM)} & {(\text{in} \ \LamV)} \\
-	& {(\lambda x.p(t))@(p(u), p(v)::p(l))} & {} \\
-	{(\lambda x.t)(u, v::l)} & {app_{\lambda} (x.p(t), p(u), p(v)::p(l))} & {} \\
-	{t[x:=u](v, l)} & {p(t)[x:=p(u)]@(p(v), p(l))} & {} \\
-	& {p(t[x:=u])@(p(v), p(l))} & {}
-	\arrow[equals, from=2-2, to=3-2]
-        \arrow["{\text{Def. of @}}"{description}, draw=none, from=2-3, to=3-3]
-	\arrow["p"{description}, maps to, from=3-1, to=2-2]
-	\arrow["{_{\beta_2}}", from=3-1, to=4-1]
-	\arrow["{_{\vec \beta_2}}", from=3-2, to=4-2]
-	\arrow["p"{description}, maps to, from=4-1, to=5-2]
-	\arrow[equals, from=4-2, to=5-2]
-	\arrow["{\text{\cref{p_subst_pres}}}"{description}, draw=none, from=4-3, to=5-3]
-      \end{tikzcd}\]
+  Case $t \to_{\beta_2} t'$:
+  % https://q.uiver.app/#q=WzAsMTAsWzAsMiwiKFxcbGFtYmRhIHgudCkodSwgdjo6bCkiXSxbMCwzLCJ0W3g6PXVdKHYsIGwpIl0sWzEsMiwiYXBwX3tcXGxhbWJkYX0gKHgucCh0KSwgcCh1KSwgcCcobCkpIl0sWzEsMywicCh0KVt4Oj1wKHUpXUAocCh2KSwgcCcobCkpIl0sWzEsNCwicCh0W3g6PXVdKUAocCh2KSwgcCcobCkpIl0sWzEsMSwiKFxcbGFtYmRhIHgucCh0KSlAKHAodSksIHAnKGwpKSJdLFswLDAsIihcXHRleHR7aW59IFxcIFxcTGFtTSkiXSxbMSwwLCIoXFx0ZXh0e2lufSBcXCBcXExhbVYpIl0sWzIsM10sWzIsNF0sWzAsMSwiX3tcXGJldGFfMn0iXSxbMiwzLCJfe1xcYmV0YV8yfSJdLFszLDQsIiIsMix7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzAsNSwicCIsMV0sWzUsMiwiIiwxLHsibGV2ZWwiOjIsInN0eWxlIjp7ImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMSw0LCJwIiwxXSxbOCw5LCJcXHRleHR7XFxjcmVme2NvbXBhdGliaWxpdHlfbGVtbWFzfSBhbmQgXFxjcmVme3Bfc3Vic3RfcHJlc319IiwxLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoibm9uZSJ9LCJoZWFkIjp7Im5hbWUiOiJub25lIn19fV1d
+  \[\begin{tikzcd}
+      {(\text{in} \ \LamM)} & {(\text{in} \ \LamV)} \\
+      & {(\lambda x.p(t))@(p(u), p(v)::p(l))} & {} \\
+      {(\lambda x.t)(u, v::l)} & {app_{\lambda} (x.p(t), p(u), p(v)::p(l))} & {} \\
+      {t[x:=u](v, l)} & {p(t)[x:=p(u)]@(p(v), p(l))} & {} \\
+      & {p(t[x:=u])@(p(v), p(l))} & {}
+      \arrow[equals, from=2-2, to=3-2]
+      \arrow["{\text{Def. of @}}"{description}, draw=none, from=2-3, to=3-3]
+      \arrow["p"{description}, maps to, from=3-1, to=2-2]
+      \arrow["{_{\beta_2}}", from=3-1, to=4-1]
+      \arrow["{_{\vec \beta_2}}", from=3-2, to=4-2]
+      \arrow["p"{description}, maps to, from=4-1, to=5-2]
+      \arrow[equals, from=4-2, to=5-2]
+      \arrow["{\text{\cref{p_subst_pres}}}"{description}, draw=none, from=4-3, to=5-3]
+    \end{tikzcd}\]
 
-    Case $t \to_h t'$:
-    % https://q.uiver.app/#q=WzAsOCxbMCwxLCJ0KHUsIGwpKHUnLCBsJykiXSxbMCwyLCJ0KHUsIGwrKHUnOjpsJykpIl0sWzEsMSwiKHAodClAKHAodSksIHAnKGwpKSlAKHAodScpLCBwJyhsJykpIl0sWzEsMiwicCh0KUAocCh1KSwgcCcobCsodSc6OmwnKSkpIl0sWzEsMCwiKFxcdGV4dHtpbn0gXFwgXFxMYW1WKSJdLFswLDAsIihcXHRleHR7aW59IFxcIFxcTGFtTSkiXSxbMiwxXSxbMiwyXSxbMCwxLCJfaCJdLFswLDIsInAiLDFdLFsxLDMsInAiLDFdLFsyLDMsIiIsMSx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzYsNywiXFx0ZXh0e1xcY3JlZnt1bmtub3duX2xlbW1hfX0iLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=
-    \[\begin{tikzcd}
-	{(\text{in} \ \LamM)} & {(\text{in} \ \LamV)} \\
-	{t(u, l)(u', l')} & {(p(t)@(p(u), p(l)))@(p(u'), p(l'))} & {} \\
-	{t(u, l+(u'::l'))} & {p(t)@(p(u), p(l+(u'::l')))} & {}
-	\arrow["p"{description}, maps to, from=2-1, to=2-2]
-	\arrow["{_h}", from=2-1, to=3-1]
-	\arrow[equals, from=2-2, to=3-2]
-	\arrow["{\text{\cref{can_app_comm}}}"{description}, draw=none, from=2-3, to=3-3]
-	\arrow["p"{description}, maps to, from=3-1, to=3-2]
-      \end{tikzcd}\]
+  Case $t \to_h t'$:
+  % https://q.uiver.app/#q=WzAsOCxbMCwxLCJ0KHUsIGwpKHUnLCBsJykiXSxbMCwyLCJ0KHUsIGwrKHUnOjpsJykpIl0sWzEsMSwiKHAodClAKHAodSksIHAnKGwpKSlAKHAodScpLCBwJyhsJykpIl0sWzEsMiwicCh0KUAocCh1KSwgcCcobCsodSc6OmwnKSkpIl0sWzEsMCwiKFxcdGV4dHtpbn0gXFwgXFxMYW1WKSJdLFswLDAsIihcXHRleHR7aW59IFxcIFxcTGFtTSkiXSxbMiwxXSxbMiwyXSxbMCwxLCJfaCJdLFswLDIsInAiLDFdLFsxLDMsInAiLDFdLFsyLDMsIiIsMSx7ImxldmVsIjoyLCJzdHlsZSI6eyJoZWFkIjp7Im5hbWUiOiJub25lIn19fV0sWzYsNywiXFx0ZXh0e1xcY3JlZnt1bmtub3duX2xlbW1hfX0iLDEseyJzdHlsZSI6eyJib2R5Ijp7Im5hbWUiOiJub25lIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=
+  \[\begin{tikzcd}
+      {(\text{in} \ \LamM)} & {(\text{in} \ \LamV)} \\
+      {t(u, l)(u', l')} & {(p(t)@(p(u), p(l)))@(p(u'), p(l'))} & {} \\
+      {t(u, l+(u'::l'))} & {p(t)@(p(u), p(l+(u'::l')))} & {}
+      \arrow["p"{description}, maps to, from=2-1, to=2-2]
+      \arrow["{_h}", from=2-1, to=3-1]
+      \arrow[equals, from=2-2, to=3-2]
+      \arrow["{\text{\cref{can_app_comm}}}"{description}, draw=none, from=2-3, to=3-3]
+      \arrow["p"{description}, maps to, from=3-1, to=3-2]
+    \end{tikzcd}\]
 
-    % From these cases, we proved that:
-    From the shown base cases, an easy induction on the relation $\to_{\beta h}$ proves for every $\LamM$-terms $t, t'$:
-    \[ t \twoheadrightarrow_{\beta h} t' \implies p(t) \twoheadrightarrow_{\vec \beta} p(t'). \]
-    Thus, for every $\LamV$-terms $u, u'$, 
-    \[ i(u) \twoheadrightarrow_{\beta h} i(u') \implies p(i(u)) = u \twoheadrightarrow_{\vec \beta} p(i(u')) = u'. \]
-  \end{proof}
+  % From these cases, we proved that:
+  From the shown base cases, an easy induction on the relation $\to_{\beta h}$ proves for every $\LamM$-terms $t, t'$:
+  \[ t \twoheadrightarrow_{\beta h} t' \implies p(t) \twoheadrightarrow_{\vec \beta} p(t'). \]
+  Thus, for every $\LamV$-terms $u, u'$, 
+  \[
+    i(u) \twoheadrightarrow_{\beta h} i(u') \implies
+    \underbrace{p(i(u))}_u \twoheadrightarrow_{\vec \beta} \underbrace{p(i(u'))}_{u'}.
+  \]
+\end{proof}
 
-As an immediate application of the conservativeness result just proved, we can derive subject reduction for $\LamV$ from $\LamM$ (already proved as \cref{type_preservation}).
+% Although a relation $(\twoheadrightarrow_{\beta})_c$ has not been considered before, it can be thought of as a multistep reduction relation for $\LamCan$.
+
+\begin{corollary}[Conservative extension]
+  $\LamM$ is a conservative extension of $\LamCan$.
+
+  That is, for every $t, t' \in Can$, 
+  \[ t \twoheadrightarrow_{\beta^{Can}} t' \iff t \twoheadrightarrow_{\beta h} t', \]
+  where $\twoheadrightarrow_{\beta^{Can}}$ is the reflexive-transitive closure of $(\to_{\beta})_c$.
+\end{corollary}
+\begin{proof}
+  Immediate by \cref{canonical_reduction_iso,conservativeness}.
+\end{proof}
+
+As another immediate application of the conservativeness result just proved, we can derive subject reduction for $\LamV$ from $\LamM$ (already proved as \cref{type_preservation}).
 
 \begin{corollary}[Subject reduction for $\LamV$]
   \label{can_subject_reduction}
-  Given $\LamV$-terms $t$ and $t'$, the follwing holds:
+  Given $\LamV$-terms $t$ and $t'$, the following holds:
   \[
     \Gamma \vdash t : A \ \land \ t \to_{\vec \beta} t' \implies \Gamma \vdash t' : A.
   \]
@@ -715,18 +739,21 @@ As another consequence of conservativeness, confluence of $\LamV$ can be lifted 
   If $\twoheadrightarrow_{\vec \beta}$ is confluent in $\LamV$, then $\twoheadrightarrow_{\beta h}$ is confluent in $\LamM$. 
 \end{corollary}
 \begin{proof}
-  Recall \cref{h_is_multistep}. Given $\LamM$-terms $t, t_1, t_2$, we have the following:
+  Given $\LamM$-terms $t, t_1, t_2$, we have the following:
   \[
     % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQcQBfU9TXfIRTlSxanSat2OAPrFuvEBmx4CRMmJoMWbRCCwAKNAZwBKUwF4AFidMK+KwUQBMo8dql7Zz+0v6qhZBFnd0ldfSMTOXNrKOI7HgcBNRRXEK0w9kNjbxibXN9lZMCyAGZQnXYAHSqYAA8sOBw4AAIalsMcAHIE8RgoAHN4IlAAMwAnCABbJBEOCCQyCUrEMGZGRhpGegAjGEYABX8nPUYYUc4aKxh6KGkAdwhr24REkAnp2ZocBcRSjJWaw2W12+yOjhSIDOFxAVxudy8j2eUFeig+M0Qcx+SFcy08QM2UNBh2OkOhlxAyIeT3hqLGkwxS2xiAALAD8etCds9iSIUIoecKVTETSXr50Tjvr8AGzs3QEkE88HFdjk2FQrBgcJQehwa53N4SxC45lsvHyzmKsGk-lquG3anIunvBmS+ZIACscqQCqJSptqsF6uFHCRtPFrr+Us93tWlr91r5gZh9oRodFKIjn1Z0cQsvNPvj3MTKtOQdTjvDhsjXvdedjvuLvNLApTlPhlbFXEoXCAA
     \begin{tikzcd}
-      & t \arrow[ld, two heads, "\beta h"] \arrow[rd, two heads, "\beta h"] \arrow[d, two heads, "h"] & \\
-      t_1 \arrow[d, two heads, "h"] & i(p(t))=h(t) \arrow[ld, two heads, "\beta h"] \arrow[rd, two heads, "\beta h"] & t_2 \arrow[d, two heads, "h"] \\
-      i(p(t_1))=h(t_1) \arrow[rd, two heads, dashed, "\beta h"] && i(p(t_2))=h(t_2) \arrow[ld, two heads, dashed, "\beta h"] \\
+      % & t \arrow[ld, two heads, "\beta h"] \arrow[rd, two heads, "\beta h"] \arrow[d, two heads, "h"] & \\
+      & t \arrow[ld, two heads, "\beta h"] \arrow[rd, two heads, "\beta h"] & \\
+      % t_1 \arrow[d, two heads, "h"] & i(p(t))=h(t) \arrow[ld, two heads, "\beta h"] \arrow[rd, two heads, "\beta h"] & t_2 \arrow[d, two heads, "h"] \\
+      t_1 \arrow[d, two heads, "h"] & i(p(t)) \arrow[ld, two heads, "\beta h"] \arrow[rd, two heads, "\beta h"] & t_2 \arrow[d, two heads, "h"] \\
+      h(t_1)=i(p(t_1)) \arrow[rd, two heads, dashed, "\beta h"] && i(p(t_2))=h(t_2) \arrow[ld, two heads, dashed, "\beta h"] \\
       & \exists \ i(t') &
     \end{tikzcd}
   \]
   
-  In the latter diagram, the existence of such $t'$ comes from the fact that $\LamV$ is confluent and from using \cref{conservativeness} to lift the following diagram to $\LamM$.
+  In the latter diagram, the existence of such $t'$ comes from the fact that $\LamV$ is confluent.
+  This can be seen by applying first \cref{conservativeness} to our hypothesis $t \twoheadrightarrow_{\beta h} t_1$ and $t \twoheadrightarrow_{\beta h} t_2$ getting that $p(t) \twoheadrightarrow_{\vec \beta} p(t_1)$ and $p(t) \twoheadrightarrow_{\vec \beta} p(t_2)$.
   \[
     % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQ0AKHAShAF9S6TLnyEU5UsWp0mrdlxwB9Yn0HDseAkQBMUmQxZtEHbkp1qhHEVvElSOg3OMgAOq5gAPLHBxwABO7+OADkAjIwUADm8ESgAGYAThAAtkiSIDgQSADMNIbyiGDMjIw0jPQARjCMAAo2YuyMMPE4IOVYYC5Q9HAAFpECVkmp6TRZSGSyRkjFpeVVNfWajSbNre0gA-RQ7DgA7hDbUAjqICNpiBkTiHrThXNlIBXVdQ3aay1tNMd7h8enYbJS5TG55e7GR4LV7LUQfZ5fTa-EwHI4wHaAhLApB3MH5ZyzEpPF5Ld7iBEbH7o3Yo-7U06UfhAA
     \begin{tikzcd}
@@ -735,6 +762,8 @@ As another consequence of conservativeness, confluence of $\LamV$ can be lifted 
       & \exists \ t' &                             
     \end{tikzcd}
   \]
+  Second, we use the converse implication of \cref{conservativeness} to lift the previous diagram, mapping each term to its image by $i$ and each $\twoheadrightarrow_{\vec \beta}$ step to a $\twoheadrightarrow_{\beta h}$ step.
+  Finally, we recall \cref{h_is_multistep} to justify the vertical arrows in the first diagram and \cref{comm_i_p_h} to justify each equality.
 \end{proof}
   
 % ---

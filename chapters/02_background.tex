@@ -3,8 +3,6 @@
 
 % In this chapter, we intend to take the example of formalising some theory about the $\Lam$-calculus as a motivation to display some core aspects involved in the more elaborate formalisations ahead.
 
-
-
 This chapter introduces essential background for the reading of this dissertation.
 First, we introduce the well-known simply typed $\Lam$-calculus.
 Then, we delve into a known variation of the introduced $\Lam$-calculus theory using de~Bruijn indices, that has known facilities when it comes to mechanisation.
@@ -21,7 +19,7 @@ For what types and the simply typed $\Lam$-calculus is about we refer to \cite{B
 \begin{definition}[$\Lam$-terms]
   The $\Lam$-terms are defined by the following grammar:
   \[ M, N \ ::= \ x \ | \ (\lambda x . M) \ | \ (M N) , \]
-  where $x$ denotes a variable.
+  where $x$ denotes a (term) variable.
 \end{definition}
 
 \begin{remark} \hfill
@@ -45,7 +43,7 @@ For what types and the simply typed $\Lam$-calculus is about we refer to \cite{B
 Now we may define some syntactic notions.
 
 \begin{definition}[Bound/free occurrence]
-	We say that the variable $x$ occurs bound when it occurs in the scope of an abstraction $\lambda x$ and say that it occurs free otherwise.
+  We say that the variable $x$ occurs bound when it occurs in the scope of an abstraction $\lambda x$ and say that it occurs free otherwise.
 \end{definition}
 
 As an illustration of the previous concept, consider the term $M = x (\lambda x . x)$.
@@ -62,8 +60,7 @@ We can easily calculate the set of free variables for a given term.
   \end{align*}
 \end{definition}
 
-Now, we will consider a sequence of steps taken from~\cite{Barendregt1987}, in order to define a substitution operation that avoids the capture of free variables.
-This is, a substitution operation that does not swap free variables for bound variables.
+Now, we will consider a sequence of steps taken from~\cite{Barendregt1987}, in order to define a substitution operation that avoids the capture of free variables, that is, a substitution operation that does not swap free variables for bound variables.
 
 \begin{definition}[Renaming of bound variables]
  A renaming of bound variables in a $\Lam$-term $M$ is the replacement of a part $\lambda x . N$ of $M$ by $\lambda y . N \langle x:=y \rangle$, where $y$ does not occur at all in $N$ and $N \langle x:=y \rangle$ denotes the naive substitution operation.
@@ -144,7 +141,7 @@ At last, we introduce some standard notions related to the $\beta$-reduction.
   Consider the following binary relation on $\Lam$-terms:  
   \[
     \beta = \{ ((\lambda x . M) N, M[x := N]) \
-                | \ \text{for every variable $x$ and $\Lam$-terms $M, N$} \}.
+                | \ \text{$x$ is a term variable and $M, N$ are $\Lam$-terms} \}.
   \]  
   We call one step $\beta$-reduction to the relation $\to_\beta$ and multistep $\beta$-reduction to the relation $\twoheadrightarrow_\beta$.
 \end{definition}
@@ -205,7 +202,9 @@ In \cref{c:isomorphism}, from proving an isomorphism with the $\Lam$-calculus, w
 
 \begin{theorem}[Confluence]
   \label{confluence}
-    For every $\Lam$-terms $M, M_1, M_2$, 
+  For every $\Lam$-terms $M, M_1, M_2$ such that $M \twoheadrightarrow_\beta M_1$ and $M \twoheadrightarrow_\beta M_2$, there exists a $\Lam$-term $N$ such that $M_1 \twoheadrightarrow_\beta N$ and $M_2 \twoheadrightarrow_\beta N$.
+
+  % We may see this with the following diagram:
   \[\begin{tikzcd}
       & M \arrow[ld, two heads, "\beta"] \arrow[rd, two heads, "\beta"] & \\
       M_1 \arrow[rd, two heads, dashed, "\beta"] && M_2 \arrow[ld, two heads, dashed, "\beta"] \\
@@ -225,7 +224,7 @@ In \cref{c:isomorphism}, from proving an isomorphism with the $\Lam$-calculus, w
 
 \begin{remark} \hfill
   \begin{enumerate}
-  \item A denumerable set of atomic variables is assumed and letters $p, q, r$ range over this set.
+  \item A denumerable set of type variables is assumed and letters $p, q, r$ range over this set.
   \item Notice that we use the symbol $\supset$, coming from logic, to denote implication.
     This is motivated by the well-known correspondence between function types and implicational proposition, through the Curry-Howard isomorphism.
   \end{enumerate}
@@ -245,7 +244,8 @@ In \cref{c:isomorphism}, from proving an isomorphism with the $\Lam$-calculus, w
 \end{definition}
 
 \begin{definition}[Context]
-  A context~$\Gamma, \Delta, \dots$ is a finite (possibly empty) set of type-assignments whose subjects are variables of $\Lam$-terms and which is consistent. By consistent we mean that no variable is the subject of more than one type-assignment.
+  A context~$\Gamma, \Delta, \dots$ is a finite (possibly empty) set of type-assignments whose subjects are term variables and which is consistent.
+  By consistent we mean that no variable is the subject of more than one type-assignment.
 \end{definition}
 
 \begin{notation} We may simplify the set notation of contexts as follows:
@@ -287,7 +287,7 @@ In \cref{c:isomorphism}, from proving an isomorphism with the $\Lam$-calculus, w
 
 \section{$\Lam$-calculus with de~Bruijn syntax}
 
-In the 1970s, de Bruijn started working on the \textit{Automath} proof checker and proposed a simplified syntax to deal with generic binders \cite{deBruijn}.
+In the late 1960s, Nicolaas de Bruijn started working on the \textit{Automath} proof checker and proposed a simplified syntax to deal with generic binders \cite{deBruijn}.
 This approach is claimed by the author to be good for meta-lingual discussion and for implementation in computer programmes.
 In contrast, this syntax is further away from the human reader.
 This section will serve as an intermediate step to the mechanised version of the simply typed $\Lam$-calculus described in the next section.
@@ -309,35 +309,64 @@ We show below some examples that illustrate the connection of ordinary and namel
 \begin{align*}
   \lambda x . x &\rightsquigarrow \lambda . 0 \\
 % (\lambda x . xx)(\lambda x . xx) &\rightsquigarrow (\lambda . 00)(\lambda .00) \\
-  \lambda x . \lambda y . x &\rightsquigarrow \lambda . \lambda . 0 \\
+  \lambda x . \lambda y . y &\rightsquigarrow \lambda . \lambda . 0 \\
   \lambda x . \lambda y . x &\rightsquigarrow \lambda . \lambda . 1
 \end{align*}
 
 Now, we will present a different formulation for the concept of substitution, adequate to deal with nameless $\Lam$-terms.
-\begin{definition}[Substitution]
+\begin{definition}[Substitution and renaming]
   A substitution $\sigma, \tau, \dots$ over nameless $\Lam$-terms is a function mapping natural numbers (indices) to nameless $\Lam$-terms.
+
+  A renaming $\xi, \zeta, \dots$ is the particular case of a substitution that maps indices to indices (a function $\mathbb{N} \to \mathbb{N}$). 
 \end{definition}
 
 Here are some examples of useful substitutions.
 \begin{align*}
-  id(k) &= k \\
+  id(k)       &= k \\
   \uparrow(k) &= k+1 \\
-  (M \cdot \sigma)(k) &=
-                        \begin{cases}
-                          M & \ \text{if $k = 0$} \\
-                          \sigma(k-1) & \ \text{if $k > 0$}
-                        \end{cases}
+  (M \cdot \sigma)(k)
+              &=
+                \begin{cases}
+                  M & \ \text{if $k = 0$} \\
+                  \sigma(k-1) & \ \text{if $k > 0$}
+                \end{cases}
 \end{align*}
 
-\begin{definition}[Instantiation and composition]
+% We may also use the name of renamings for the particular cases of substitutions mapping indices to indices.
+From these examples, we can see that $id$ and $\uparrow$ are renamings.
+Furthermore, given a renaming $\xi$, a substitution $(i \cdot \xi)$ is also a renaming.
+
+In order to instantiate a nameless $\Lam$-term under a substitution we first define the simpler case of instantiation under a renaming.
+
+\begin{definition}[Instantiation under a renaming]
+  The operation of instantiating a nameless $\Lam$-term $M$ under a renaming $\xi$, $M\{ \xi \}$, is recursively defined by the following equations:
+  \begin{align*}
+    & i\{ \xi \} = \xi(i); \\
+    & (\lambda . M_1)\{ \xi \} = \lambda . (M_1 \{ 0 \cdot (\uparrow \circ \ \xi) \}); \\
+    & (M_1 M_2)\{ \xi \} = (M_1\{ \xi \}) (M_2\{ \xi \}).
+  \end{align*}
+\end{definition}
+
+\begin{remark}
+  Notice that, in the abstraction equation, the substitution $0 \cdot (\uparrow \circ \ \xi)$ is indeed a renaming.
+  This is the case because the composition operation for renamings is the usual composition of functions $\mathbb{N} \to \mathbb{N}$.
+  From this follows that $\ \uparrow \circ \ \xi$ is a renaming, which in turn implies that $0 \cdot (\uparrow \circ \ \xi)$ is a renaming.
+\end{remark}
+
+\begin{definition}[Composition of a renaming with a substitution]
+  We define the substitution resulting of the composition of a renaming $\xi$ and a substitution $\sigma$ by
+  \[ (\xi \circ \sigma)(k) = \sigma(k)\{ \xi \} . \]
+\end{definition}
+
+Given the previous definition for composition, we can use it to define the instantiation of terms under general substitutions as follows.
+
+\begin{definition}[Instantiation under a substitution]
   The operation of instantiating a nameless $\Lam$-term $M$ under a substitution $\sigma$, $M[\sigma]$, is recursively defined by the following equations:
   \begin{align*}
     & i[\sigma] = \sigma(i); \\
     & (\lambda . M_1)[\sigma] = \lambda . (M_1[0 \cdot (\uparrow \circ \ \sigma)]); \\
-    & (M_1 M_2)[\sigma] = (M_1[\sigma]) (M_2[\sigma]);
+    & (M_1 M_2)[\sigma] = (M_1[\sigma]) (M_2[\sigma]).
   \end{align*}
-
-  where the composition of two substitutions is mutually defined as $(\tau \circ \sigma)(k) = \sigma(k)[\tau]$.
 \end{definition}
 
 This definition for instantiation describes a capture-avoiding substitution operation that replaces all free variables simultaneously.
@@ -346,6 +375,13 @@ It is based on the ideas introduced in~\cite{AutosubstSchafer} and is very close
 
 Using the previous definition of substitution, we could now define the $\beta$-reduction rule as
 \[ (\lambda . M) N \to M[N \cdot id]. \]
+
+Having introduced the instantiation of terms under substitutions, we are able to complete our sequence of definitions by providing a definition for the composition of substitutions.
+
+\begin{definition}[Composition of substitutions]
+  We define the composition of substitutions as
+  \[ (\sigma \circ \tau)(k) = \tau(k)[\sigma] . \]
+\end{definition}
 
 Another variation we may encounter when formalising $\Lam$-terms using a nameless syntax is the typing system.
 A similar approach to our modification of the typing system can be found in~\cite[Chapter~7]{AndrewAdams}.
@@ -359,7 +395,7 @@ We formulate the definition of context and derivable sequents in the nameless se
   
   $| \Gamma |$ is used to denote the length of a context \ $\Gamma$;
 
-  $\Gamma_i$ is used to denote the $i$th element of a context \ $\Gamma$, given $i < | \Gamma |$.
+  $\Gamma_i$ is used to denote the $(i+1)$th element of a context \ $\Gamma$, given $i < | \Gamma |$.
 \end{notation}
 
 \begin{definition}[Typing rules for nameless $\Lam$-terms]
@@ -411,7 +447,7 @@ The multiary versions of the $\Lam$-calculus that we are going to introduce will
 
 The \textit{Rocq Prover} (former \textit{Coq Proof Assistant}) \cite{RocqManual} is an interactive theorem prover based on the expressive formal language called the Polymorphic, Cumulative Calculus of Inductive Constructions.
 This is a tool that helps in the formalisation of mathematical results and that can interact with a human to generate machine-verified proofs.
-\textit{Rocq} encodes propositions as types and proofs for these propositions as programs in $\Lam$-calculus, in line with the Curry-Howard isomorphism.
+\textit{Rocq} encodes propositions as types and proofs for these propositions as programs in $\Lam$-calculus, in line with the Curry-Howard isomorphism \cite{CurryHoward}.
 
 It is arguably a great tool for mechanising metatheory as it was widely used in solutions for the \textit{POPLmark} challenge \cite{POPLmark}.
 Also, this proof assistant provides many libraries to deal with the issue of variable binding, like \textit{Autosubst}, as we will see in the next sections.
@@ -668,13 +704,17 @@ A small illustration of the versatility of this option is in the \lst$Intro$ rul
 This is the same function we encountered when defining the substitution operation for the $\beta$-contractum \lst$s.[u.:ids]$.
 
 As claimed (\cref{nameless_typing_claim}) upon the definition of the typing rules for the nameless terms, we can show admissibility for the structural rules of weakening, contraction and exchange.
-We do this by proving the preservation of renamings (also an idea from~\cite{AutosubstManual}), as the mentioned structural rules can be seen as a particular case of index renaming (as we have illustrated with the weakening case).
+We do this by proving the preservation of renamings (also an idea from~\cite{AutosubstManual}), as the mentioned structural rules can be seen as a particular case of ``index renaming'' (as we have illustrated with the weakening case).
 
 \begin{lstlisting}[language=Coq]
-Lemma type_renaming : forall Gamma t A, sequent Γ t A ->
-  forall Delta xi, Gamma = (xi >>> Delta) -> sequent Delta t.[ren xi] A
+Lemma type_renaming : forall (Gamma: var->type) t A, sequent Γ t A ->
+  forall (Delta: var->type) (xi: var->var), Gamma = (xi>>>Delta) -> sequent Delta t.[ren xi] A.
 \end{lstlisting}
-  
+
+The lemma \lst$type_renaming$ captures this idea of preservation of types when renaming a term.
+We reorder the context $\Delta$ according to a rename $\xi$ by declaring that \lst$Gamma = (xi >>> Delta)$, where \lst$>>>$ denotes forward composition (this is a composition operation defined by \textit{Autosubst}).
+Also notice that the keyword \lst$ren$ is simply an operation that transforms a renaming $\xi$ of type \lst$var->var$ in a substitution \lst$ren xi$ of type \lst$var -> term$.
+
 %%% Local Variables:
 %%% mode: LaTeX
 %%% TeX-master: "../dissertation"
