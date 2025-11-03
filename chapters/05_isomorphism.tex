@@ -338,12 +338,27 @@ Definition theta' (s: Lambda.term) (l: list Canonical.term) :
 \end{lstlisting}
 
 The mechanised object that represents map $\theta'$ uses a higher-order function on lists called \lst$fold_left$ that behaves exactly as $\theta'$, given the function \lst$(fun s v => App s (theta v))$ which folds the $\LamV$-list into a $\Lam$-term.
+To aid the reader, we describe a way to define such a function in the \textit{Rocq Prover}.
+\begin{lstlisting}[language=Coq]
+Fixpoint fold_left {A B: Type} (f: A->B->A) (l: list B) (a: A) : A :=
+  match l with
+  | [] => a
+  | b::l => fold_left f l (f a b)
+  end.
+\end{lstlisting}
+Fortunately, a user may easily import this definition from the \lst$Lists$ library.
 
-Such representation of map $\theta$ was an undesired consequence of the use of polymorphic lists in the definition for $\LamV$-terms.
+Such representation of map $\theta$ using \lst$fold_left$ was an undesired consequence of the use of polymorphic lists in the definition for $\LamV$-terms.
 We could not define mutually recursive functions on the structure of the term and list because the proof assistant fails to recognise their termination~\cite{YvesStackOverflow}.
 Instead, we have to define these maps using higher-order functions.
 In this specific case, we could enjoy the generality of the \lst$fold_left$ function.
-Unfortunately, with such definition for $\theta'$, we had to repeatedly fold the definition for $\theta'$ in our proofs to make the goal more readable (hiding the calls to \lst$fold_left$).
+Unfortunately, with this definition for $\theta'$, we had to repeatedly fold
+\footnote{
+  One should carefully read the context in which the word fold appears:
+  when ``fold'' refers to a definition, it is related to the \textit{Rocq} tactic \lst$fold$;
+  when ``fold'' refers to a list, it is related to the \lst$fold_left$ function.
+}
+its definition in our proof developments to make the goal more readable (hiding the calls to \lst$fold_left$).
 This necessity of ``folding'' a definition can be seen in the mechanisation of~\cref{theta_step_lemma}:
 \begin{lstlisting}[language=Coq]
 Lemma theta'_step_pres l :
