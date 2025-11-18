@@ -29,8 +29,8 @@
 **/*.glsdefs
 
 **/*~
-dissertation.synctex.gz
-dissertation.dvi
-dissertation.out.ps
-dissertation.pdf
+**/*.synctex.gz
+**/*.dvi
+**/*.out.ps
+**/*.pdf
 auto/
