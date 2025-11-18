@@ -1,213 +1,128 @@
 \documentclass{beamer}
-
-% --------
-% Packages
-
-\usepackage{hyperref}
-
-% other packages
-\usepackage{latexsym,,multicol,booktabs,calligra}
-\usepackage{pstricks,stackengine}
-
-% \usepackage[margin=1in]{geometry}
-\usepackage{graphicx}
-\usepackage{fontspec}
-\usepackage{multirow}
-\usepackage{afterpage}
-\usepackage{layout}
-\usepackage{xcolor}
-\usepackage{color}
-\usepackage{caption}
-\usepackage{fix-cm}
-\usepackage{float}
-\usepackage{makecell}
-\usepackage{tabularx}
-\usepackage{titlesec}
-\usepackage{pdfpages}
-\usepackage{longtable}
-\usepackage[english]{babel}
-\usepackage{setspace}
-\usepackage[square, numbers]{natbib}
-\bibliographystyle{abbrvnat}
-\usepackage{hyperref}
-\usepackage{bookmark}
-\usepackage[acronym, shortcuts, style=index]{glossaries}
-
-\makeglossaries
-\usepackage{subcaption}
-\usepackage[title]{appendix}
-% \usepackage{multico}
-
-\usepackage{beton}
-\usepackage{amsmath}
-\usepackage{amsthm}
-\usepackage{amssymb}
-\usepackage{fancyhdr}
-\usepackage{comment}
-\usepackage{cleveref}
-
-\usepackage[inline]{enumitem}
-\usepackage[normalem]{ulem}
-\usepackage{soul}
-
-\usepackage{listings}
+\usepackage[utf8]{inputenc}
 
 \usepackage{ebproof}
-\usepackage{tikz-cd}
-% \usetikzlibrary{arrows.meta} 
+\usepackage{comment}
+\usepackage{graphicx}
 
-\input{macros}
+\let\oldfootnote\footnote
+\renewcommand{\footnote}{\only<+->\oldfootnote}
 
-% Definitions, Lemmas and Theorems
-% \newtheorem{theorem}{Theorem}
-% \crefname{theorem}{Theorem}{Theorems}
-% \newtheorem{lemma}{Lemma}
-% \crefname{lemma}{Lemma}{Lemmas}
-% \newtheorem{claim}{Claim}
-% \crefname{claim}{Claim}{Claims}
-\newtheorem{proposition}{Proposition}
-\crefname{proposition}{Proposition}{Propositions}
+\usepackage{palatino}
+\usepackage{mathpazo}
 
-% \newtheorem{definition}{Definition}
-% \crefname{definition}{Definition}{Definitions}
-% \newtheorem{corollary}{Corollary}
-% \crefname{corollary}{Corollary}{Corollaries}
+\usetheme{Madrid}
+\usecolortheme{default}
 
-\newtheorem*{notation}{Notation}
-\newtheorem*{remark}{Remark}
-\crefname{remark}{Remark}{Remarks}
-\newtheorem*{convention}{Convention}
+%------------------------------------------------------------
+%This block of code defines the information to appear in the
+%Title page
+\title[Dissertation Defense] %optional
+{On the mechanisation of the multiary lambda calculus and subsystems}
 
-% Global counters (don't reset on chapter)
-% \counterwithout{figure}{chapter}
-% \counterwithout{table}{chapter}
-% \counterwithout{equation}{chapter}
+\author[Miguel Alves]
+{Miguel Alves}
 
-% Colors
-\definecolor{darkBlue}{cmyk}{1.0, 1.0, 0.0, 0.1}
-\definecolor{darkGreen}{cmyk}{1.0, 0.0, 1.0, 0.4}
-\definecolor{navyBlue}{cmyk}{1.0, 1.0, 0.0, 0.1}
+\institute[UMinho]{Escola de Ciências \\ Universidade do Minho}
 
-\hypersetup{
-  bookmarksnumbered=true,
-  plainpages=false,
-  pdffitwindow=true,
-  % pdfauthor={Daniel Regado},
-  % pdfcreator={Daniel Regado},
-  % pdfproducer={Daniel Regado},
-  colorlinks=true,
-  linkcolor=darkBlue,
-  citecolor=darkGreen,
-  filecolor=magenta,
-  urlcolor=navyBlue
-}
-
-\setmainfont[Ligatures=TeX, AutoFakeSlant=0.20, BoldFont=NewsGotTBold.ttf]{NewsGotT.ttf} % NewsGotT font
-
-% lstlisting coq style (inspired from a file of Assia Mahboubi)
-\newcommand{\lst}{\lstinline}
-\lstdefinelanguage{Coq}%
-  {morekeywords={Variable,Inductive,CoInductive,Fixpoint,CoFixpoint,%
-      Definition,Lemma,Proposition,Theorem,Axiom,Local,Save,Grammar,Syntax,intro,%
-      trivial,Qed,intros,Symmetry,Simpl,Rewrite,apply,elim,assumption,%
-      left,Cut,Case,auto,unfold,exact,right,Hypothesis,Pattern,destruct,%
-      constructor,Defined,Fix,Record,Proof,induction,Hints,exists,let,in,%
-      Parameter,split,Red,reflexivity,transitivity,if,then,else,Opaque,%
-      Transparent,inversion,Absurd,Generalize,Mutual,Cases,of,end,Analyze,%
-      AutoRewrite,Functional,Scheme,params,Refine,using,discriminate,Try,%
-      Require,Load,Import,Scope,Set,Open,Section,End,match,with,Ltac,%
-      Instance,%
-      bind,as,%
-      % , exists, forall
-	},%
-   sensitive, %
-   morecomment=[n]{(*}{*)},%
-   morestring=[d]",%
-   literate=
-   {=>}{{$\Rightarrow$}}1
-   {>->}{{$\rightarrowtail$}}2
-   {<->}{{$\leftrightarrow$}}1
-   {->}{{$\rightarrow$}}1
-   {\/\\}{{$\wedge$}}1
-   {|-}{{$\vdash$}}1
-   {\\\/}{{$\vee$}}1
-   {~}{{$\sim$}}1
-   {exists}{{$\exists\!\!$}}1
-   {forall}{{$\forall\!\!$}}1
-   {beta1}{{$\beta_1$}}1
-   {beta2}{{$\beta_2$}}1
-   {sigma}{{$\sigma$}}1
-   {theta}{{$\theta$}}1
-   {tau}{{$\tau$}}1
-   {rho}{{$\rho$}}1
-   {xi}{{$\xi$}}1
-   {Axiom}{Axiom}3 % patch
-   {exi}{exi}3 % insufficient patch to print reflexivity correctly
-   {zeta}{{$\zeta$}}1
-   {Gamma}{{$\Gamma$}}1
-   {Delta}{{$\Delta$}}1
-   {\\rhd}{{$\rhd$}}1
-   %{>>}{\scomp}1
-   %{<>}{{$\neq$}}1 indeed... no.
-  }[keywords,comments,strings]%
-
-\lstset{
-   basicstyle=\ttfamily,
-   keywordstyle=\bfseries\color{blue}
-  }
-\lstset{language=Coq}
-\lstset{columns=fullflexible, keepspaces}
-% ---------------------------------------
-
-\author{}
-\title{On the mechanisation of the multiary lambda calculus and subsystems}
-\subtitle{}
-\institute{}
 \date{\today}
+
+\AtBeginSection[]
+{
+	\begin{frame}
+		\frametitle{Table of Contents}
+		\tableofcontents[currentsection]
+	\end{frame}
+}
 
 \begin{document}
 
-\begin{frame}
-    \titlepage
-    \begin{figure}[htpb]
-      \begin{center}
-          % \includegraphics[width=0.2\linewidth]{pic/NJUPT_Logo.eps}
-      \end{center}
-    \end{figure}
-\end{frame}
+\frame{\titlepage}
+
+% ----
+% SEC1
+% ----
+\section{Motivation and roadmap}
 
 \begin{frame}
-    \tableofcontents[sectionstyle=show,subsectionstyle=show/shaded/hide,subsubsectionstyle=show/shaded/hide]
-\end{frame}
-
-
-% \section{}
-
-\begin{frame}{}
-  % \begin{itemize}[<+-| alert@+>]
-% \item 
-% \item 
-% \end{itemize}
-\end{frame}
-
-
-% \section{}
-% \subsection{}
-
-\begin{frame}
-\end{frame}
-
-
-% \section{}
-% \subsection{}
-
-\begin{frame}{}
+	\frametitle{Why mechanise?}
 \end{frame}
 
 \begin{frame}
-    \begin{center}
-        {\Huge\calligra Thanks!}
-    \end{center}
+	\frametitle{Why the multiary $\lambda$-calculus?}
+\end{frame}
+
+% ----
+% SEC2
+% ----
+\section{Background}
+\begin{frame}
+	\frametitle{Simply typed $\lambda$-calculus}
+\end{frame}
+
+\begin{frame}
+	\frametitle{$\lambda$-calculus with de Bruijn syntax}
+\end{frame}
+
+\begin{frame}
+	\frametitle{The \textit{Rocq Prover}}
+\end{frame}	
+
+% ----
+% SEC3
+% ----
+\section{Multiary $\lambda$-calculus and subsystems}
+\begin{frame}
+	\frametitle{System $\lambda m$}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Canonical subsystem $\lambda m^{Can}$}	
+\end{frame}
+
+% ----
+% SEC4
+% ----
+\section{Canonical $\lambda$-calculus}
+\begin{frame}
+	\frametitle{System $\vec \lambda$}
+\end{frame}
+
+\begin{frame}
+	\frametitle{$\vec \lambda$ vs $\lambda m^{Can}$}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Conservativeness}	
+\end{frame}
+
+% ----
+% SEC5
+% ----
+\section{An isomorphism with the simply typed $\lambda$-calculus}
+\begin{frame}
+	\frametitle{Mappings $\theta$ and $\psi$}
+\end{frame}
+
+
+% ----
+% SEC6
+% ----
+\section{Conclusions and discussion}
+\begin{frame}
+	\frametitle{\textit{Autosubst} library}
+\end{frame}
+
+% ----
+% SEC7
+% ----
+\section{A showcase of the mechanisation in the \textit{Rocq Prover}}
+\begin{frame}
+	\frametitle{\textit{Autosubst} library}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Conservativeness result?}
 \end{frame}
 
 \end{document}

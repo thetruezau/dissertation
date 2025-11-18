@@ -34,3 +34,5 @@
 **/*.out.ps
 **/*.pdf
 auto/
+presentation.nav
+presentation.snm
