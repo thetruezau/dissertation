@@ -1,15 +1,24 @@
 \documentclass{beamer}
-\usepackage[utf8]{inputenc}
+% \usepackage[utf8]{inputenc}
 
 \usepackage{ebproof}
 \usepackage{comment}
 \usepackage{graphicx}
+% \usepackage{palatino}
+\usepackage{fontspec}
+\usepackage{mathpazo}
+\usepackage{xcolor}
+\usepackage{color}
+\usepackage{caption}
+
+
+\usepackage{cancel}
 
 \let\oldfootnote\footnote
 \renewcommand{\footnote}{\only<+->\oldfootnote}
 
-\usepackage{palatino}
-\usepackage{mathpazo}
+
+\input{macros}
 
 \usetheme{Madrid}
 \usecolortheme{default}
@@ -17,7 +26,7 @@
 %------------------------------------------------------------
 %This block of code defines the information to appear in the
 %Title page
-\title[Dissertation Defense] %optional
+\title[Dissertation Defense] % optional
 {On the mechanisation of the multiary lambda calculus and subsystems}
 
 \author[Miguel Alves]
@@ -29,100 +38,104 @@
 
 \AtBeginSection[]
 {
-	\begin{frame}
-		\frametitle{Table of Contents}
-		\tableofcontents[currentsection]
-	\end{frame}
+  \begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
 }
 
 \begin{document}
 
 \frame{\titlepage}
 
-% ----
+% ---
 % SEC1
-% ----
-\section{Motivation and roadmap}
+% ---
+
+\section{Multiary $\Lam$-calculus and subsystems}
+\subsection{System $\LamM$}
+\begin{frame}
+  \frametitle{System $\LamM$}
+  
+  \onslide<3->{A $\Lam$-calculus with multiary applications!}
+  \begin{definition}[Expressions]
+    \begin{align*}
+      \only<1-2>{ (\Lam \text{-terms}) && \hspace{-1cm} t, u, v &::= \ x \ | \ \lambda x . t \ | \ \only<1>{t u}
+                                                                                                   \only<2>{\xcancel{t u}} }
+      \only<3->{ (\LamM \text{-terms}) && \hspace{-1cm} t, u, v &::= \ x \ | \ \lambda x . t \ | \ t(u, l) }
+      \only<4->{ \\ (\LamM \text{-lists}) && \hspace{-2cm} l &::= \ []\  | \ u :: l }
+    \end{align*}
+  \end{definition}
+
+  \begin{definition}[Reduction rules]
+    \begin{align*}
+      \only<1-4>{ (\beta) & \qquad (\lambda x . t) u  \to t[x := u] }
+      \only<5->{ (\beta_1) & \qquad (\lambda x . t)(u, [])   \to t[x := u] }
+      \only<6->{ \\ (\beta_2) & \qquad (\lambda x . t)(u, v::l) \to t[x := u](v, l) }
+      \only<7->{ \\ (h)       & \qquad t(u, l)(u', l')          \to t(u, l + (u'::l')) }
+    \end{align*}
+  \end{definition}
+\end{frame}
+
+\subsection{Canonical subsystem $\LamCan$}
 
 \begin{frame}
-	\frametitle{Why mechanise?}
+  \frametitle{$h$-normal forms}
+  The purpose of the $h$ reduction rule
+  \[ (h) \qquad t(u, l)(u', l') \to t(u, l + (u'::l')) \]
+  is to bring either a variable or an abstraction to the head of applications.
+
+  \vspace{15pt}
+  \onslide<2->{
+    We can identify such subset of expressions, having only applications
+    \[ x(u, l) \quad \text{ or } \quad (\lambda x . t)(u, l). \]
+  }
+\end{frame}
+
+\subsection{Canonical $\Lam$-calculus}
+\begin{frame}
+  \frametitle{System $\LamV$}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Why the multiary $\lambda$-calculus?}
+  \frametitle{$\LamV$ vs $\LamCan$}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conservativeness}	
+\end{frame}
+
+\begin{frame}
+  \frametitle{$\LamV$ vs $\Lam$}
 \end{frame}
 
 % ----
 % SEC2
 % ----
-\section{Background}
+\section{On the mechanisation}
+\subsection{\textit{Our main choices on mechanisation}}
 \begin{frame}
-	\frametitle{Simply typed $\lambda$-calculus}
+  \frametitle{Our main choices on mechanisation}
+  \begin{itemize}
+  \item<1-> Proof assistant: \textit{Rocq Prover}
+  \item<2-> Deal with binders: de Bruijn indices
+  \item<3-> Dependencies on libraries: \textit{Autosubst} library to define substitution operations using de Bruijn indices and parallel substitutions
+  \end{itemize}
+\end{frame}
+
+\subsection{\textit{Autosubst} library}
+\begin{frame}
+  \frametitle{$\sigma$-calculus and parallel substitutions}
+  
 \end{frame}
 
 \begin{frame}
-	\frametitle{$\lambda$-calculus with de Bruijn syntax}
+  \frametitle{System $\LamM$ using \textit{Autosubst}}
 \end{frame}
 
+\subsection{A showcase}
 \begin{frame}
-	\frametitle{The \textit{Rocq Prover}}
-\end{frame}	
-
-% ----
-% SEC3
-% ----
-\section{Multiary $\lambda$-calculus and subsystems}
-\begin{frame}
-	\frametitle{System $\lambda m$}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Canonical subsystem $\lambda m^{Can}$}	
-\end{frame}
-
-% ----
-% SEC4
-% ----
-\section{Canonical $\lambda$-calculus}
-\begin{frame}
-	\frametitle{System $\vec \lambda$}
-\end{frame}
-
-\begin{frame}
-	\frametitle{$\vec \lambda$ vs $\lambda m^{Can}$}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Conservativeness}	
-\end{frame}
-
-% ----
-% SEC5
-% ----
-\section{An isomorphism with the simply typed $\lambda$-calculus}
-\begin{frame}
-	\frametitle{Mappings $\theta$ and $\psi$}
-\end{frame}
-
-
-% ----
-% SEC6
-% ----
-\section{Conclusions and discussion}
-\begin{frame}
-	\frametitle{\textit{Autosubst} library}
-\end{frame}
-
-% ----
-% SEC7
-% ----
-\section{A showcase of the mechanisation in the \textit{Rocq Prover}}
-\begin{frame}
-	\frametitle{\textit{Autosubst} library}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Conservativeness result?}
+  \frametitle{Mechanisation of the conservativeness result}
 \end{frame}
 
 \end{document}

@@ -1,17 +1,49 @@
 \headcommand {\slideentry {0}{0}{1}{1/1}{}{0}}
 \headcommand {\beamer@framepages {1}{1}}
-\headcommand {\slideentry {0}{0}{2}{2/2}{}{0}}
+\headcommand {\beamer@sectionpages {1}{1}}
+\headcommand {\beamer@subsectionpages {1}{1}}
+\headcommand {\sectionentry {1}{Multiary $\pmb {\lambda }$-calculus and subsystems}{2}{Multiary $\pmb {\lambda }$-calculus and subsystems}{0}}
+\headcommand {\slideentry {1}{0}{1}{2/2}{}{0}}
 \headcommand {\beamer@framepages {2}{2}}
-\headcommand {\slideentry {0}{0}{3}{3/3}{}{0}}
-\headcommand {\beamer@framepages {3}{3}}
-\headcommand {\slideentry {0}{0}{4}{4/4}{}{0}}
-\headcommand {\beamer@framepages {4}{4}}
-\headcommand {\slideentry {0}{0}{5}{5/5}{}{0}}
-\headcommand {\beamer@framepages {5}{5}}
-\headcommand {\slideentry {0}{0}{6}{6/6}{}{0}}
-\headcommand {\beamer@framepages {6}{6}}
-\headcommand {\beamer@partpages {1}{6}}
-\headcommand {\beamer@subsectionpages {1}{6}}
-\headcommand {\beamer@sectionpages {1}{6}}
-\headcommand {\beamer@documentpages {6}}
-\headcommand {\gdef \inserttotalframenumber {6}}
+\headcommand {\beamer@subsectionpages {2}{2}}
+\headcommand {\beamer@subsectionentry {0}{1}{1}{3}{System $\pmb {\lambda m}$}}
+\headcommand {\slideentry {1}{1}{1}{3/9}{System $\pmb {\lambda m}$}{0}}
+\headcommand {\beamer@framepages {3}{9}}
+\headcommand {\beamer@subsectionpages {3}{9}}
+\headcommand {\beamer@subsectionentry {0}{1}{2}{10}{Canonical subsystem $\pmb {\lambda m}^{Can}$}}
+\headcommand {\slideentry {1}{2}{1}{10/11}{Canonical subsystem $\pmb {\lambda m}^{Can}$}{0}}
+\headcommand {\beamer@framepages {10}{11}}
+\headcommand {\beamer@subsectionpages {10}{11}}
+\headcommand {\beamer@subsectionentry {0}{1}{3}{12}{Canonical $\pmb {\lambda }$-calculus}}
+\headcommand {\slideentry {1}{3}{1}{12/12}{Canonical $\pmb {\lambda }$-calculus}{0}}
+\headcommand {\beamer@framepages {12}{12}}
+\headcommand {\slideentry {1}{3}{2}{13/13}{Canonical $\pmb {\lambda }$-calculus}{0}}
+\headcommand {\beamer@framepages {13}{13}}
+\headcommand {\slideentry {1}{3}{3}{14/14}{Canonical $\pmb {\lambda }$-calculus}{0}}
+\headcommand {\beamer@framepages {14}{14}}
+\headcommand {\slideentry {1}{3}{4}{15/15}{Canonical $\pmb {\lambda }$-calculus}{0}}
+\headcommand {\beamer@framepages {15}{15}}
+\headcommand {\beamer@sectionpages {2}{15}}
+\headcommand {\beamer@subsectionpages {12}{15}}
+\headcommand {\sectionentry {2}{On the mechanisation}{16}{On the mechanisation}{0}}
+\headcommand {\slideentry {2}{0}{1}{16/16}{}{0}}
+\headcommand {\beamer@framepages {16}{16}}
+\headcommand {\beamer@subsectionpages {16}{16}}
+\headcommand {\beamer@subsectionentry {0}{2}{1}{17}{\textit {Our main choices on mechanisation}}}
+\headcommand {\slideentry {2}{1}{1}{17/19}{\textit {Our main choices on mechanisation}}{0}}
+\headcommand {\beamer@framepages {17}{19}}
+\headcommand {\beamer@subsectionpages {17}{19}}
+\headcommand {\beamer@subsectionentry {0}{2}{2}{20}{\textit {Autosubst} library}}
+\headcommand {\slideentry {2}{2}{1}{20/20}{\textit {Autosubst} library}{0}}
+\headcommand {\beamer@framepages {20}{20}}
+\headcommand {\slideentry {2}{2}{2}{21/21}{\textit {Autosubst} library}{0}}
+\headcommand {\beamer@framepages {21}{21}}
+\headcommand {\beamer@subsectionpages {20}{21}}
+\headcommand {\beamer@subsectionentry {0}{2}{3}{22}{A showcase}}
+\headcommand {\slideentry {2}{3}{1}{22/22}{A showcase}{0}}
+\headcommand {\beamer@framepages {22}{22}}
+\headcommand {\beamer@partpages {1}{22}}
+\headcommand {\beamer@subsectionpages {22}{22}}
+\headcommand {\beamer@sectionpages {16}{22}}
+\headcommand {\beamer@documentpages {22}}
+\headcommand {\gdef \inserttotalframenumber {13}}
