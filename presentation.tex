@@ -2,7 +2,7 @@
 % \usepackage[utf8]{inputenc}
 
 \usepackage{ebproof}
-\usepackage{tikz-cd}
+\usepackage{quiver}
 \usepackage{graphicx}
 % \usepackage{palatino}
 % \usepackage{fontspec}
@@ -11,61 +11,6 @@
 \usepackage{color}
 \usepackage{caption}
 \usepackage{cancel}
-\usepackage{comment}
-
-\usepackage{listings}
-% lstlisting coq style (inspired from a file of Assia Mahboubi)
-\newcommand{\lst}{\lstinline}
-\lstdefinelanguage{Coq}%
-  {morekeywords={Variable,Inductive,CoInductive,Fixpoint,CoFixpoint,%
-      Definition,Lemma,Proposition,Theorem,Axiom,Local,Save,Grammar,Syntax,intro,%
-      trivial,Qed,intros,Symmetry,Simpl,Rewrite,apply,elim,assumption,%
-      left,Cut,Case,auto,unfold,exact,right,Hypothesis,Pattern,destruct,%
-      constructor,Defined,Fix,Record,Proof,induction,Hints,exists,let,in,%
-      Parameter,split,Red,reflexivity,transitivity,if,then,else,Opaque,%
-      Transparent,inversion,Absurd,Generalize,Mutual,Cases,of,end,Analyze,%
-      AutoRewrite,Functional,Scheme,params,Refine,using,discriminate,Try,%
-      Require,Load,Import,Scope,Set,Open,Section,End,match,with,Ltac,%
-      Instance,%
-      bind,as,%
-      % , exists, forall
-	},%
-   sensitive, %
-   morecomment=[n]{(*}{*)},%
-   morestring=[d]",%
-   literate=
-   {=>}{{$\Rightarrow$}}1
-   {>->}{{$\rightarrowtail$}}2
-   {<->}{{$\leftrightarrow$}}1
-   {->}{{$\rightarrow$}}1
-   {\/\\}{{$\wedge$}}1
-   {|-}{{$\vdash$}}1
-   {\\\/}{{$\vee$}}1
-   {~}{{$\sim$}}1
-   {exists}{{$\exists\!\!$}}1
-   {forall}{{$\forall\!\!$}}1
-   {beta1}{{$\beta_1$}}1
-   {beta2}{{$\beta_2$}}1
-   {sigma}{{$\sigma$}}1
-   {theta}{{$\theta$}}1
-   {tau}{{$\tau$}}1
-   {rho}{{$\rho$}}1
-   {xi}{{$\xi$}}1
-   {Axiom}{Axiom}3 % patch
-   {exi}{exi}3 % insufficient patch to print reflexivity correctly
-   {zeta}{{$\zeta$}}1
-   {Gamma}{{$\Gamma$}}1
-   {Delta}{{$\Delta$}}1
-   {\\rhd}{{$\rhd$}}1
-   %{>>}{\scomp}1
-   %{<>}{{$\neq$}}1 indeed... no.
-  }[keywords,comments,strings]%
-\lstset{
-   basicstyle=\ttfamily,
-   keywordstyle=\bfseries\color{blue}
-  }
-\lstset{language=Coq}
-\lstset{columns=fullflexible, keepspaces}
 
 \let\oldfootnote\footnote
 \renewcommand{\footnote}{\only<+->\oldfootnote}
@@ -73,13 +18,7 @@
 % \newtheorem{proposition}{Proposition}
 % \crefname{proposition}{Proposition}{Propositions}
 
-\newcommand{\LamM}{\pmb{\lambda m}}
-\newcommand{\LamVM}{\pmb{\vec \lambda m}}
-
-\newcommand{\Lam}{\pmb{\lambda}}
-\newcommand{\LamV}{\pmb{\vec \lambda}}
-
-\newcommand{\LamCan}{\LamM^{Can}}
+\input{macros}
 
 \usetheme{Madrid}
 \usecolortheme{default}
@@ -236,27 +175,30 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{$\LamCan$ vs $\LamV$}
-  % https://q.uiver.app/#q=WzAsOSxbMCwwLCJcXGJveGVke1xccG1ie1xcbGFtYmRhIG19fSJdLFswLDEsIlxcYm94ZWR7XFxwbWJ7XFxsYW1iZGEgbV57Q2FufX19Il0sWzIsMSwiXFxib3hlZHtcXHBtYntcXHZlYyBcXGxhbWJkYX19Il0sWzAsMiwieCh1LCBsKSJdLFsyLDIsImFwcF92ICh4LCB1LCBsKSJdLFswLDMsIihcXGxhbWJkYSB4LnQpKHUsIGwpIl0sWzIsMywiYXBwX1xcbGFtYmRhICh4LnQsIHUsIGwpIl0sWzAsNCwiXFxmcmFje3QgXFwgXFx0b19cXGJldGEgXFwgdCcgXFwgKFxcdGV4dHtpbiB9XFxsYW1iZGEgbSl9e2godCkgXFwgKFxcdG9fXFxiZXRhKV9jIFxcIGgodCcpfSJdLFsyLDQsInQgXFwgXFx0b197XFx2ZWMgXFxiZXRhfSBcXCB0JyJdLFswLDEsImgiLDJdLFswLDIsInAiXSxbMiwxLCJpIl1d
-  
-  \[\begin{tikzcd}[sep=small]
-      {\boxed{\LamM}} \\
-      {\boxed{\LamCan}} & {\boxed{\LamV}} \\
-      {(\lambda x.t)(u, l)} & {app_\lambda (x.t, u, l)} \\
-      {\frac{t \ \to_\beta \ t' \ (\text{in }\lambda m)}{h(t) \ (\to_\beta)_c \ h(t')}} & {t \ \to_{\vec \beta} \ t'}
-      \arrow["h", from=1-1, to=2-1]
-      \arrow["p", from=1-1, to=2-2]
-      \arrow["i", from=2-2, to=2-1]
-    \end{tikzcd}\]
-  
+  \frametitle{$\LamCan$ vs $\LamV$}  
   % We prove that two different definitions for the canonical subsystem result in isomorphic systems.
-  \begin{theorem}[Isomorphism of reduction] \hfill
-    \begin{enumerate}
-    \item $t \to_{\vec \beta} t'$ in $\LamV$ $\iff$ $i(t) \ (\to_{\beta})_c \ i(t')$ in $\LamCan$
-    \item $t \ (\to_{\beta})_c \ t'$ in $\LamCan$ $\iff$ $p(t) \to_{\vec \beta} p(t')$ in $\LamV$
-    \end{enumerate}
-  \end{theorem}
 
+  % https://q.uiver.app/#q=WzAsNyxbMCwwLCJcXGJveGVke1xccG1ie1xcbGFtYmRhIG19fSJdLFswLDEsIlxcYm94ZWR7XFxwbWJ7XFxsYW1iZGEgbV57Q2FufX19Il0sWzIsMSwiXFxib3hlZHtcXHBtYntcXHZlYyBcXGxhbWJkYX19Il0sWzAsMywiXFxMYXJnZXtcXGZyYWN7dCBcXCBcXHRvX1xcYmV0YSBcXCB0JyBcXCAoXFx0ZXh0e2luIH1cXGxhbWJkYSBtKX17aCh0KSBcXCAoXFx0b19cXGJldGEpX2MgXFwgaCh0Jyl9fSJdLFsyLDMsInQgXFwgXFx0b197XFx2ZWMgXFxiZXRhfSBcXCB0JyJdLFswLDIsIihcXGxhbWJkYSB4LnQpKHUsIGwpIl0sWzIsMiwiYXBwX1xcbGFtYmRhICh4LnQsIHUsIGwpIl0sWzAsMSwiaCIsMl0sWzAsMiwicCJdLFsyLDEsImkiXV0=
+  \[
+    \begin{tikzcd}[sep=small]
+	{\boxed{\LamM}} \\
+	{\boxed{\LamCan}} && {\boxed{\Lam}} \\
+	{(\lambda x.t)(u, l)} && {app_\lambda (x.t, u, l)} \\
+	{\Large{\frac{t \ \to_\beta \ t' \ (\text{in }\lambda m)}{h(t) \ (\to_\beta)_c \ h(t')}}} && {t \ \to_{\vec \beta} \ t'}
+	\arrow["h"', from=1-1, to=2-1]
+	\arrow["p", from=1-1, to=2-2]
+	\arrow["i", from=2-2, to=2-1]
+      \end{tikzcd}
+    \]
+
+    \only<2->{
+      \begin{theorem}[Isomorphism of reduction] \hfill
+        \begin{enumerate}
+        \item $t \to_{\vec \beta} t'$ in $\LamV$ $\iff$ $i(t) \ (\to_{\beta})_c \ i(t')$ in $\LamCan$
+        \item $t \ (\to_{\beta})_c \ t'$ in $\LamCan$ $\iff$ $p(t) \to_{\vec \beta} p(t')$ in $\LamV$
+        \end{enumerate}
+      \end{theorem}
+    }
 \end{frame}
 
 \begin{frame}
@@ -269,38 +211,39 @@
 
 \begin{frame}
   \frametitle{$\LamV$ vs $\Lam$}
-  % https://q.uiver.app/#q=WzAsNixbMCwwLCJcXGJveGVke1xccG1ie1xcdmVjIFxcbGFtYmRhfX0iXSxbMCwxLCJhcHBfXFxsYW1iZGEgKHgudCwgdSwgW3ZfMSwgdl8yLCBcXGRvdHMsIHZfa10pIl0sWzIsMCwiXFxib3hlZHtcXHBtYntcXGxhbWJkYX19Il0sWzIsMSwiKCgoKChcXGxhbWJkYSB4LnQpIHUpIHZfMSkgdl8yKSBcXGRvdHMpIHZfayJdLFswLDIsInQgXFwgXFx0b197XFx2ZWMgXFxiZXRhfSBcXCB0JyJdLFsyLDIsInQgXFwgXFx0b197XFxiZXRhfSBcXCB0JyJdLFswLDIsIlxccHNpIiwwLHsib2Zmc2V0IjotMSwic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMiwwLCJcXHRoZXRhIiwwLHsib2Zmc2V0IjotMSwic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=
-  \[
-    \begin{tikzcd}[sep=small]
-      {\boxed{\pmb{\vec \lambda}}} && {\boxed{\pmb{\lambda}}} \\
+
+  % https://q.uiver.app/#q=WzAsNixbMCwwLCJcXGJveGVke1xccG1ie1xcdmVjIFxcbGFtYmRhfX0iXSxbMCwxLCJhcHBfXFxsYW1iZGEgKHgudCwgdSwgW3ZfMSwgdl8yLCBcXGRvdHMsIHZfa10pIl0sWzIsMCwiXFxib3hlZHtcXHBtYntcXGxhbWJkYX19Il0sWzIsMSwiKCgoKChcXGxhbWJkYSB4LnQpIHUpIHZfMSkgdl8yKSBcXGRvdHMpIHZfayJdLFswLDIsInQgXFwgXFx0b197XFx2ZWMgXFxiZXRhfSBcXCB0JyJdLFsyLDIsInQgXFwgXFx0b197XFxiZXRhfSBcXCB0JyJdLFswLDIsIlxcdGhldGEiLDAseyJvZmZzZXQiOi0xfV0sWzIsMCwiXFxwc2kiLDAseyJvZmZzZXQiOi0xfV1d
+  \[\begin{tikzcd}[sep=small]
+      {\boxed{\LamV}} && {\boxed{\Lam}} \\
       {app_\lambda (x.t, u, [v_1, v_2, \dots, v_k])} && {(((((\lambda x.t) u) v_1) v_2) \dots) v_k} \\
       {t \ \to_{\vec \beta} \ t'} && {t \ \to_{\beta} \ t'}
-      \arrow["\psi", shift left, from=1-2, to=1-1]
       \arrow["\theta", shift left, from=1-1, to=1-2]
-    \end{tikzcd}
-  \]
-
-  \only<3->
+      \arrow["\psi", shift left, from=1-2, to=1-1]
+    \end{tikzcd}\]
+  
+  \only<2->{
   \begin{theorem}[Isomorphism of reduction] \hfill
     \begin{enumerate}
     \item $t \to_{\vec \beta} t' \text{ in } \LamV \iff \theta(t) \to_{\beta} \theta(t') \text{ in } \Lam$
     \item $t \to_{\beta} t' \text{ in } \Lam \iff \psi(t) \to_{\vec \beta} \psi(t') \text{ in } \LamV$
     \end{enumerate}
   \end{theorem}
+  }
 \end{frame}
 
 % ----
 % SEC2
 % ----
 \section{On the mechanisation}
-\subsection{Our key choices on the mechanisation}
+\subsection{Key choices on the mechanisation}
 \begin{frame}
   \frametitle{Our key choices on the mechanisation}
   \begin{itemize}
   \item<1-> \underline{Proof assistant}: \textit{Rocq Prover}
   \item<2-> \underline{Deal with binders}: de Bruijn indices
-
+    
     \only<3->{ Example: a $\Lam$-term $\lambda x. \lambda y . y$ is represented as $\lambda . \lambda . 0$ }
+
   \item<4-> \underline{Libraries}: \textit{Autosubst} library to define substitution operations using de Bruijn indices and parallel substitutions
   \end{itemize}
 \end{frame}
@@ -319,11 +262,42 @@
 
 \begin{frame}
   \frametitle{$\LamM$ vs its mechanised self}
+  
+  \renewcommand{\arraystretch}{5} % Default value: 1
+  \[ \begin{matrix}    
+    t, u, v ::= \ x \ | \ \lambda x . t \ | \ t(u, l)
+    &
+      \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.5\textwidth]{pictures/screenshot_terms}
+      \end{figure}
+    \\
+    (\beta_1) \quad (\lambda x . t)(u, []) \to t[x := u]
+    &
+      \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.5\textwidth]{pictures/screenshot_beta1}
+      \end{figure}
+    \\ \vspace{10pt}
+    \begin{prooftree}
+      \hypo{ x:A, \Gamma \vdash t:B }
+      \infer1[Right]{ \Gamma \vdash \lambda x . t : A \supset B  }
+    \end{prooftree}
+    &
+      \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.5\textwidth]{pictures/screenshot_typing}
+      \end{figure}
+  \end{matrix} \]
 \end{frame}
 
 \subsection{A showcase}
 \begin{frame}
   \frametitle{Mechanisation of the conservativeness result}
+    \begin{theorem}[Conservativeness]
+    For every $\LamV$-terms $t$ and $t'$, we have:
+    \[ t \twoheadrightarrow_{\vec \beta} t' \iff i(t) \twoheadrightarrow_{\beta h} i(t'). \]
+  \end{theorem}
 \end{frame}
 
 \end{document}
