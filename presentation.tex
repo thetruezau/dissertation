@@ -2,30 +2,91 @@
 % \usepackage[utf8]{inputenc}
 
 \usepackage{ebproof}
-\usepackage{comment}
+\usepackage{tikz-cd}
 \usepackage{graphicx}
 % \usepackage{palatino}
-\usepackage{fontspec}
+% \usepackage{fontspec}
 \usepackage{mathpazo}
 \usepackage{xcolor}
 \usepackage{color}
 \usepackage{caption}
-
-
 \usepackage{cancel}
+\usepackage{comment}
+
+\usepackage{listings}
+% lstlisting coq style (inspired from a file of Assia Mahboubi)
+\newcommand{\lst}{\lstinline}
+\lstdefinelanguage{Coq}%
+  {morekeywords={Variable,Inductive,CoInductive,Fixpoint,CoFixpoint,%
+      Definition,Lemma,Proposition,Theorem,Axiom,Local,Save,Grammar,Syntax,intro,%
+      trivial,Qed,intros,Symmetry,Simpl,Rewrite,apply,elim,assumption,%
+      left,Cut,Case,auto,unfold,exact,right,Hypothesis,Pattern,destruct,%
+      constructor,Defined,Fix,Record,Proof,induction,Hints,exists,let,in,%
+      Parameter,split,Red,reflexivity,transitivity,if,then,else,Opaque,%
+      Transparent,inversion,Absurd,Generalize,Mutual,Cases,of,end,Analyze,%
+      AutoRewrite,Functional,Scheme,params,Refine,using,discriminate,Try,%
+      Require,Load,Import,Scope,Set,Open,Section,End,match,with,Ltac,%
+      Instance,%
+      bind,as,%
+      % , exists, forall
+	},%
+   sensitive, %
+   morecomment=[n]{(*}{*)},%
+   morestring=[d]",%
+   literate=
+   {=>}{{$\Rightarrow$}}1
+   {>->}{{$\rightarrowtail$}}2
+   {<->}{{$\leftrightarrow$}}1
+   {->}{{$\rightarrow$}}1
+   {\/\\}{{$\wedge$}}1
+   {|-}{{$\vdash$}}1
+   {\\\/}{{$\vee$}}1
+   {~}{{$\sim$}}1
+   {exists}{{$\exists\!\!$}}1
+   {forall}{{$\forall\!\!$}}1
+   {beta1}{{$\beta_1$}}1
+   {beta2}{{$\beta_2$}}1
+   {sigma}{{$\sigma$}}1
+   {theta}{{$\theta$}}1
+   {tau}{{$\tau$}}1
+   {rho}{{$\rho$}}1
+   {xi}{{$\xi$}}1
+   {Axiom}{Axiom}3 % patch
+   {exi}{exi}3 % insufficient patch to print reflexivity correctly
+   {zeta}{{$\zeta$}}1
+   {Gamma}{{$\Gamma$}}1
+   {Delta}{{$\Delta$}}1
+   {\\rhd}{{$\rhd$}}1
+   %{>>}{\scomp}1
+   %{<>}{{$\neq$}}1 indeed... no.
+  }[keywords,comments,strings]%
+\lstset{
+   basicstyle=\ttfamily,
+   keywordstyle=\bfseries\color{blue}
+  }
+\lstset{language=Coq}
+\lstset{columns=fullflexible, keepspaces}
 
 \let\oldfootnote\footnote
 \renewcommand{\footnote}{\only<+->\oldfootnote}
 
+% \newtheorem{proposition}{Proposition}
+% \crefname{proposition}{Proposition}{Propositions}
 
-\input{macros}
+\newcommand{\LamM}{\pmb{\lambda m}}
+\newcommand{\LamVM}{\pmb{\vec \lambda m}}
+
+\newcommand{\Lam}{\pmb{\lambda}}
+\newcommand{\LamV}{\pmb{\vec \lambda}}
+
+\newcommand{\LamCan}{\LamM^{Can}}
 
 \usetheme{Madrid}
 \usecolortheme{default}
 
-%------------------------------------------------------------
-%This block of code defines the information to appear in the
-%Title page
+% ------------------------------------------------------------
+% This block of code defines the information to appear in the
+% Title page
 \title[Dissertation Defense] % optional
 {On the mechanisation of the multiary lambda calculus and subsystems}
 
@@ -52,13 +113,13 @@
 % SEC1
 % ---
 
-\section{Multiary $\Lam$-calculus and subsystems}
-\subsection{System $\LamM$}
+\section{Multiary lambda-calculus and subsystems}
+\subsection{Multiary lambda calculus}
 \begin{frame}
-  \frametitle{System $\LamM$}
+  \frametitle{From $\Lam$ to $\LamM$}
   
   \onslide<3->{A $\Lam$-calculus with multiary applications!}
-  \begin{definition}[Expressions]
+  \begin{definition}[Expressions] \vspace{-15pt}
     \begin{align*}
       \only<1-2>{ (\Lam \text{-terms}) && \hspace{-1cm} t, u, v &::= \ x \ | \ \lambda x . t \ | \ \only<1>{t u}
                                                                                                    \only<2>{\xcancel{t u}} }
@@ -67,70 +128,197 @@
     \end{align*}
   \end{definition}
 
-  \begin{definition}[Reduction rules]
+  \begin{definition}[Reduction rules] \vspace{-15pt}
     \begin{align*}
-      \only<1-4>{ (\beta) & \qquad (\lambda x . t) u  \to t[x := u] }
-      \only<5->{ (\beta_1) & \qquad (\lambda x . t)(u, [])   \to t[x := u] }
+      \only<1-4>{ (\beta) & \qquad (\lambda x . t) u \to t[x := u] }
+      \only<5->{ (\beta_1) & \qquad (\lambda x . t)(u, []) \to t[x := u] }
       \only<6->{ \\ (\beta_2) & \qquad (\lambda x . t)(u, v::l) \to t[x := u](v, l) }
-      \only<7->{ \\ (h)       & \qquad t(u, l)(u', l')          \to t(u, l + (u'::l')) }
+      \only<7->{ \\ (h) & \qquad t(u, l)(u', l') \to t(u, l + (u'::l')) }
     \end{align*}
+  \end{definition}
+  
+  \begin{definition}[Typing rules]    
+    \only<1-7>{ Typing rules are isomorphic to natural deduction (Curry-Howard isomorphism). }
+    \only<8->{ Typing rules are isomorphic to a fragment of the sequent calculus (similar to system $LJT$). }
   \end{definition}
 \end{frame}
 
-\subsection{Canonical subsystem $\LamCan$}
-
+\subsection{Canonical subsystem}
 \begin{frame}
   \frametitle{$h$-normal forms}
   The purpose of the $h$ reduction rule
   \[ (h) \qquad t(u, l)(u', l') \to t(u, l + (u'::l')) \]
   is to bring either a variable or an abstraction to the head of applications.
 
-  \vspace{15pt}
   \onslide<2->{
-    We can identify such subset of expressions, having only applications
+    \vspace{10pt}
+    We will identify the subsets $Can$ (of terms) and $CanList$ (of lists) in $h$-normal form, having applicative terms restricted to
     \[ x(u, l) \quad \text{ or } \quad (\lambda x . t)(u, l). \]
+  }
+
+  \onslide<3->{
+    \vspace{-10pt}
+    Moreover, we easily define a map $h: \Lam\text{-terms} \to Can$ collapsing $\Lam$-terms to their $h$-normal form.
+    This map suffices to induce notions of reduction and typification over these subexpressions, creating what we will call a \underline{canonical subsystem}. 
   }
 \end{frame}
 
-\subsection{Canonical $\Lam$-calculus}
+\subsection{Canonical lambda calculus}
 \begin{frame}
-  \frametitle{System $\LamV$}
+  \frametitle{From $\LamM$ to $\LamV$}
+  
+  \onslide<4->{Applications are split in two kinds!}
+  \begin{definition}[Expressions] \vspace{-15pt}
+    \begin{align*}
+      \only<1-2>{ (\LamM \text{-terms}) && \hspace{-1cm} t, u, v &::= \ x \ | \ \lambda x . t \
+                                                                   | \ \only<1>{t(u, l)} \only<2>{\xcancel{t(u, l)}} \\ }
+      \only<3>{ (\LamV \text{-terms}) && \hspace{-1cm} t, u, v &::= \ x \ | \ \lambda x . t \ | \ app_v(x, u, l) \\ }
+      \only<4->{ (\LamV \text{-terms}) && \hspace{-1cm} t, u, v &::= \ x \ | \ \lambda x . t \ | \ app_v(x, u, l) \ | \ app_\lambda(x.t, u, l) \\ }
+      (\only<1-2>{ \LamM } \only<3->{ \LamV } \text{-lists}) && \hspace{-2cm} l &::= \ []\  | \ u :: l
+    \end{align*}
+  \end{definition}
+
+  \begin{definition}[Reduction rules] \vspace{-15pt}
+    \begin{align*}
+      \only<1-4>{(\beta_1) & \qquad (\lambda x . t)(u, []) \to t[x := u] \\ }
+      \only<5->{(\vec \beta_1) & \qquad app_\lambda (x . t, u, []) \to t[x := u] \\ }
+      \only<1-5>{ (\beta_2) & \qquad (\lambda x . t)(u, v::l) \to t[x := u](v, l) }
+      \only<6-7>{ (\vec \beta_2) & \qquad app_\lambda (x . t, u, v::l) \to t[x := u](v, l) }
+      \only<8->{ (\vec \beta_2) & \qquad app_\lambda (x . t, u, v::l) \to t[x := u]@(v, l) }
+      \only<1-6>{ \\ (h) & \qquad t(u, l)(u', l') \to t(u, l + (u'::l')) }
+      \only<7>{ \\ \xcancel{ (h) } & \qquad t(u, l)(u', l') \to t(u, l + (u'::l')) }
+    \end{align*}
+  \end{definition}
+
+  \only<8->{ *In the $(\vec \beta_2)$ rule, the $@$ operator inspects the first term $t[x:=u]$ in order to produce a new applicative term (a generic application $t(u, l)$ is not part of this new syntax). }
 \end{frame}
 
 \begin{frame}
-  \frametitle{$\LamV$ vs $\LamCan$}
+  \frametitle{Typing system of $\LamV$}
+  \begin{definition}[Typing rules for $\LamV$-expressions]
+    \[
+      \begin{prooftree}
+        \infer0[Ax]{ x:A, \Gamma \vdash var(x):A } 
+      \end{prooftree}
+      \qquad
+      \begin{prooftree}
+        \hypo{ x:A, \Gamma \vdash t:B }
+        \infer1[Right]{ \Gamma \vdash \lambda x . t : A \supset B  } 
+      \end{prooftree}
+    \]
+    \[
+      \begin{prooftree}
+        \hypo{ \Gamma' \vdash u:A}
+        \hypo{ \Gamma' ; B \vdash l:C }	
+        \infer2[LeftContr]{ \underbrace{ \Gamma, x: A \supset B }_{\Gamma'} \vdash app_v (x, u, l) : C } 
+      \end{prooftree}
+    \]
+    \[
+      \begin{prooftree}
+        \hypo{ \Gamma \vdash u:A }
+        \hypo{ \Gamma, x:A \vdash t:B }
+        \hypo{ \Gamma ; B \vdash l : C }	
+        \infer3[TwoCut]{ \Gamma \vdash app_\lambda (x . t, u, l) : C } 
+      \end{prooftree}
+    \]
+    \[
+      \begin{prooftree}
+        \infer0[Ax*]{ \Gamma ; A \vdash []:A } 
+      \end{prooftree}
+      \qquad
+      \begin{prooftree}
+        \hypo{ \Gamma \vdash u:A }
+        \hypo{ \Gamma ; B \vdash l:C }
+        \infer2[Left*]{ \Gamma ; A \supset B \vdash  u::l : C } 
+      \end{prooftree}
+    \]
+  \end{definition}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Conservativeness}	
+  \frametitle{$\LamCan$ vs $\LamV$}
+  % https://q.uiver.app/#q=WzAsOSxbMCwwLCJcXGJveGVke1xccG1ie1xcbGFtYmRhIG19fSJdLFswLDEsIlxcYm94ZWR7XFxwbWJ7XFxsYW1iZGEgbV57Q2FufX19Il0sWzIsMSwiXFxib3hlZHtcXHBtYntcXHZlYyBcXGxhbWJkYX19Il0sWzAsMiwieCh1LCBsKSJdLFsyLDIsImFwcF92ICh4LCB1LCBsKSJdLFswLDMsIihcXGxhbWJkYSB4LnQpKHUsIGwpIl0sWzIsMywiYXBwX1xcbGFtYmRhICh4LnQsIHUsIGwpIl0sWzAsNCwiXFxmcmFje3QgXFwgXFx0b19cXGJldGEgXFwgdCcgXFwgKFxcdGV4dHtpbiB9XFxsYW1iZGEgbSl9e2godCkgXFwgKFxcdG9fXFxiZXRhKV9jIFxcIGgodCcpfSJdLFsyLDQsInQgXFwgXFx0b197XFx2ZWMgXFxiZXRhfSBcXCB0JyJdLFswLDEsImgiLDJdLFswLDIsInAiXSxbMiwxLCJpIl1d
+  
+  \[\begin{tikzcd}[sep=small]
+      {\boxed{\LamM}} \\
+      {\boxed{\LamCan}} & {\boxed{\LamV}} \\
+      {(\lambda x.t)(u, l)} & {app_\lambda (x.t, u, l)} \\
+      {\frac{t \ \to_\beta \ t' \ (\text{in }\lambda m)}{h(t) \ (\to_\beta)_c \ h(t')}} & {t \ \to_{\vec \beta} \ t'}
+      \arrow["h", from=1-1, to=2-1]
+      \arrow["p", from=1-1, to=2-2]
+      \arrow["i", from=2-2, to=2-1]
+    \end{tikzcd}\]
+  
+  % We prove that two different definitions for the canonical subsystem result in isomorphic systems.
+  \begin{theorem}[Isomorphism of reduction] \hfill
+    \begin{enumerate}
+    \item $t \to_{\vec \beta} t'$ in $\LamV$ $\iff$ $i(t) \ (\to_{\beta})_c \ i(t')$ in $\LamCan$
+    \item $t \ (\to_{\beta})_c \ t'$ in $\LamCan$ $\iff$ $p(t) \to_{\vec \beta} p(t')$ in $\LamV$
+    \end{enumerate}
+  \end{theorem}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conservativeness}
+  \begin{theorem}[Conservativeness]
+    For every $\LamV$-terms $t$ and $t'$, we have:
+    \[ t \twoheadrightarrow_{\vec \beta} t' \iff i(t) \twoheadrightarrow_{\beta h} i(t'). \]
+  \end{theorem}
 \end{frame}
 
 \begin{frame}
   \frametitle{$\LamV$ vs $\Lam$}
+  % https://q.uiver.app/#q=WzAsNixbMCwwLCJcXGJveGVke1xccG1ie1xcdmVjIFxcbGFtYmRhfX0iXSxbMCwxLCJhcHBfXFxsYW1iZGEgKHgudCwgdSwgW3ZfMSwgdl8yLCBcXGRvdHMsIHZfa10pIl0sWzIsMCwiXFxib3hlZHtcXHBtYntcXGxhbWJkYX19Il0sWzIsMSwiKCgoKChcXGxhbWJkYSB4LnQpIHUpIHZfMSkgdl8yKSBcXGRvdHMpIHZfayJdLFswLDIsInQgXFwgXFx0b197XFx2ZWMgXFxiZXRhfSBcXCB0JyJdLFsyLDIsInQgXFwgXFx0b197XFxiZXRhfSBcXCB0JyJdLFswLDIsIlxccHNpIiwwLHsib2Zmc2V0IjotMSwic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XSxbMiwwLCJcXHRoZXRhIiwwLHsib2Zmc2V0IjotMSwic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiYXJyb3doZWFkIn0sImhlYWQiOnsibmFtZSI6Im5vbmUifX19XV0=
+  \[
+    \begin{tikzcd}[sep=small]
+      {\boxed{\pmb{\vec \lambda}}} && {\boxed{\pmb{\lambda}}} \\
+      {app_\lambda (x.t, u, [v_1, v_2, \dots, v_k])} && {(((((\lambda x.t) u) v_1) v_2) \dots) v_k} \\
+      {t \ \to_{\vec \beta} \ t'} && {t \ \to_{\beta} \ t'}
+      \arrow["\psi", shift left, from=1-2, to=1-1]
+      \arrow["\theta", shift left, from=1-1, to=1-2]
+    \end{tikzcd}
+  \]
+
+  \only<3->
+  \begin{theorem}[Isomorphism of reduction] \hfill
+    \begin{enumerate}
+    \item $t \to_{\vec \beta} t' \text{ in } \LamV \iff \theta(t) \to_{\beta} \theta(t') \text{ in } \Lam$
+    \item $t \to_{\beta} t' \text{ in } \Lam \iff \psi(t) \to_{\vec \beta} \psi(t') \text{ in } \LamV$
+    \end{enumerate}
+  \end{theorem}
 \end{frame}
 
 % ----
 % SEC2
 % ----
 \section{On the mechanisation}
-\subsection{\textit{Our main choices on mechanisation}}
+\subsection{Our key choices on the mechanisation}
 \begin{frame}
-  \frametitle{Our main choices on mechanisation}
+  \frametitle{Our key choices on the mechanisation}
   \begin{itemize}
-  \item<1-> Proof assistant: \textit{Rocq Prover}
-  \item<2-> Deal with binders: de Bruijn indices
-  \item<3-> Dependencies on libraries: \textit{Autosubst} library to define substitution operations using de Bruijn indices and parallel substitutions
+  \item<1-> \underline{Proof assistant}: \textit{Rocq Prover}
+  \item<2-> \underline{Deal with binders}: de Bruijn indices
+
+    \only<3->{ Example: a $\Lam$-term $\lambda x. \lambda y . y$ is represented as $\lambda . \lambda . 0$ }
+  \item<4-> \underline{Libraries}: \textit{Autosubst} library to define substitution operations using de Bruijn indices and parallel substitutions
   \end{itemize}
 \end{frame}
 
 \subsection{\textit{Autosubst} library}
 \begin{frame}
-  \frametitle{$\sigma$-calculus and parallel substitutions}
-  
+  \frametitle{A main difference: parallel substitutions}
+  We are used to deal with a substitution operation that replaces one variable at a time --- $t[x:=u]$.
+
+  \begin{itemize}
+  \item<2-> Using a combination of de Bruijn indices and parallel substitutions (that replace every free variable at a time) we can simplify our representations and definitions. 
+  \item<3-> Substitutions can be seen as sequences, $\sigma = (s_0, s_1, s_2, \dots)$, and the operation $t[\sigma]$ replaces the variable $0$ by $s_0$, $1$ by $s_1$ and so on.
+  \item<4-> We also decided to simplify the presentation of our typing systems using contexts that are substitutions over types, $\Gamma = (A, B, C, \dots)$.
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{System $\LamM$ using \textit{Autosubst}}
+  \frametitle{$\LamM$ vs its mechanised self}
 \end{frame}
 
 \subsection{A showcase}
