@@ -56,7 +56,7 @@
 % ---
 
 \section{Multiary $\Lam$-calculus and subsystems}
-\subsection{Multiary $\Lam$-calculus}
+\subsection{Multiary $\Lam$-calculus ($\LamM$)}
 \begin{frame}
   \frametitle{From $\Lam$ to $\LamM$}
   
@@ -85,9 +85,9 @@
   \end{block}
 \end{frame}
 
-\subsection{Canonical subsystem}
+\subsection{Canonical subsystem ($\LamCan$)}
 \begin{frame}
-  \frametitle{$h$-normal forms}
+  \frametitle{$h$-normal forms and $\LamCan$}
   The purpose of the $h$ reduction rule
   \[ (h) \qquad {\color{red} t(u, l)}(u', l') \to {\color{red} t}(u, l + (u'::l')) \]
   is to reorganise our terms, bringing either a variable or an abstraction to the head of applicative terms.
@@ -98,7 +98,7 @@
   \onslide<4->{ This map suffices to induce notions of reduction and typification over these subexpressions, creating what we will call a \underline{canonical subsystem}. }
 \end{frame}
 
-\subsection{Canonical $\Lam$-calculus}
+\subsection{Canonical $\Lam$-calculus ($\LamV$)}
 \begin{frame}
   \frametitle{From $\LamM$ to $\LamV$}
   
@@ -118,7 +118,7 @@
       \only<1-4>{(\beta_1) & \qquad (\lambda x . t)(u, []) \to t[x := u] \\ }
       \only<5->{(\vec \beta_1) & \qquad app_\lambda (x . t, u, []) \to t[x := u] \\ }
       \only<1-4>{ (\beta_2) & \qquad (\lambda x . t)(u, v::l) \to t[x := u](v, l) }
-      \only<6-7>{ (\vec \beta_2) & \qquad app_\lambda (x . t, u, v::l) \to t[x := u](v, l) }
+      \only<6-7>{ (\vec \beta_2) & \qquad app_\lambda (x . t, u, v::l) \to {\color{red} t[x := u](v, l)} }
       \only<8->{ (\vec \beta_2) & \qquad app_\lambda (x . t, u, v::l) \to t[x := u]@(v, l) }
       \only<1-4>{ \\ (h) & \qquad t(u, l)(u', l') \to t(u, l + (u'::l')) }
       \only<7>{ \\ \xcancel{ (h) } & \qquad t(u, l)(u', l') \to t(u, l + (u'::l')) }
@@ -200,13 +200,13 @@
   \frametitle{Conservativeness}
   \begin{theorem}[Conservativeness]
     For every $\LamV$-terms $t$ and $t'$, we have:
-    \[ t \twoheadrightarrow_{\vec \beta} t' \iff i(t) \twoheadrightarrow_{\beta h} i(t'). \]
+    \[ t \twoheadrightarrow_{\vec \beta} t' \text{ in } \LamV \iff i(t) \twoheadrightarrow_{\beta h} i(t') \text{ in } \LamM. \]
   \end{theorem}
 
   \begin{corollary}[$\LamM$ is a conservative extension of $\LamCan$]<2->
     % In other words,
     For every $t, t' \in Can$, 
-    \[ t \twoheadrightarrow_{\beta^{Can}} t' \iff t \twoheadrightarrow_{\beta h} t', \]
+    \[ t \twoheadrightarrow_{\beta^{Can}} t' \text{ in } \LamCan \iff t \twoheadrightarrow_{\beta h} t' \text{ in } \LamM, \]
     where $\twoheadrightarrow_{\beta^{Can}}$ is the reflexive-transitive closure of $(\to_{\beta})_c$.
   \end{corollary}
 \end{frame}
@@ -300,9 +300,9 @@
 \subsection{Hands on the proof assistant}
 \begin{frame}
   \frametitle{Hands on the proof assistant}
-    \begin{theorem}[Conservativeness]
+  \begin{theorem}[Conservativeness]
     For every $\LamV$-terms $t$ and $t'$, we have:
-    \[ t \twoheadrightarrow_{\vec \beta} t' \iff i(t) \twoheadrightarrow_{\beta h} i(t'). \]
+    \[ t \twoheadrightarrow_{\vec \beta} t' \text{ in } \LamV \iff i(t) \twoheadrightarrow_{\beta h} i(t') \text{ in } \LamM. \]
   \end{theorem}
 \end{frame}
 
