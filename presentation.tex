@@ -79,10 +79,10 @@
     \end{align*}
   \end{definition}
   
-  \begin{definition}[Typing rules]<1,8->
+  \begin{block}{Typing rules}<1,8->
     \only<1-7>{ Typing rules are isomorphic to natural deduction (Curry-Howard isomorphism). }
     \only<8->{ Typing rules are isomorphic to a fragment of the sequent calculus (similar to system $LJT$). }
-  \end{definition}
+  \end{block}
 \end{frame}
 
 \subsection{Canonical subsystem}
@@ -90,9 +90,9 @@
   \frametitle{$h$-normal forms}
   The purpose of the $h$ reduction rule
   \[ (h) \qquad {\color{red} t(u, l)}(u', l') \to {\color{red} t}(u, l + (u'::l')) \]
-  is to bring either a variable or an abstraction to the head of applicative terms.
+  is to reorganise our terms, bringing either a variable or an abstraction to the head of applicative terms.
 
-  \onslide<2->{ We will identify the subsets $Can$ (of terms) and $CanList$ (of lists) in $h$-normal form, having applicative terms restricted to \[ x(u, l) \quad \text{ or } \quad (\lambda x . t)(u, l). \] }
+  \onslide<2->{ We will identify the subsets $Can$ (canonical terms) and $CanList$ (canonical lists) of $h$-nfs, having applicative terms restricted to \[ x(u, l) \quad \text{ or } \quad (\lambda x . t)(u, l). \] }
   \onslide<3->{ Moreover, we easily define a map \[ h: \LamM \text{-terms} \to Can. \] }
   % collapsing $\Lam$-terms to their $h$-normal form.
   \onslide<4->{ This map suffices to induce notions of reduction and typification over these subexpressions, creating what we will call a \underline{canonical subsystem}. }
@@ -314,10 +314,10 @@
 \begin{frame}
   \frametitle{Take home messages}
   \begin{itemize}
-  \item<1-> A simple, yet, computationally interesting idea like changing the syntax of the $\Lam$-calculus aplication has a logical meaning involving sequent calculus.
-  \item<2-> A mechanisation may lead to a different representation of the object theory.
+  \item<1-> A simple, yet, computationally interesting idea like changing the syntax of the $\Lam$-calculus application has a logical meaning involving sequent calculus.
+  \item<2-> A mechanisation cannot hide details and may lead to a different presentation (when comparing to the paper one).
     % \item<3-> Mechanisation works can help clarifying
-  \item<3-> Mechanising metatheory can be boosted by available libraries and modularisation may help in reusing available work.
+  \item<3-> Mechanising metatheory can be boosted by using the available libraries (\textit{Autosubst} in our case) and generalisation of many concepts is a good path to code reusability.
   \end{itemize}
 \end{frame}
 
