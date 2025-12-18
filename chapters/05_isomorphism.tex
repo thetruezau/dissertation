@@ -49,11 +49,11 @@ We start by defining the maps between expressions of $\Lam$ and $\LamV$ underlyi
 \begin{definition}[Maps $\psi$ and $\psi'$]
   The map $\psi' : (\Lam \text{-terms} \times \LamV \text{-lists}) \to \LamV \text{-terms}$ is defined by recursion on $\Lam$-terms as follows:
   \begin{align*}
-    \psi(x, []) &= var(x) \\
-    \psi(x, u::l) &= app_v (x, u, l) \\
-    \psi(\lambda x . M, []) &= \lambda x . \psi(M) \\
-    \psi(\lambda x . M, u::l) &= app_\lambda (x . \psi(M), u, l) \\
-    \psi(M N, l) &= \psi'(M, \psi(N)::l),              
+    \psi'(x, []) &= var(x) \\
+    \psi'(x, u::l) &= app_v (x, u, l) \\
+    \psi'(\lambda x . M, []) &= \lambda x . \psi(M) \\
+    \psi'(\lambda x . M, u::l) &= app_\lambda (x . \psi(M), u, l) \\
+    \psi'(M N, l) &= \psi'(M, \psi(N)::l),              
   \end{align*}
   where $\psi(M)$ is easily defined as $\psi'(M, [])$.
 \end{definition}

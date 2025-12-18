@@ -353,6 +353,19 @@ In order to instantiate a nameless $\Lam$-term under a substitution we first def
   From this follows that $\ \uparrow \circ \ \xi$ is a renaming, which in turn implies that $0 \cdot (\uparrow \circ \ \xi)$ is a renaming.
 \end{remark}
 
+As an example of the instantiation of a nameless $\Lam$-term under a renaming, we give a detailed computation of $(\lambda . \lambda . 7 1)\{ \uparrow \}$.
+
+For simplification, let $\xi_1 = 0 \cdot (\uparrow \circ \uparrow)$ and $\xi_2 = 0 \cdot (\uparrow \circ \ \xi_1)$.
+First, let us calculate $\xi_2(7)$ and $\xi_2(1)$.
+\[ \xi_2(7) = (\uparrow \circ \xi_1)(6) = \uparrow(\xi_1(6)) = \uparrow((\uparrow \circ \uparrow)(5)) = \uparrow(\uparrow(\uparrow(5))) = \uparrow(\uparrow(6)) = \dots = 8 \]
+\[ \xi_2(1) = (\uparrow \circ \xi_1)(0) = \uparrow(\xi_1(0)) = \uparrow(0) = 1 \]
+
+Therefore,
+\[ (\lambda . \lambda . 7 1)\{ \uparrow \} = \lambda . (\lambda . 7 1)\{ \xi_1 \} 
+  = \lambda . \lambda . (7 1)\{ \xi_2 \} = \lambda . \lambda . 7\{ \xi_2 \} 1\{ \xi_2 \} 
+  = \lambda . \lambda . \xi_2(7) \xi_2(1) = \lambda . \lambda . 8 1
+  . \]
+
 \begin{definition}[Composition of a renaming with a substitution]
   We define the substitution resulting of the composition of a renaming $\xi$ and a substitution $\sigma$ by
   \[ (\xi \circ \sigma)(k) = \sigma(k)\{ \xi \} . \]
@@ -375,6 +388,18 @@ It is based on the ideas introduced in~\cite{AutosubstSchafer} and is very close
 
 Using the previous definition of substitution, we could now define the $\beta$-reduction rule as
 \[ (\lambda . M) N \to M[N \cdot id]. \]
+
+For example, let us calculate the reduction of the term $((\lambda . \lambda . 1) N_1) N_2$, known as the first projection.
+\begin{align*}
+  ((\lambda . \lambda . 1) N_1) N_2 &\to ((\lambda . 1)[N_1 \cdot id]) N_2 = ((\lambda . 1)[N_1 \cdot id]) N_2 \\
+                                    &= (\lambda . (1[0 \cdot (\uparrow \circ (N_1 \cdot id))])) N_2
+                                      = (\lambda . ((\uparrow \circ (N_1 \cdot id))(0))) N_2 \\
+  = (\lambda . N_1 \{ \uparrow \}) N_2 & \to (N_1 \{ \uparrow \}) [N_2 \cdot id]
+                                         = \dots = N_1 \{ \uparrow \}
+\end{align*}
+
+As the term $N_1 \{ \uparrow \}$ has no occurrences of $0$ as a free variable, we see that the instantiation of substitution $(N_1 \{ \uparrow \}) [N_2 \cdot id]$ can be simplified as $N_1 \{ \uparrow \}$.
+It is interesting to notice that the resultant nameless $\Lam$-term is the same up to a renaming of free variables.
 
 Having introduced the instantiation of terms under substitutions, we are able to complete our sequence of definitions by providing a definition for the composition of substitutions.
 
@@ -547,7 +572,7 @@ It provides the \textit{Rocq Prover} with two kinds of tactics:
 The library makes use of some ideas we have already covered up: de~Bruijn syntax and parallel substitutions.
 There is also a more subtle third ingredient: the theory of explicit substitution \cite{Abadi}.
 This theory is particularly relevant to the implementation of the \lst$asimpl$ and \lst$autosubst$ tactics and we will not digress much on it.
-Essentially, our calculus with parallel substitutions forms a model of the $\sigma$-calculus and we may simplify our terms with substitutions using the convergent rewriting equations described by this theory.
+Essentially, our calculus with parallel substitutions forms a model of the $\sigma$-calculus \cite{Abadi} and we may simplify our terms with substitutions using the convergent rewriting equations described by this theory.
 
 Taking the naive example of an inductive definition of the $\Lam$-terms in \textit{Rocq}, we now display a definition using \textit{Autosubst}.
 
@@ -608,13 +633,13 @@ This inductive definition mechanises the $\beta$-reduction altogether with the c
 \begin{lstlisting}[language=Coq]
 Inductive step : relation term :=
 | Step_Beta s s' u : s' = s.[u.:ids] ->
-step (App (Lam s) t) s'
+  step (App (Lam s) u) s'
 | Step_Abs s s' : step s s' ->
-step (Lam s) (Lam s')
+  step (Lam s) (Lam s')
 | Step_App1 s s' t: step s s' ->
-step (App s t) (App s' t)
+  step (App s t) (App s' t)
 | Step_App2 s t t': step t t' ->
-step (App s t) (App s t').
+  step (App s t) (App s t').
 \end{lstlisting}
 
 In this definition we already give use to the substitution operation defined using \textit{Autosubst} (found in the \lst$Step_Beta$ constructor).
