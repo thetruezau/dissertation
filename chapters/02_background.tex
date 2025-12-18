@@ -399,7 +399,7 @@ For example, let us calculate the reduction of the term $((\lambda . \lambda . 1
 \end{align*}
 
 As the term $N_1 \{ \uparrow \}$ has no occurrences of $0$ as a free variable, we see that the instantiation of substitution $(N_1 \{ \uparrow \}) [N_2 \cdot id]$ can be simplified as $N_1 \{ \uparrow \}$.
-It is interesting to notice that the resultant nameless $\Lam$-term is the same up to a renaming of free variables.
+It is also interesting to notice that the resulting nameless $\Lam$-term is the same up to a renaming of free variables, and, obviously we have $N_1 \{ \uparrow \} = N_1$ when $N_1$ is a closed term.
 
 Having introduced the instantiation of terms under substitutions, we are able to complete our sequence of definitions by providing a definition for the composition of substitutions.
 
@@ -444,6 +444,20 @@ We formulate the definition of context and derivable sequents in the nameless se
   \]
 \end{definition}
 
+Given the typing rules for nameless $\Lam$-terms, below is an example of a proof tree that gives the type $A$ to the term $((\lambda . \lambda . 1) N_1) N_2$ in a context $B, A, \Gamma$, provided that $\Gamma \vdash N_1:A$ and $\Gamma \vdash N_2:B$.
+
+\[
+  \begin{prooftree}    
+    \infer0[Var]{ B, A, \Gamma \vdash 1 : A } 
+    \infer1[Abs]{ A, \Gamma \vdash \lambda 1 : B \supset A } 
+    \infer1[Abs]{ \Gamma \vdash \lambda . \lambda . 1 : A \supset (B \supset A) } 
+    \hypo{ \Gamma \vdash N_1 : A }
+    \infer2[App]{ \Gamma \vdash (\lambda . \lambda . 1) N_1 : B \supset A } 
+    \hypo{ \Gamma \vdash N_2 : B }	
+    \infer2[App]{ \Gamma \vdash ((\lambda . \lambda . 1) N_1) N_2 : A } 
+  \end{prooftree}
+\]
+  
 \begin{claim}
   \label{nameless_typing_claim}  
   Structural rules of weakening, contraction and exchange are admissible in this setting.
