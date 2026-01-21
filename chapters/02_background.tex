@@ -449,7 +449,7 @@ Given the typing rules for nameless $\Lam$-terms, below is an example of a proof
 \[
   \begin{prooftree}    
     \infer0[Var]{ B, A, \Gamma \vdash 1 : A } 
-    \infer1[Abs]{ A, \Gamma \vdash \lambda 1 : B \supset A } 
+    \infer1[Abs]{ A, \Gamma \vdash \lambda . 1 : B \supset A } 
     \infer1[Abs]{ \Gamma \vdash \lambda . \lambda . 1 : A \supset (B \supset A) } 
     \hypo{ \Gamma \vdash N_1 : A }
     \infer2[App]{ \Gamma \vdash (\lambda . \lambda . 1) N_1 : B \supset A } 
@@ -751,8 +751,9 @@ Lemma type_renaming : forall (Gamma: var->type) t A, sequent Γ t A ->
 \end{lstlisting}
 
 The lemma \lst$type_renaming$ captures this idea of preservation of types when renaming a term.
-We reorder the context $\Delta$ according to a rename $\xi$ by declaring that \lst$Gamma = (xi >>> Delta)$, where \lst$>>>$ denotes forward composition (this is a composition operation defined by \textit{Autosubst}).
+We reorder the context $\Delta$ according to a rename $\xi$ by declaring that \lst$Gamma = (xi >>> Delta)$, where \lst$>>>$ denotes forward composition (this is a composition operation defined by \textit{Autosubst}), that is the infinite \mbox{context/function} \lst$Gamma(i) = Delta(xi(i)), forall (i:var)$.
 Also notice that the keyword \lst$ren$ is simply an operation that transforms a renaming $\xi$ of type \lst$var->var$ in a substitution \lst$ren xi$ of type \lst$var -> term$.
+
 
 %%% Local Variables:
 %%% mode: LaTeX

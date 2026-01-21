@@ -29,7 +29,8 @@
 % ------------------------------------------------------------
 % This block of code defines the information to appear in the
 % Title page
-\title[Dissertation Defense] % optional
+% \title[Dissertation Defense] % optional
+\title[ALC Meeting 2025] % optional
 {On the mechanisation of the multiary lambda calculus and subsystems}
 
 \author[Miguel Alves]
@@ -50,6 +51,28 @@
 \begin{document}
 
 \frame{\titlepage}
+
+\section{Motivation}
+\begin{frame}
+	\frametitle{Motivation...}
+	Why mechanise?
+	\begin{itemize}
+		\item<1-> Computer verification of proofs
+		\item<2-> Use of automation and libraries (ex: mathlib for lean)
+	\end{itemize}
+	
+	\onslide<3->{ Why mechanise metatheory? }
+	\begin{itemize}
+		\item<4-> Long and tedious proofs (often by structural induction)
+		\item<5-> A good target for mechanisation
+	\end{itemize}
+	
+	\onslide<6->{ Why the multiary $\Lam$-calculus? }
+	\begin{itemize}
+		\item<7-> Results from a simple adaptation of applicative terms $t u \to t(u, l)$
+		\item<8-> Typing rules have interesting logical content (sequent calculus!)
+	\end{itemize}
+\end{frame}
 
 % ---
 % SEC1
@@ -297,18 +320,19 @@
   \end{matrix} \]
 \end{frame}
 
-\subsection{Hands on the proof assistant}
+\subsection{The mechanised work}
 \begin{frame}
-  \frametitle{Hands on the proof assistant}
+  \frametitle{The mechanised work}
   \begin{figure}[h]
   	\centering
   	\includegraphics[width=0.9\textwidth]{pictures/scripts_roadmap}
   \end{figure}
   
-  \begin{theorem}[Conservativeness]<2->
-    For every $\LamV$-terms $t$ and $t'$, we have:
-    \[ t \twoheadrightarrow_{\vec \beta} t' \text{ in } \LamV \iff i(t) \twoheadrightarrow_{\beta h} i(t') \text{ in } \LamM. \]
-  \end{theorem}
+  \only<2->{
+  \begin{figure}[h]
+  	\centering
+  	\includegraphics[width=0.7\textwidth]{pictures/screenshot_loc}
+  \end{figure}}
 \end{frame}
 
 % ---
@@ -324,6 +348,11 @@
     % \item<3-> Mechanisation works can help clarifying
   \item<3-> Mechanising metatheory can be boosted by using the available libraries (\textit{Autosubst} in our case) and generalisation of many concepts is a good path to code reusability.
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Christmas surprise!}
+	\Large{ A Linear Algebra theorem mechanised! }
 \end{frame}
 
 \end{document}
