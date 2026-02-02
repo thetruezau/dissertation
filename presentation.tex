@@ -106,7 +106,7 @@
   
   \begin{block}{Typing rules}<1,8->
     \only<1-7>{ Typing rules are isomorphic to natural deduction (Curry-Howard isomorphism). }
-    \only<8->{ Typing rules are isomorphic to a fragment of the sequent calculus (similar to system $LJT$). }
+    \only<8->{ Typing rules are isomorphic to a fragment of the sequent calculus (similar to system $\overline\lambda$ and the focused sequent calculus $LJT$). }
   \end{block}
 \end{frame}
 
@@ -127,10 +127,8 @@
       \begin{prooftree}
         \hypo{ \Gamma \vdash t : A \supset B }
         \hypo{ \Gamma \vdash u : A }
-        \only<1>{ \hypo{ \Gamma ; B \vdash l : C } }
-        \only<2>{ \hypo{ \color{blue} \Gamma ; B \vdash l : C } }
-        \only<1>{ \infer3[mElim]{ \Gamma \vdash t(u, l) : C } }
-        \only<2>{ \infer3[\color{red}mElim]{ \Gamma \vdash t(u, l) : C } }
+        \hypo{ \Gamma ; B \vdash l : C }
+        \infer3[mElim]{ \Gamma \vdash t(u, l) : C }
       \end{prooftree}
     \]
     \[
@@ -145,18 +143,43 @@
       \end{prooftree}
     \]
   \end{definition}
+  
+  \only<2->{ The sequent deriving lists creates only derivations where the formula in focus is a chain of implications.
+  	\[
+  	\begin{prooftree}
+  		\hypo{ \Gamma \vdash B_1 }
+  		\hypo{ \Gamma \vdash B_2 }
+  		\hypo{}
+  		
+  		\ellipsis{}{ \Gamma ; ... \vdash C }
+  		\infer2[Left*]{ \Gamma ; B_2 \supset ... \vdash  C }
+  		\infer2[Left*]{ \Gamma ; B_1 \supset B_2 \supset ... \vdash  C } 
+  	\end{prooftree}
+  	\]
+  }  
+\end{frame}
 
-  \onslide<2->{
+\begin{frame}
+  \frametitle{ The generalised elimination spirit behind $\LamM$ }
     Notice the similarities between the multiary elimination rule and the generalised elimination rule from von Plato.
+    
+    \[
+    \begin{prooftree}
+    	\hypo{ \Gamma \vdash t : A \supset B }
+    	\hypo{ \Gamma \vdash u : A }
+    	\hypo{ \color{blue} \Gamma ; B \vdash l : C }
+    	\infer3[mElim]{ \Gamma \vdash t(u, l) : C }
+    \end{prooftree}
+    \]
+    \vspace{10pt}
     \[
       \begin{prooftree}
         \hypo{ \Gamma \vdash A \supset B }
         \hypo{ \Gamma \vdash A }
         \hypo{ \color{blue} \Gamma , B \vdash C }	
-        \infer3[\color{red}gElim]{ \Gamma \vdash C }
+        \infer3[gElim]{ \Gamma \vdash C }
       \end{prooftree}
     \]
-  }
 \end{frame}
 
 \subsection{Canonical subsystem ($\LamCan$)}
@@ -194,7 +217,7 @@
         \hypo{ \Gamma \vdash u' : C }
         \hypo{ \Gamma ; D \vdash l' : E }
         \infer2[Left*]{ \Gamma ; C \supset D \vdash u'::l' : E }
-        \infer2[dashed,Cut*]{ \Gamma ; B \vdash l+(u'::l') : E }
+        \infer[dashed]2[Cut*]{ \Gamma ; B \vdash l+(u'::l') : E }
         \infer3[mElim]{ \Gamma \vdash t(u, l+(u'::l')) : E }
       \end{prooftree}
     \]
@@ -426,7 +449,7 @@
   \item<1-> A simple, yet, computationally interesting idea like changing the syntax of the $\Lam$-calculus application has a logical meaning involving sequent calculus and natural deduction with generalised eliminations.
   \item<2-> A mechanisation cannot hide details and may lead to a different presentation (when comparing to the paper one).
     % \item<3-> Mechanisation works can help clarifying
-  \item<3-> Mechanising metatheory can be boosted by using the available libraries (\textit{Autosubst} in our case) and generalisation of many concepts is a good path to code reusability.
+  \item<3-> Mechanising metatheory can be boosted by using the available libraries (\textit{Autosubst} in our case) and generalisation of many concepts is a good path to automation of proofs and code reusability.
   \end{itemize}
 \end{frame}
 
